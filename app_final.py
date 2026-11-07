@@ -18,6 +18,7 @@ from hackkit import reon_ladder as LAD
 from hackkit import reon_system as SYS
 from hackkit import reon_storefront as SF
 from hackkit import reon_enviro as EN
+from hackkit import reon_secondlife as SL
 
 st.set_page_config(page_title="REON decision layer", layout="wide")
 st.title("Beyond the weakest cell: what cell-level control is worth")
@@ -50,7 +51,7 @@ with front:
     p0 = {"One large cell": 1, "4 cells in parallel": 4, "16 cells in parallel": 16}[kind0]
     fade0 = {"Gentle (maker's 20,000-cycle claim)": 0.004, "Typical": 0.008, "Hot or hard": 0.02}[hard0]
 
-    @st.cache_data(show_spinner="Simulating a 250-cell string (about 15 seconds)")
+    @st.cache_data(show_spinner="Not precomputed: simulating a 250-cell string (about 15 seconds)")
     def sf_run(p, fade, value):
         return SF.storefront(p, fade, float(value), 15.5, real_packs())
 
@@ -108,8 +109,14 @@ with t1:
             kw.update(trials=8, steps=60)
         return G.robust_recommend(start, n, **kw), G.safe_recommend(start, n, **kw)[0]
 
-    if True:
-        rob, out = eng1(n1, p1, value, elec, fcv, loss, fade)
+    sig1 = (n1, p1, value, elec, fcv, loss, fade)
+    if n1 <= 16 or st.button("Run the engine with these settings (about 15 seconds at 250 cells)", key="run1"):
+        st.session_state["res1"] = (sig1,) + tuple(eng1(*sig1))
+    res1 = st.session_state.get("res1")
+    if res1 is None or res1[0] != sig1:
+        st.info("Press the button to run the engine with these settings. The Customer view tab already shows precomputed results for the standard 250-cell cases.")
+    if res1 is not None and res1[0] == sig1:
+        rob, out = res1[1], res1[2]
         (st.success if rob["verdict"] == "BUY" else st.warning)(f"Verdict on a fresh seed: {rob['verdict']} ({rob['build']}). " + "; ".join(rob["reasons"]))
         for w in rob["warnings"]:
             st.caption(f"Note: {w}")
@@ -247,13 +254,20 @@ with t9:
         out, _ = G.safe_recommend(start, n, value_per_kwh_year=float(v), electronics_per_kwh=float(e), fade_cv=0.45 / np.sqrt(p), fade_mean=float(f), loss=0.04, years=30.0, eol_frac=0.7, trials=8, steps=60, ks=ks)
         return out
 
-    o9 = rec9(n9, p9, f9, v9, e9)
-    sv = SYS.system_view(o9["table"])
-    names = ["plain", o9["ours_best"], o9["rival_best"]]
-    rows = [{"build": nm, "service life (y)": sv[nm]["years"], "system cycles": sv[nm]["system_cycles"], "share of the 20,000-cycle cell rating": sv[nm]["share_of_cell_rating"], "lifetime kWh per kWh nameplate": sv[nm]["lifetime_kwh_per_kwh_nameplate"],
-             "cost per kWh delivered": sv[nm]["cost_per_kwh_delivered"]} for nm in dict.fromkeys(names)]
-    st.dataframe(pd.DataFrame(rows).round(2).set_index("build"))
-    st.caption("System cycles at one cycle a day. Warranty standard 10 years / 8,000 cycles (Tim Ren). Cost per kWh delivered uses an assumed 98 per kWh cell cost plus the build's electronics. Life stops at 30 years in this view.")
+    sig9 = (n9, p9, f9, v9, e9)
+    if st.button("Run the system view (about 12 seconds at 250 cells)", key="run9"):
+        st.session_state["res9"] = (sig9, rec9(*sig9))
+    res9 = st.session_state.get("res9")
+    if res9 is None or res9[0] != sig9:
+        st.info("Press the button to run the engine with these settings.")
+    if res9 is not None and res9[0] == sig9:
+        o9 = res9[1]
+        sv = SYS.system_view(o9["table"])
+        names = ["plain", o9["ours_best"], o9["rival_best"]]
+        rows = [{"build": nm, "service life (y)": sv[nm]["years"], "system cycles": sv[nm]["system_cycles"], "share of the 20,000-cycle cell rating": sv[nm]["share_of_cell_rating"], "lifetime kWh per kWh nameplate": sv[nm]["lifetime_kwh_per_kwh_nameplate"],
+                 "cost per kWh delivered": sv[nm]["cost_per_kwh_delivered"]} for nm in dict.fromkeys(names)]
+        st.dataframe(pd.DataFrame(rows).round(2).set_index("build"))
+        st.caption("System cycles at one cycle a day. Warranty standard 10 years / 8,000 cycles (Tim Ren). Cost per kWh delivered uses an assumed 98 per kWh cell cost plus the build's electronics. Life stops at 30 years in this view.")
     d = st.columns(3)
     lam9 = d[0].select_slider("Faults per cell-year (assumed; ask REON)", [0.0005, 0.001, 0.002, 0.005, 0.01], 0.002, key="lam9")
     yr9 = d[1].select_slider("Years", [5, 10, 15, 20], 10, key="yr9")
@@ -287,6 +301,20 @@ with t10:
     r10 = lad(bs)
     st.bar_chart(pd.DataFrame({"gain over plain, %": [100 * r10[g] for g in (1, 6, 12, 24, 48)]}, index=["each cell", "6 cells per switch", "12 per switch", "module of 24", "2 modules (48)"]))
     st.caption(f"Switching whole modules keeps {100*r10[24]/r10[1]:.0f}% of the cell-level gain here. Our own simulation, independent lognormal draws; ask REON for teardown data.")
+    st.divider()
+    st.subheader("Second life: one retired EV pack as a stationary string")
+    st.write("Real late-life cells (Nature Energy 2026, 12 EVs at 280,000 km, 95 cells each) re-used as one fixed series string. How much more is usable if neighbouring cells switch as a module, or every cell switches, and how little can the electronics cost before it stops paying? Static first-order screen: no further ageing, testing and disassembly not priced.")
+    q = st.columns(3)
+    win2 = q[0].select_slider("Share of cells that must stay in the string (Tim Ren: about 90% in normal use)", [0.5, 0.7, 0.9], 0.9, key="win2")
+    val2 = q[1].select_slider("Value per kWh-year", [12, 22, 40, 80], 40, key="val2")
+    yrs2 = q[2].select_slider("Years of second life", [4, 8, 12], 8, key="yrs2")
+    sl = SL.table(real_packs(), window=win2, value=float(val2), years=float(yrs2))
+    sl_rows = [{"option": k.replace("upper bound", "upper bound (every cell may leave, no loss)"), "extra usable energy, median (range over 12 cars)": f"{100*v['gain_median']:.1f}% ({100*v['gain_min']:.1f} to {100*v['gain_max']:.1f})",
+                "most the electronics can cost per kWh and still pay, median (range)": f"{v['flip_cost_median']:.0f} ({v['flip_cost_min']:.0f} to {v['flip_cost_max']:.0f})"} for k, v in sl.items()]
+    st.dataframe(pd.DataFrame(sl_rows).set_index("option"))
+    best = sl["cell level"]["flip_cost_median"]
+    st.write("Reading it: " + ("cell-level control pays across REON's quoted 7 to 24 per kWh." if best >= 24 else "cell-level control pays only at the cheap end of REON's quoted 7 to 24 per kWh." if best >= 7 else "cell-level control does not pay at REON's quoted 7 to 24 per kWh here.")
+             + " Negative numbers mean the option loses energy to switch loss. Real retired EV cells are fairly well matched, and sorting them into matched strings recovers most of the gain (hackkit/reon_sorting.py), so second life is a scenario with a flip point, not the headline.")
 
 with t11:
     st.write("Which unanswered question moves the answer most? Net gain over a plain string, 12 years, per kWh nameplate, 250 cells, one input changed at a time from the base case (single cells, fade 0.008, value 40, switch cost 15.5). A HOLD counts as zero. Ask REON in this order.")
@@ -303,7 +331,8 @@ with t12:
     dem = c[0].select_slider("Demand charge ($ per kW-month)", [5, 10, 15, 20, 25], 15, key="dem12")
     hrs = c[1].select_slider("Hours of storage per kW (2 or 4)", [2, 4], 2, key="hrs12")
     v12 = dem * 12.0 / hrs
-    rob12, _ = eng1(250, 1, v12, 15.5, 0.45, 0.04, 0.008)
+    c12 = SF.cached_core(1, 0.008, v12)
+    rob12 = {"verdict": c12["verdict"], "mean_gain": c12["dollars_per_kwh"]} if c12 else eng1(250, 1, v12, 15.5, 0.45, 0.04, 0.008)[0]
     st.metric(f"Value of a kWh at this tariff", f"${v12:.0f} per year")
     (st.success if rob12["verdict"] == "BUY" else st.warning)(f"{rob12['verdict']}: net gain over a plain string {rob12['mean_gain']:+.1f} per kWh, about ${rob12['mean_gain'] * 60:,.0f} on a 60 kWh battery over 12 years.")
     st.markdown("- **Buyers.** About 5 million US commercial customers can subscribe to demand charges above $15/kW, about 3 million above $20/kW (NREL survey). Only the top quarter reach the 40 to 90 per kWh-year range.\n"

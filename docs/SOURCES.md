@@ -82,3 +82,11 @@
 | Certification path | UL 9540, UL 1973, NFPA 855 named in industry guidance | CITED (named only, not read) | not verified for REON; REON engineers to confirm. Claim that our layer sits outside the safety loop is DESIGN INTENT |
 | Value from a tariff | demand charge x 12 / hours of storage per kW | DERIVED | tab 12; at $5/kW-month and 2 h about 30 per kWh-year |
 | Sensitivity ranking | `examples/reon_tornado_250_output.txt` | DERIVED | tab 11; 250 cells, single cells, one input at a time |
+
+## Added 7 Nov (late night): precomputed cases and second life
+| Item | Value | Tag | Source / note |
+|---|---|---|---|
+| Precomputed demo cases | 56 engine results at 250 cells (p 1/4/16/40 x fade 0.004/0.008/0.02 x value 12/22/40/80, plus 8 tariff-screen values) | DERIVED | `examples/data/storefront_cases.json`, made by `examples/reon_precompute_cases.py`; a test recomputes one case and fails if the file is stale |
+| Second life, cell data | 12 retired EV packs, 95 cells each, capacity at 280,000 km | REAL | Nature Energy 2026 Fig 4 (`examples/data/nature_fig4_cells.csv`) |
+| Second life, voltage window | at least 50/70/90% of cells stay in the string; modules obey the same window | CITED (REON CTO: about 90% connected in normal use, unclear) / ASSUMED | `hackkit/reon_secondlife.py` |
+| Second life, flip cost | value per kWh-year x years x extra usable share, after switch loss; compared with REON's 7 to 24 per kWh | DERIVED | static, no further ageing; testing and disassembly not priced (REON has not said) |

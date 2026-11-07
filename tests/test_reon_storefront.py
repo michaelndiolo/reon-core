@@ -25,3 +25,16 @@ def test_storefront_small_case_runs_and_hold_has_no_env():
     assert r["verdict"] in ("BUY", "HOLD") and r["life_plain"] > 0
     if r["verdict"] == "HOLD":
         assert r["env"] is None
+
+
+def test_cache_matches_live_engine_and_covers_front_page():
+    cases = SF.load_cases()
+    for p in (1, 4, 16, 40):
+        for f in (0.004, 0.008, 0.02):
+            for v in (12, 22, 40, 80):
+                assert SF.case_key(p, f, v) in cases, (p, f, v)
+    for v in (15, 30, 45, 60, 75, 90, 120, 150):
+        assert SF.case_key(1, 0.008, v) in cases
+    live = SF.core(40, 0.02, 40.0)                       # one case recomputed: the saved file must not be stale
+    saved = SF.cached_core(40, 0.02, 40.0)
+    assert live["verdict"] == saved["verdict"] and abs(live["dollars_per_kwh"] - saved["dollars_per_kwh"]) < 1e-6 and abs(live["life_ours"] - saved["life_ours"]) < 1e-6

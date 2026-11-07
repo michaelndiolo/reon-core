@@ -5,6 +5,9 @@ Dollars are bankable-horizon (12 years, warranty is 10) per kWh nameplate x name
 Everything is a simulation on assumed sodium-ion behaviour; sourced and assumed inputs are tagged in docs/SOURCES.md."""
 from __future__ import annotations
 
+import json
+import os
+
 import numpy as np
 
 from hackkit import reon_guard as G
@@ -12,6 +15,26 @@ from hackkit import reon_storm as S
 from hackkit import reon_enviro as EN
 
 N_SERIES = 250
+ELEC = 15.5
+CASES_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "examples", "data", "storefront_cases.json")
+
+
+def case_key(p, fade, value):
+    return f"{int(p)}|{float(fade):.4f}|{float(value):g}"
+
+
+def load_cases(path=CASES_PATH):
+    """Precomputed engine results (examples/reon_precompute_cases.py), so the demo is instant. Empty dict if the file is missing."""
+    try:
+        with open(path) as f:
+            return json.load(f).get("cases", {})
+    except (OSError, ValueError):
+        return {}
+
+
+def cached_core(p, fade, value, cases=None):
+    """The precomputed result for this (p, fade, value) at 250 cells and switch cost 15.5, or None. Fields: verdict, build, reasons, dollars_per_kwh, p10_per_kwh, life_plain, life_ours."""
+    return (load_cases() if cases is None else cases).get(case_key(p, fade, value))
 KS = (1, 2, 4, 8, 16, 25)
 OURS = ("selective", "late", "level", "hybrid")
 
@@ -32,18 +55,25 @@ def backup_hours(packs, nameplate_kwh, load_kw, cold=0.8):
     return float(np.median(plain)), float(np.median(managed))
 
 
-def storefront(p, fade, value, elec, packs, load_kw=5.0, nameplate_kwh=60.0, n=N_SERIES, horizon_env=20.0):
+def core(p, fade, value, elec=ELEC, n=N_SERIES):
+    """Run the engine (about 12 s at 250 cells): verdict on an independent seed, 12-year gain per kWh, and simulated lives over 30 years."""
     start = _start(p, n)
     rob = G.robust_recommend(start, n, **_kw(p, fade, value, elec, 12.0, n))
     out, _ = G.safe_recommend(start, n, seed=9, **_kw(p, fade, value, elec, 30.0, n))
     t = out["table"]
     nm = out["ours_best"]
-    life_p, life_o = t["plain"]["years"], t[nm]["years"]
+    return dict(verdict=rob["verdict"], build=rob["build"], reasons=list(rob["reasons"]), dollars_per_kwh=float(rob["mean_gain"]), p10_per_kwh=float(rob["p10_gain"]),
+                life_plain=float(t["plain"]["years"]), life_ours=float(t[nm]["years"]))
+
+
+def storefront(p, fade, value, elec, packs, load_kw=5.0, nameplate_kwh=60.0, n=N_SERIES, horizon_env=20.0, use_cache=True):
+    c = cached_core(p, fade, value) if (use_cache and n == N_SERIES and float(elec) == ELEC) else None
+    c = c or core(p, fade, value, elec, n)
     bp, bm = backup_hours(packs, nameplate_kwh, load_kw)
-    buy = rob["verdict"] == "BUY"
-    res = dict(verdict=rob["verdict"], build=rob["build"], reasons=rob["reasons"], dollars_per_kwh=rob["mean_gain"], dollars_total=rob["mean_gain"] * nameplate_kwh,
-               p10_total=rob["p10_gain"] * nameplate_kwh, life_plain=life_p, life_ours=life_o, backup_plain_h=bp, backup_managed_h=bm, nameplate_kwh=nameplate_kwh, load_kw=load_kw)
-    res["env"] = EN.environmental(nameplate_kwh, life_p, life_o, horizon_env) if buy and life_o > life_p else None
+    buy = c["verdict"] == "BUY"
+    res = dict(verdict=c["verdict"], build=c["build"], reasons=c["reasons"], dollars_per_kwh=c["dollars_per_kwh"], dollars_total=c["dollars_per_kwh"] * nameplate_kwh,
+               p10_total=c["p10_per_kwh"] * nameplate_kwh, life_plain=c["life_plain"], life_ours=c["life_ours"], backup_plain_h=bp, backup_managed_h=bm, nameplate_kwh=nameplate_kwh, load_kw=load_kw)
+    res["env"] = EN.environmental(nameplate_kwh, c["life_plain"], c["life_ours"], horizon_env) if buy and c["life_ours"] > c["life_plain"] else None
     return res
 
 
