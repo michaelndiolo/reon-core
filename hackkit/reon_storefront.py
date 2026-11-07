@@ -1,0 +1,60 @@
+"""Customer view for a C&I site (Tim Ren: chain stores / small commercial, storm night, 60 kWh, 200-300 cells in series).
+Turns the engine's numbers into three things a store owner reads: how many hours the backup lasts, how many years the battery lasts, and dollars.
+One series element is either a single large cell (p = 1) or a parallel group of p cells (REON has not said which): the headline depends on it, so it is a switch.
+Dollars are bankable-horizon (12 years, warranty is 10) per kWh nameplate x nameplate; life is cell-limited and capped at 30 years.
+Everything is a simulation on assumed sodium-ion behaviour; sourced and assumed inputs are tagged in docs/SOURCES.md."""
+from __future__ import annotations
+
+import numpy as np
+
+from hackkit import reon_guard as G
+from hackkit import reon_storm as S
+from hackkit import reon_enviro as EN
+
+N_SERIES = 250
+KS = (1, 2, 4, 8, 16, 25)
+OURS = ("selective", "late", "level", "hybrid")
+
+
+def _kw(p, fade, value, elec, years, n):
+    return dict(value_per_kwh_year=float(value), electronics_per_kwh=float(elec), fade_cv=0.45 / np.sqrt(p), fade_mean=float(fade), loss=0.04, years=float(years),
+                eol_frac=0.7, trials=8, steps=60, ks=tuple(k for k in KS if k < n) or (1,))
+
+
+def _start(p, n):
+    return 100.0 * (1.0 + 0.02 / np.sqrt(p) * np.random.default_rng(3).standard_normal(n))
+
+
+def backup_hours(packs, nameplate_kwh, load_kw, cold=0.8):
+    """Median hours over real packs, plain vs managed, at a steady critical load (cold-weather capacity factor)."""
+    plain = [S.hours(v, nameplate_kwh, load_kw, False, cold) for v in packs.values()]
+    managed = [S.hours(v, nameplate_kwh, load_kw, True, cold) for v in packs.values()]
+    return float(np.median(plain)), float(np.median(managed))
+
+
+def storefront(p, fade, value, elec, packs, load_kw=5.0, nameplate_kwh=60.0, n=N_SERIES, horizon_env=20.0):
+    start = _start(p, n)
+    rob = G.robust_recommend(start, n, **_kw(p, fade, value, elec, 12.0, n))
+    out, _ = G.safe_recommend(start, n, seed=9, **_kw(p, fade, value, elec, 30.0, n))
+    t = out["table"]
+    nm = out["ours_best"]
+    life_p, life_o = t["plain"]["years"], t[nm]["years"]
+    bp, bm = backup_hours(packs, nameplate_kwh, load_kw)
+    buy = rob["verdict"] == "BUY"
+    res = dict(verdict=rob["verdict"], build=rob["build"], reasons=rob["reasons"], dollars_per_kwh=rob["mean_gain"], dollars_total=rob["mean_gain"] * nameplate_kwh,
+               p10_total=rob["p10_gain"] * nameplate_kwh, life_plain=life_p, life_ours=life_o, backup_plain_h=bp, backup_managed_h=bm, nameplate_kwh=nameplate_kwh, load_kw=load_kw)
+    res["env"] = EN.environmental(nameplate_kwh, life_p, life_o, horizon_env) if buy and life_o > life_p else None
+    return res
+
+
+def headline(r, state=None, state_hours=None):
+    """One plain-language paragraph."""
+    if r["verdict"] != "BUY":
+        return (f"At these inputs we would not sell you the cell-level switches: a plain string, or a simpler fix, is as good ({'; '.join(r['reasons'])}). "
+                f"That is a result, not a failure of the tool.")
+    s = (f"On a storm night, a {r['nameplate_kwh']:.0f} kWh battery carrying {r['load_kw']:.0f} kW keeps the lights on about {r['backup_managed_h']:.1f} hours instead of {r['backup_plain_h']:.1f}. "
+         f"The battery lasts about {r['life_ours']:.0f} years instead of {r['life_plain']:.0f} before it has to be replaced, and over the first 12 years it is worth about "
+         f"${r['dollars_total']:,.0f} more (10th percentile ${r['p10_total']:,.0f}).")
+    if state and state_hours:
+        s += f" In {state} a typical outage lasts about {state_hours:.1f} hours."
+    return s

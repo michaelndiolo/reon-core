@@ -1,4 +1,5 @@
 """REON decision layer: dashboard v1 (replays and simulations only; no live hardware link). Run: streamlit run app_final.py
+Front page: customer view (storm night, years, dollars, environmental value). Engineering and evidence tabs sit behind it.
 Tabs: 1 Is it worth it (live engine + go/no-go), 2 Where it flips (break-even map), 3 Life of the string (automatic bypass vs crew), 4 Storm (backup hours), 5 Voltage limit, 6 Evidence and limits."""
 import csv
 import numpy as np
@@ -15,6 +16,8 @@ from hackkit import reon_reliability as RL
 from hackkit import reon_balance as BAL
 from hackkit import reon_ladder as LAD
 from hackkit import reon_system as SYS
+from hackkit import reon_storefront as SF
+from hackkit import reon_enviro as EN
 
 st.set_page_config(page_title="REON decision layer", layout="wide")
 st.title("Beyond the weakest cell: what cell-level control is worth")
@@ -31,7 +34,54 @@ def real_packs():
 
 
 BE = pd.DataFrame({"fade spread 0.20": [16.2, 27.3, 45.7, None], "0.45": [25.4, 42.9, None, None], "0.60": [29.1, 49.4, None, None]}, index=["value 12", "value 22", "value 40", "value 80"])
-t1, t2, t3, t4, t5, t6, t7, t8, t9, t10 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting", "8 Where the money comes from", "9 System view", "10 Balancing and modules"])
+front, eng_wrap = st.tabs(["Customer view: a storm night", "Engineering and evidence"])
+with eng_wrap:
+    t1, t2, t3, t4, t5, t6, t7, t8, t9, t10 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting", "8 Where the money comes from", "9 System view", "10 Balancing and modules"])
+
+with front:
+    st.markdown("**Scope, in one sentence:** one application, a 60 kWh sodium-ion backup battery at a chain store or small commercial site, where we add a decision layer on top of REON's existing per-cell sensing and switches to keep the lights on longer, make the battery last longer, and avoid buying cells twice.")
+    sd0 = pd.read_csv("examples/data/eia_reliability_by_state.csv", comment="#").set_index("state")
+    a = st.columns(5)
+    state0 = a[0].selectbox("Your state", list(sd0.index), index=list(sd0.index).index("California"), key="f_state")
+    load0 = a[1].slider("Critical load during an outage (kW)", 1.0, 10.0, 5.0, key="f_load")
+    kind0 = a[2].radio("What is one position in the string?", ["One large cell", "4 cells in parallel", "16 cells in parallel"], key="f_kind", help="REON has not said which. The answer changes the result (see engineering tab 9).")
+    hard0 = a[3].radio("How hard is the battery used?", ["Gentle (maker's 20,000-cycle claim)", "Typical", "Hot or hard"], index=1, key="f_hard")
+    val0 = a[4].select_slider("What a kWh of battery earns per year ($)", [12, 22, 40, 80], 40, key="f_val", help="12 grid services, 22 EV, 40 to 80 sites that pay demand charges")
+    p0 = {"One large cell": 1, "4 cells in parallel": 4, "16 cells in parallel": 16}[kind0]
+    fade0 = {"Gentle (maker's 20,000-cycle claim)": 0.004, "Typical": 0.008, "Hot or hard": 0.02}[hard0]
+
+    @st.cache_data(show_spinner="Simulating a 250-cell string (about 15 seconds)")
+    def sf_run(p, fade, value):
+        return SF.storefront(p, fade, float(value), 15.5, real_packs())
+
+    r0 = dict(sf_run(p0, fade0, val0))
+    r0["backup_plain_h"], r0["backup_managed_h"] = SF.backup_hours(real_packs(), 60.0, load0)
+    r0["load_kw"] = load0
+    ci = float(sd0.loc[state0, "caidi_major_2025"]) / 60.0
+    st.subheader(f"{'Worth it' if r0['verdict'] == 'BUY' else 'Not worth it here'}")
+    (st.success if r0["verdict"] == "BUY" else st.warning)(SF.headline(r0, state0, ci))
+    m = st.columns(3)
+    m[0].metric("Backup on a storm night", f"{r0['backup_managed_h']:.1f} h", f"{r0['backup_managed_h'] - r0['backup_plain_h']:+.1f} h vs a plain string")
+    m[1].metric("Battery life", f"{r0['life_ours']:.0f} years" if r0["verdict"] == "BUY" else f"{r0['life_plain']:.0f} years", f"{r0['life_ours'] - r0['life_plain']:+.0f} years vs plain" if r0["verdict"] == "BUY" else None)
+    m[2].metric("Worth over the first 12 years", f"${r0['dollars_total']:,.0f}" if r0["verdict"] == "BUY" else "$0", f"pessimistic case ${r0['p10_total']:,.0f}" if r0["verdict"] == "BUY" else None)
+    st.caption(f"Backup is the median over 12 real car packs (Nature Energy 2026) at {load0:.0f} kW, cold-weather capacity 80%. Switching adds a modest amount of hours on day one; the payoff is life and money. "
+               f"{state0}: a typical customer lost power {sd0.loc[state0, 'saidi_major_2025']:.0f} minutes in 2025 across {sd0.loc[state0, 'saifi_major_2025']:.1f} interruptions (EIA-861, utility-wide averages; one store can be far worse).")
+    if r0["verdict"] == "BUY" and r0["life_ours"] > r0["life_plain"]:
+        H0 = st.slider("Environmental horizon (years of service)", 10, 30, 20, key="f_h")
+        e0 = EN.environmental(60.0, r0["life_plain"], r0["life_ours"], H0)
+        st.subheader("Environmental value")
+        k = st.columns(2)
+        k[0].metric("Battery cells not manufactured", f"{e0['kwh_cells_avoided']:.0f} kWh", help="over the horizon, because the string lasts longer")
+        k[1].metric("Manufacturing carbon avoided, net", f"{e0['net_t']:.1f} t CO2e", f"range {round(e0['low_t'], 1) + 0.0:.1f} to {e0['high_t']:.1f} t")
+        st.caption("Embodied carbon: sodium-ion pack 56.8 kg CO2e/kWh (EIA Review study via ess-news.com); Fraunhofer/RWTH cell-level 75 to 87 for sodium-ion. Those figures ignore cycle life, which we supply. "
+                   "Two inputs are assumed, shown as a range: how many avoided cells would really have been replaced (50 to 100%) and the carbon of REON's electronics (1 to 10 kg per kWh, counted in full). "
+                   + ("The sign of the result does not flip inside these ranges." if not e0["sign_can_flip"] else "At the low end this is close to zero: the sign can flip, so treat the carbon claim as small here."))
+    with st.expander("What we are not doing"):
+        st.markdown("- We are not changing REON's hardware. We add the decision layer: which cell to switch out, when to bypass, when to call a crew. REON's hardware keeps safety authority.\n"
+                    "- We are not claiming this for homes, EVs or scooters; the numbers are for a commercial backup battery.\n"
+                    "- We are not claiming a grid-emissions saving. The carbon figure is manufacturing only.\n"
+                    "- Everything here is a simulation or a replay on assumed sodium-ion behaviour; there is no live REON data in it yet. Cell fade, fault rates and switch cost are assumptions or REON statements, tagged in the evidence tab.\n"
+                    "- We do not count benefits beyond the 12-year bankable horizon in the dollar figure. Life beyond that is a projection.")
 
 with t1:
     c = st.columns(5)

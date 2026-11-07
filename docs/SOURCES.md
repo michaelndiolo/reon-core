@@ -59,3 +59,16 @@
 | Temperature effect on ageing | doubling per 10 C | ASSUMED (common rule of thumb, not measured on sodium) | stress mode `sitefade` |
 | Site presets | C&I with a crew nearby; remote minigrid with no crew: visit cost, lead, detect, downtime cost, fault rate | ASSUMED | `hackkit/reon_presets.py` |
 | Current shedding lowers switch loss | conduction loss share = I x R / V | DERIVED (physics) | `slack` in `reon_events.simulate` |
+
+## Added 7 Nov (night): customer front page and environmental number
+| Item | Value | Tag | Source / note |
+|---|---|---|---|
+| Embodied carbon, sodium-ion pack | 56.8 kg CO2e/kWh cradle to gate (China); LFP pack 75.5, about 25 % higher. The study does not account for cycle life | CITED | Environmental Impact Assessment Review study, reported by ess-news.com; read through the article, not the paper itself |
+| Embodied carbon, cell level (opposite ranking) | sodium-ion 75 to 87, LFP 59 to 70 kg CO2e/kWh | CITED | Fraunhofer / RWTH 2025 as reported; cell level, not pack level, so not directly comparable |
+| Embodied-carbon range used | low 56.8, high 87.0, base 68.9 (midpoint of 56.8 and 81, the middle of 75 to 87) | DERIVED | `hackkit/reon_enviro.py`; wired through `reon_carbon.carbon_balance` and `sensitivity` |
+| Share of avoided cells that would really have been replaced | 0.5 / 0.8 / 1.0 | ASSUMED | no source; shown as a range |
+| Embodied carbon of REON's control electronics | 1 / 4 / 10 kg CO2e per kWh nameplate, counted in full | ASSUMED | no source; conservative (whole electronics, not the extra over a BMS) |
+| Grid emissions saved | 0 | not claimed | manufacturing carbon only |
+| Cells not replaced | nameplate x horizon x (1/life plain - 1/life ours) | DERIVED | lives come from the simulated engine (cell-limited, capped at 30 years) |
+| Storm-night backup hours | median over 12 real car packs, 60 kWh, steady load, 80 % cold capacity | REAL cell data, ASSUMED sodium behaviour | `reon_storefront.backup_hours`; switching adds under an hour on day one |
+| Front-page dollars | first 12 years only, whole 60 kWh battery | DERIVED | `reon_storefront.storefront`; cases in `examples/reon_storefront_cases_output.txt` |
