@@ -1,0 +1,16 @@
+top 5 on TRAIN (ranked by worst scenario; mean net, worst scenario):
+  weak line 0.80, persist 3, crew at 3 bypassed, budget 4: 220.5 (worst 175.9)
+  weak line 0.80, persist 3, crew at 3 bypassed, budget 6: 220.5 (worst 175.9)
+  weak line 0.80, persist 2, crew at 3 bypassed, budget 4: 221.0 (worst 175.6)
+  weak line 0.80, persist 2, crew at 3 bypassed, budget 6: 221.0 (worst 175.6)
+  weak line 0.80, persist 5, crew at 3 bypassed, budget 2: 225.4 (worst 174.5)
+
+HOLD-OUT (60 new seeds): detect-and-replace 163.7
+  weak line 0.80, persist 3, crew at 3, budget 4: 222.7 (worst scenario 176.6), vs replace +58.9
+  weak line 0.80, persist 3, crew at 3, budget 6: 222.7 (worst scenario 176.6), vs replace +58.9
+  weak line 0.80, persist 2, crew at 3, budget 4: 222.6 (worst scenario 176.7), vs replace +58.8
+  weak line 0.80, persist 2, crew at 3, budget 6: 222.6 (worst scenario 176.7), vs replace +58.8
+  weak line 0.80, persist 5, crew at 3, budget 2: 226.9 (worst scenario 176.4), vs replace +63.2
+  weak line 0.85, persist 3, crew at 3, budget 4: 213.2 (worst scenario 168.9), vs replace +49.5  <- default
+
+best train setting on hold-out: (0.8, 2, 3, 4) = mean 222.6, worst 176.7; default = mean 213.2, worst 168.9

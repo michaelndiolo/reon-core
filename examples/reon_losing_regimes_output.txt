@@ -1,0 +1,20 @@
+500 stress draws, 89 where we do not beat the best rival (18%)
+  winning rival: {'balancer 9%': 3, 'balancer 5%': 4, 'plain': 24, 'balancer 10%': 2, 'balancer 46%': 3, 'balancer 15%': 1, 'balancer 4%': 3, 'balancer 26%': 2, 'balancer 7%': 3, 'balancer 42%': 3, 'balancer 13%': 1, 'balancer 28%': 2, 'balancer 54%': 2, 'sort only': 3, 'balancer 24%': 4, 'balancer 12%': 1, 'balancer 8%': 4, 'balancer 11%': 1, 'balancer 35%': 2, 'balancer 14%': 2, 'balancer 30%': 2, 'balancer 6%': 3, 'balancer 34%': 1, 'balancer 31%': 2, 'balancer 52%': 2, 'balancer 33%': 1, 'balancer 21%': 1, 'balancer 47%': 1, 'balancer 17%': 1, 'balancer 36%': 2, 'balancer 19%': 1, 'balancer 27%': 1, 'balancer 25%': 1}
+  our best build there: {'hybrid 1/16 + balancer 9%': 2, 'hybrid 1/16 + balancer 5%': 3, 'selective 1/16 cells': 15, 'hybrid 1/16 + balancer 10%': 2, 'hybrid 1/16 + balancer 46%': 3, 'selective: only the 1 weakest cell of the pack': 13, 'hybrid 1/16 + balancer 15%': 1, 'hybrid 1/16 + balancer 26%': 1, 'hybrid 1/16 + balancer 7%': 3, 'hybrid 1/16 + balancer 42%': 3, 'late switches': 14, 'hybrid 1/16 + balancer 54%': 2, 'hybrid 1/16 + balancer 24%': 4, 'hybrid 1/16 + balancer 11%': 1, 'hybrid 1/16 + balancer 35%': 2, 'hybrid 1/16 + balancer 14%': 2, 'hybrid 1/16 + balancer 4%': 2, 'hybrid 1/16 + balancer 30%': 2, 'hybrid 1/16 + balancer 6%': 2, 'hybrid 3/16 + balancer 6%': 1, 'hybrid 1/16 + balancer 31%': 2, 'hybrid 1/16 + balancer 8%': 1, 'hybrid 1/16 + balancer 21%': 1, 'hybrid 1/16 + balancer 47%': 1, 'hybrid 1/16 + balancer 52%': 1, 'hybrid 1/16 + balancer 36%': 2, 'hybrid 1/16 + balancer 19%': 1, 'hybrid 1/16 + balancer 27%': 1, 'hybrid 1/16 + balancer 25%': 1}
+  in those draws our best build vs the PLAIN string: median +6.6, still positive in 69%
+  size of the loss to the best rival: median -1.2, worst -9.7 per kWh nameplate
+
+break-even switch cost vs the best rival (balancer 5 %, cost 4), per kWh nameplate; Tim Ren's range is 7 to 24
+value/kWh-yr  fade CV   usable-energy loss 2 %   loss 5 % (voltage floor)
+       12      0.20                   16.2         16.2
+       12      0.45                   25.4         23.6
+       12      0.60                   29.1         27.3
+       22      0.20                   27.3         26.4
+       22      0.45                   42.9         40.2
+       22      0.60                   49.4         46.6
+       40      0.20                   45.7         43.9
+       40      0.45               above 60     above 60
+       40      0.60               above 60     above 60
+       80      0.20               above 60     above 60
+       80      0.45               above 60     above 60
+       80      0.60               above 60     above 60

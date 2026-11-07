@@ -21,7 +21,7 @@ def _draw(rng, n, months, fade, fcv, start_cv, lam, reps=6):
 
 
 def simulate(policy, seed, n=16, months=144, fade=0.02, fcv=0.45, start_cv=0.02, lam=0.01, lead=1.0, visit_cost=1000.0, nameplate=60.0, value=40.0, e=15.5, cell_cost_per_kwh=98.0,
-             n_min=12, bypass_budget=4, crew_at=3, g=0.87, loss=0.02, persist=3, retire=0.7, rate=0.07):
+             n_min=12, bypass_budget=4, crew_at=3, weak_line=None, g=0.87, loss=0.02, persist=3, retire=0.7, rate=0.07):
     rng = np.random.default_rng(seed)
     f, c0, ft = _draw(rng, n, months, fade, fcv, start_cv, lam)
     gen = np.zeros(n, int)
@@ -32,6 +32,8 @@ def simulate(policy, seed, n=16, months=144, fade=0.02, fcv=0.45, start_cv=0.02,
     theta = 0.85 if policy.startswith("ours") else (1.0 if policy == "replace" else float(policy[3:]))
     if policy == "replace":
         theta = 0.85
+    if weak_line is not None and policy.startswith("ours"):
+        theta = weak_line
     auto = policy != "replace"
     budget = bypass_budget
     pend = None
