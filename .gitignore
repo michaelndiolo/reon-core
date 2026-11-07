@@ -7,3 +7,8 @@
 __pycache__/
 data_external/
 venv/
+
+# private data from REON: never commit
+data/private/
+*.sample.csv
+*_bms_*.csv
