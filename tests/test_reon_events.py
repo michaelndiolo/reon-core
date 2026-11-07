@@ -29,4 +29,17 @@ def test_dead_cell_takes_plain_string_down_but_not_bypassing_one():
 def test_choose_policy_cheap_visits_prefers_replace_or_threshold_and_remote_prefers_auto():
     cheap = E.choose_policy(visit_cost=60.0, lam=0.008, loss=0.09, seeds_pick=range(0, 4), seeds_check=range(100, 104))
     remote = E.choose_policy(visit_cost=6000.0, lam=0.02, seeds_pick=range(0, 4), seeds_check=range(100, 104))
-    assert remote["auto_wins"] and set(cheap["finalists"]) <= set(E.POLICIES)
+    assert remote["auto_wins"] and set(cheap["finalists"]) <= set(E.EXTENDED)
+
+
+def test_bridge_and_detect_and_down_cost():
+    kw = dict(visit_cost=100.0, lam=0.01)
+    assert set(E.EXTENDED) >= {"ours+crew1", "ours+crew2"}
+    a = E.simulate("replace", 1, detect=0.0, down_cost=20.0, **kw)
+    b = E.simulate("replace", 1, detect=6.0, down_cost=20.0, **kw)
+    assert b["down_months"] >= a["down_months"]
+    c = E.simulate("ours+crew1", 1, down_cost=20.0, **kw)
+    assert c["down_months"] == 0
+    import pytest
+    with pytest.raises(ValueError):
+        E.simulate("ours", 1, detect=-1)

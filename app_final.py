@@ -29,7 +29,8 @@ BE = pd.DataFrame({"fade spread 0.20": [16.2, 27.3, 45.7, None], "0.45": [25.4, 
 t1, t2, t3, t4, t5, t6, t7 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting"])
 
 with t1:
-    c = st.columns(4)
+    c = st.columns(5)
+    fade = c[4].slider("Cell fade per year (assumed 0.02; Tim Ren says 20,000-cycle cells, which is about 0.004-0.012)", 0.003, 0.04, 0.02, format="%.3f")
     value = c[0].slider("Value per kWh-year (12 grid, 22 EV, 30-90 demand-charge sites)", 5.0, 100.0, 40.0)
     fcv = c[1].slider("Spread of fade rates between cells (real cars 0.20-0.60)", 0.05, 0.8, 0.45)
     elec = c[2].slider("Switch cost per kWh nameplate (Tim Ren: 7-24)", 2.0, 40.0, 15.5)
@@ -37,8 +38,8 @@ with t1:
     if st.button("Run the engine") or True:
         rng = np.random.default_rng(3)
         start = 100.0 * (1.0 + 0.02 * rng.standard_normal(16))
-        rob = G.robust_recommend(start, 16, value_per_kwh_year=value, electronics_per_kwh=elec, fade_cv=fcv, loss=loss)
-        out, _ = G.safe_recommend(start, 16, value_per_kwh_year=value, electronics_per_kwh=elec, fade_cv=fcv, loss=loss)
+        rob = G.robust_recommend(start, 16, value_per_kwh_year=value, electronics_per_kwh=elec, fade_cv=fcv, loss=loss, fade_mean=fade)
+        out, _ = G.safe_recommend(start, 16, value_per_kwh_year=value, electronics_per_kwh=elec, fade_cv=fcv, loss=loss, fade_mean=fade)
         (st.success if rob["verdict"] == "BUY" else st.warning)(f"Verdict on a fresh seed: {rob['verdict']} ({rob['build']}). " + "; ".join(rob["reasons"]))
         for w in rob["warnings"]:
             st.caption(f"Note: {w}")
@@ -62,19 +63,21 @@ with t2:
     st.write("A logistic go/no-go screen on all inputs, tested on held-out draws, is right 88.5 % of the time against 82.7 % for always saying go, and catches about half the cases we lose: use it as a screen, not a verdict.")
 
 with t3:
-    c = st.columns(4)
+    c = st.columns(6)
     lam = c[0].select_slider("Cell fault rate per cell-year", [0.0002, 0.001, 0.002, 0.01, 0.03], 0.01)
     visit = c[1].select_slider("Cost of one crew visit", [250, 1000, 3000, 6000], 1000)
     lead = c[2].select_slider("Crew lead time (months)", [0.5, 1.0, 2.0, 4.0], 1.0)
     wl = c[3].select_slider("Weak line (fraction of the others)", [0.80, 0.85, 0.90], 0.80)
+    detect = c[4].select_slider("Months before a plain string notices a fault", [0.0, 1.0, 3.0, 6.0], 0.0)
+    dcost = c[5].select_slider("Cost per month down, per kWh nameplate (assumed)", [0, 5, 20, 60], 0)
     rows = []
-    for pol in E.POLICIES:
-        r = [E.simulate(pol, s, lam=lam, visit_cost=float(visit), lead=lead, weak_line=wl) for s in range(40)]
+    for pol in E.EXTENDED:
+        r = [E.simulate(pol, s, lam=lam, visit_cost=float(visit), lead=lead, weak_line=wl, detect=detect, down_cost=float(dcost)) for s in range(40)]
         rows.append({"policy": pol, "net value per kWh": np.mean([x["net"] for x in r]), "crew visits": np.mean([x["visits"] for x in r]), "months down": np.mean([x["down_months"] for x in r]), "life (years)": np.mean([x["life_years"] for x in r])})
     st.dataframe(pd.DataFrame(rows).round(1).set_index("policy"))
-    pick = E.choose_policy(E.POLICIES, lam=lam, visit_cost=float(visit), lead=lead, weak_line=wl)
+    pick = E.choose_policy(E.EXTENDED, lam=lam, visit_cost=float(visit), lead=lead, weak_line=wl, detect=detect, down_cost=float(dcost))
     (st.success if pick["auto_wins"] else st.warning)(f"For this site the policy to use is: {pick['policy']} (picked on one set of random seeds, confirmed on another). " + ("Automatic bypass pays here." if pick["auto_wins"] else "Automatic bypass does NOT pay here: cheap crew visits or a threshold rule do better."))
-    st.write("replace = detect, wait for a crew, swap the cell. thr = fixed-threshold automatic bypass. ours = persistent-fault bypass plus per-cycle switching; ours+crew also books one visit to restore bypassed cells. Fault rates and visit cost are ASSUMED.")
+    st.write("replace = detect, wait for a crew, swap the cell. thr = fixed-threshold automatic bypass. ours = persistent-fault bypass plus per-cycle switching; ours+crew also books one visit to restore bypassed cells; ours+crew1/2 book it after 1 or 2 bypassed cells (cheap-visit sites). Fault rates and visit cost are ASSUMED.")
 
 with t4:
     c = st.columns(4)

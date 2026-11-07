@@ -11,6 +11,7 @@ import numpy as np
 from hackkit.reon_guard import need
 
 POLICIES = ("replace", "thr0.95", "thr0.90", "thr0.85", "thr0.80", "ours", "ours+crew")
+EXTENDED = POLICIES + ("ours+crew1", "ours+crew2")   # bridge variants: bypass at once, then book the crew after 1 or 2 bypassed cells (cheap-visit sites)
 
 
 def _draw(rng, n, months, fade, fcv, start_cv, lam, reps=6):
@@ -22,11 +23,11 @@ def _draw(rng, n, months, fade, fcv, start_cv, lam, reps=6):
 
 
 def simulate(policy, seed, n=16, months=144, fade=0.02, fcv=0.45, start_cv=0.02, lam=0.01, lead=1.0, visit_cost=1000.0, nameplate=60.0, value=40.0, e=15.5, cell_cost_per_kwh=98.0,
-             n_min=12, bypass_budget=4, crew_at=3, weak_line=None, g=0.87, loss=0.02, persist=3, retire=0.7, rate=0.07):
-    need(policy in POLICIES, f"events: unknown policy {policy!r}")
+             n_min=12, bypass_budget=4, crew_at=3, weak_line=None, g=0.87, loss=0.02, persist=3, retire=0.7, rate=0.07, detect=0.0, thr_pays_loss=True, down_cost=0.0):
+    need(policy in EXTENDED, f"events: unknown policy {policy!r}")
     need(n >= 2 and months >= 1 and nameplate > 0 and 0 <= lam <= 1 and fade >= 0 and fcv >= 0 and start_cv >= 0 and visit_cost >= 0 and lead >= 0 and 0 <= loss < 1 and 0 < retire < 1 and 0 <= rate <= 1,
          "events: n >= 2, months >= 1, nameplate > 0, 0 <= fault rate <= 1, costs and spreads >= 0, 0 < retire < 1")
-    need(1 <= n_min <= n and bypass_budget >= 0 and crew_at >= 1 and persist >= 1 and (weak_line is None or 0 < weak_line < 1), "events: 1 <= n_min <= n, budget >= 0, crew_at >= 1, persist >= 1, 0 < weak line < 1")
+    need(1 <= n_min <= n and bypass_budget >= 0 and crew_at >= 1 and persist >= 1 and detect >= 0 and down_cost >= 0 and (weak_line is None or 0 < weak_line < 1), "events: 1 <= n_min <= n, budget >= 0, crew_at >= 1, persist >= 1, 0 < weak line < 1")
     rng = np.random.default_rng(seed)
     f, c0, ft = _draw(rng, n, months, fade, fcv, start_cv, lam)
     gen = np.zeros(n, int)
@@ -40,6 +41,8 @@ def simulate(policy, seed, n=16, months=144, fade=0.02, fcv=0.45, start_cv=0.02,
     if weak_line is not None and policy.startswith("ours"):
         theta = weak_line
     auto = policy != "replace"
+    crew_k = int(policy[9:]) if policy.startswith("ours+crew") and len(policy) > 9 else crew_at
+    bridge = policy.startswith("ours+crew")
     budget = bypass_budget
     pend = None
     pv_val = pv_cost = 0.0
@@ -66,8 +69,8 @@ def simulate(policy, seed, n=16, months=144, fade=0.02, fcv=0.45, start_cv=0.02,
                     flagged[i] = False
         eng = ~byp
         up = not (dead & eng).any()
-        if (flagged.any() or (policy == "ours+crew" and byp.sum() >= crew_at)) and pend is None:
-            pend = t + lead
+        if (flagged.any() or (bridge and byp.sum() >= crew_k)) and pend is None:
+            pend = t + lead + (detect if policy == "replace" else 0.0)
         if pend is not None and t >= pend:
             fl = np.flatnonzero(flagged | (auto & byp) | (dead & ~byp))
             for i in fl:
@@ -87,7 +90,7 @@ def simulate(policy, seed, n=16, months=144, fade=0.02, fcv=0.45, start_cv=0.02,
         elif policy.startswith("ours"):
             usable = ce.sum() * (1 - loss) / n
         else:
-            usable = (live.sum() if auto else eng.sum()) * ce.min() / n
+            usable = (live.sum() if auto else eng.sum()) * ce.min() / n * ((1 - loss) if (auto and thr_pays_loss) else 1.0)   # threshold rivals run on the same switches, so they pay the same conduction loss
         if usable < retire:
             life = t
             break
@@ -96,10 +99,11 @@ def simulate(policy, seed, n=16, months=144, fade=0.02, fcv=0.45, start_cv=0.02,
             pv_val += d * value * nameplate / 12.0 * usable
         else:
             down += 1
+            pv_cost += d * down_cost * nameplate   # resilience penalty per month down, per kWh nameplate (ASSUMED, swept)
     return dict(net=(pv_val - pv_cost) / nameplate, visits=visits, down_months=down, life_years=life / 12.0)
 
 
-def choose_policy(candidates=POLICIES, seeds_pick=range(0, 8), seeds_check=range(100, 108), **kw):
+def choose_policy(candidates=EXTENDED, seeds_pick=range(0, 8), seeds_check=range(100, 108), **kw):
     """Run every policy for THIS site, pick on one set of seeds, confirm on an independent set. The answer can be 'replace' or a fixed threshold:
     automatic bypass is not always right (cheap site visits, tiny bypass budget, high switch loss). Returns dict(policy, net, rivals{name: net}, auto_wins)."""
     def mean(p, seeds):

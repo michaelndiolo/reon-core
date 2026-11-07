@@ -43,3 +43,15 @@
 | Cost of a crew visit | not found in ESMAP, MicrogridNews or the off-grid paper | ASSUMED | still open |
 | Value of lost load per kWh | not found; the LBNL ICE update lists regional GDP per kWh (average $6.93, range $2.8 to $16) which is not an outage cost | ASSUMED | still open; storm page shows a break-even instead |
 | Not read | energy-storage.news EPRI page (site error); PMC thermal-runaway paper (bot check) | - | not worked around |
+
+## Added 7 Nov (evening): Tim Ren's answers (Discord, 3:33 pm) and grid restoration times
+| Item | Value | Tag | Source / note |
+|---|---|---|---|
+| Switch overhead | "Very minimum overhead, but not none" versus a conventional busbar; depends on the internal impedance of the switches. No number given | CITED (REON CTO, verbal) | our 2% default for conduction loss stays ASSUMED; swept 0 to 12% |
+| Warranty, stationary | Industry standard 10 years / 8,000 cycles (mostly from the cell maker) | CITED (REON CTO, verbal) | |
+| Cell life | REON's sodium cells are 20,000-cycle NFPP | CITED (REON CTO, verbal; maker claim, not verified) | implies about 0.4 to 1.2% fade a year at one cycle a day; hero stress mode `longlife` uses 0.003 to 0.012 |
+| Per-cell capacity/SOH sensing accuracy | "Within 5%, often much better; industry standard is around that" | CITED (REON CTO, verbal) | `examples/reon_sensing_noise.py`: weak line 0.15 stays safe |
+| Installed price per kWh | commercial team question (EPC, FEOC, incentives) | UNKNOWN | |
+| Time for a utility to restore power | EIA-861 Table 11.3 (2025 / 2024), CAIDI, minutes per interruption. U.S. without major events 115 / 121; with major events 196 / 402. Maine with major events 162 / 481; Florida 82 / 747 | REAL | https://www.eia.gov/electricity/annual/html/epa_11_03.html. This is grid restoration, not time to service a battery cell |
+| Time to identify, dispatch and repair a battery fault | not found | ASSUMED | lead 0.5 to 3 months and detect 0 to 6 months are swept in `examples/reon_crew_time.py` |
+| Cost per month a string is down | not found | ASSUMED | swept 0 to 60 per kWh nameplate per month |

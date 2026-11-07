@@ -1,0 +1,19 @@
+false bypass rate on real healthy cells (per 1,000 cells)
+error model     line    N=1    N=2    N=3
+bias 5%         0.10   16.5   17.0   17.2
+bias 5%         0.15    1.2    1.1    1.0
+bias 5%         0.20    0.0    0.0    0.0
+gauss 5%        0.10   15.5    7.2    4.4
+gauss 5%        0.15    1.2    0.2    0.0
+gauss 5%        0.20    0.0    0.0    0.0
+bias 2%         0.10   10.6   10.3   10.5
+bias 2%         0.15    0.3    0.5    0.4
+bias 2%         0.20    0.0    0.0    0.0
+\ndetection of a truly weak cell (share flagged), N=3 cycles
+error model     line 15%weak 20%weak 25%weak 30%weak
+bias 5%         0.10    1.00    1.00    1.00    1.00
+bias 5%         0.15    0.47    1.00    1.00    1.00
+bias 5%         0.20    0.00    0.50    1.00    1.00
+gauss 5%        0.10    0.97    1.00    1.00    1.00
+gauss 5%        0.15    0.12    0.97    1.00    1.00
+gauss 5%        0.20    0.00    0.12    0.98    1.00

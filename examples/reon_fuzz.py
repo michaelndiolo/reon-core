@@ -32,8 +32,8 @@ for i, c in enumerate(CAPS):
     check(f"response caps{i}", lambda: R.decide([R.Cell(j, cap_rel=float(x)) for j, x in enumerate(c)], R.Context(n_engaged=len(c))))
 check("response empty cells", lambda: R.decide([], R.Context()))
 for kw in (dict(lam=0.0), dict(lam=1.0), dict(lam=-1.0), dict(n=1), dict(n=2, n_min=12), dict(months=0), dict(months=1), dict(fade=0.0, fcv=0.0), dict(fade=5.0), dict(visit_cost=0.0), dict(lead=0.0), dict(bypass_budget=0), dict(bypass_budget=100),
-           dict(n_min=0), dict(n_min=100), dict(crew_at=0), dict(persist=0), dict(rate=-0.5), dict(retire=0.0), dict(retire=2.0), dict(nameplate=0.0), dict(g=-3.0), dict(weak_line=0.0), dict(weak_line=5.0), dict(start_cv=5.0)):
-    for pol in E.POLICIES:
+           dict(n_min=0), dict(n_min=100), dict(crew_at=0), dict(persist=0), dict(rate=-0.5), dict(retire=0.0), dict(retire=2.0), dict(nameplate=0.0), dict(g=-3.0), dict(weak_line=0.0), dict(weak_line=5.0), dict(start_cv=5.0), dict(detect=-1.0), dict(detect=1e6), dict(down_cost=-1.0), dict(down_cost=1e9), dict(thr_pays_loss=False)):
+    for pol in E.EXTENDED:
         check(f"events {pol} {kw}", lambda: E.simulate(pol, 1, **kw))
 check("events unknown policy", lambda: E.simulate("nonsense", 1))
 KW = dict(balancer_r=0.05, balancer_per_kwh=4.0, ks=(1, 2), fade_mean=0.02, fade_cv=0.45, loss=0.02, electronics_per_kwh=15.0, sort_cost_per_kwh=0.0, value_per_kwh_year=40.0, rate=0.07, years=12.0, eol_frac=0.7,

@@ -1,0 +1,22 @@
+PART 1: gap in net value per kWh nameplate, ours+crew1 minus replace-on-failure, 10 seeds, visit cost 1500, fault rate 0.01/cell-year
+  down_cost = penalty per month the string is down, per kWh nameplate (energy value alone is ~3 per month at 40 per kWh-year; critical loads cost much more)
+ detect  lead  down mo (replace) | gap@down_cost=0    gap@down_cost=5    gap@down_cost=20   gap@down_cost=60  
+    0.0   0.5                2.9 |             +8.9            +18.5            +47.4           +124.4
+    0.0   1.0                2.9 |             +8.9            +18.5            +47.4           +124.4
+    0.0   3.0                8.1 |            +16.9            +43.4           +122.8           +334.4
+    1.0   0.5                5.6 |             +8.7            +27.2            +82.7           +230.6
+    1.0   1.0                5.6 |             +8.7            +27.2            +82.7           +230.6
+    1.0   3.0                9.9 |            +17.2            +49.9           +148.2           +410.2
+    3.0   0.5                9.9 |             +6.9            +39.6           +137.9           +399.9
+    3.0   1.0                9.9 |             +6.9            +39.6           +137.9           +399.9
+    3.0   3.0               14.5 |            +17.1            +64.7           +207.8           +589.2
+    6.0   0.5               16.2 |             +6.7            +60.1           +220.2           +647.2
+    6.0   1.0               16.2 |             +6.7            +60.1           +220.2           +647.2
+    6.0   3.0               19.2 |            +17.5            +81.4           +273.1           +784.2
+
+PART 2: hours of backup at 5 kW from a 60 kWh pack, median of 12 real packs; wait = grid restoration time
+  US typical outage, CAIDI 2025 without major events ~115 min    plain   9.8 h (covers), managed  10.4 h (covers), managed+shed to 60%  17.4 h (covers)
+  US with major events 2025 ~196 min                             plain   9.8 h (covers), managed  10.4 h (covers), managed+shed to 60%  17.4 h (covers)
+  Maine major-event year 2024 ~481 min                           plain   9.8 h (covers), managed  10.4 h (covers), managed+shed to 60%  17.4 h (covers)
+  Florida storm year 2024 ~747 min                               plain   9.8 h (short 2.6 h), managed  10.4 h (short 2.0 h), managed+shed to 60%  17.4 h (covers)
+  Penobscot Dec 2023 anecdote (3 days, UNVERIFIED)               plain   9.8 h (short 62.2 h), managed  10.4 h (short 61.6 h), managed+shed to 60%  17.4 h (short 54.6 h)
