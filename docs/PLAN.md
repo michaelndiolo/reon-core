@@ -24,3 +24,9 @@ OlivAir work stays out. Raw datasets stay in `reon-battery`.
 - Sodium-ion ageing and spread data are missing; say so on the evidence page.
 - New applications (minigrid, storm mode) need sourced inputs and their own stress run; add only after the hero case.
 - Storm mode is a scenario replay, not a safety system.
+
+## Added 7 Nov: autonomous bypass
+- Add an event simulation: cells degrade over time, the policy bypasses on a persistent signal, count bypasses,
+  string-voltage margin, and visits avoided against a "detect and replace" baseline.
+- Value stream: life extension (existing engine) plus avoided visits (new input, ASSUMED until sourced).
+- Compare three policies on the same packs: detect-and-replace, fixed threshold, ours.

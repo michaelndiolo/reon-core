@@ -46,3 +46,23 @@ Outputs
 Net value = present value of (value per kWh-year x usable kWh x years) minus electronics cost, per kWh
 nameplate and per delivered kWh. Resilience value (avoided outage loss) is a second stream, added only with a
 sourced value of lost load. Not yet implemented.
+
+## 5. Autonomous action for remote sites (added 7 Nov, from the team)
+
+Detecting a bad cell is not enough where no crew can easily reach the site (rural minigrid, remote C&I). The
+algorithm's job is to act without a visit: bypass the failing or limiting cell automatically, keep the string
+running, and raise an alert only for what still needs a person. Think of it as a self-healing backup, not an alarm.
+
+Extra inputs: cost of one site visit, visits avoided per year, travel/lead time, minimum cells the inverter or
+string voltage window needs, spare cells (if any), per-event persistence rule (how long a cell must look bad
+before it is bypassed), allowed bypasses per string per year.
+
+Extra outputs: bypass events and when, string voltage margin left after each bypass, visits avoided, extra
+service years, and the net value of life extension plus avoided visits.
+
+Limits to show, not hide:
+- Each bypass removes one cell's voltage. A string can only lose so many before it leaves the inverter window, so
+  show "bypasses remaining" and the first date a visit becomes unavoidable.
+- A false bypass wastes good capacity, so act only on a persistent signal and let the system abstain when unsure.
+- Hard safety limits stay in certified hardware. This layer recommends and logs; it never overrides them.
+- No sourced value for a site visit yet. It is an input with a range and a slider, tagged ASSUMED until sourced.
