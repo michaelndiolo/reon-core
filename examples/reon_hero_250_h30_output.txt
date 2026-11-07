@@ -1,0 +1,14 @@
+250 series elements, value 40 per kWh-year, switch loss 4%. Horizon = years the site is valued for; 12 is bankable (warranty 10 y), 20 and 30 are cell-limited life. Life is capped at the horizon.
+ hor   p fade/yr                switch cost | verdict ours (best)                    gain    p10 margin vs rival | life plain life ours cycles plain cycles ours
+  30   1   0.004                 total cost | BUY     late switches                  66.4   50.6            37.2 |      21.4y     30.0y         7825       10950
+  30   1   0.008                 total cost | BUY     late switches                 137.1  124.3           114.2 |      10.9y     23.8y         3992        8669
+  30   1   0.020                 total cost | BUY     late switches                 100.3   90.0            85.5 |       4.7y      9.7y         1711        3536
+  30   4   0.004                 total cost | BUY     hybrid 1/250 + balancer 5%     17.9   13.9            -2.2 |      28.1y     29.3y        10243       10699
+  30   4   0.008                 total cost | BUY     late switches                  88.0   76.5            64.7 |      14.2y     24.4y         5178        8920
+  30   4   0.020                 total cost | BUY     late switches, sorted          68.6   59.2            56.3 |       6.0y     10.1y         2190        3673
+  30  16   0.004                 total cost | BUY     hybrid 1/250 + balancer 5%      6.5    5.9            -0.3 |      30.0y     30.0y        10950       10950
+  30  16   0.008                 total cost | BUY     late switches                  51.7   43.4            33.1 |      17.2y     24.6y         6273        8988
+  30  16   0.020                 total cost | BUY     late switches                  44.5   35.6            31.7 |       7.2y     10.1y         2623        3673
+  30  40   0.004                 total cost | BUY     hybrid 1/250 + balancer 5%      3.0    2.6            -0.1 |      30.0y     30.0y        10950       10950
+  30  40   0.008                 total cost | BUY     late switches                  36.7   31.0            18.6 |      18.6y     24.6y         6775        8965
+  30  40   0.020                 total cost | BUY     late switches                  31.9   24.9            19.5 |       7.7y     10.0y         2806        3650

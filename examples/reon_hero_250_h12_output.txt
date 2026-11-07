@@ -1,0 +1,16 @@
+250 series elements, value 40 per kWh-year, switch loss 4%. Horizon = years the site is valued for; 12 is bankable (warranty 10 y), 20 and 30 are cell-limited life. Life is capped at the horizon.
+ hor   p fade/yr                switch cost | verdict ours (best)                    gain    p10 margin vs rival | life plain life ours cycles plain cycles ours
+  12   1   0.004                 total cost | BUY     hybrid 1/250 + balancer 5%     11.8   11.8            -0.5 |      12.0y     12.0y         4380        4380
+  12   1   0.008                 total cost | BUY     late switches                  27.3   11.6             8.2 |      10.7y     12.0y         3896        4380
+  12   1   0.020                 total cost | BUY     late switches                  99.4   90.0            88.7 |       4.4y      9.5y         1597        3468
+  12   4   0.004                 total cost | BUY     hybrid 1/250 + balancer 5%      6.2    5.6            -0.1 |      12.0y     12.0y         4380        4380
+  12   4   0.008                 total cost | BUY     hybrid 1/250 + balancer 5%      8.0    7.6            -0.6 |      12.0y     12.0y         4380        4380
+  12   4   0.020                 total cost | BUY     late switches                  70.2   61.7            56.7 |       5.7y      9.8y         2071        3568
+  12  16   0.004                 total cost | BUY     hybrid 1/250 + balancer 5%      1.1    0.8            -0.1 |      12.0y     12.0y         4380        4380
+  12  16   0.008                 total cost | BUY     hybrid 1/250 + balancer 5%      2.7    2.2            -0.1 |      12.0y     12.0y         4380        4380
+  12  16   0.020                 total cost | BUY     late switches, sorted          44.5   37.5            31.7 |       6.9y      9.9y         2509        3595
+  12  40   0.004                 total cost | HOLD    selective 1/250 cells          -0.1   -0.1            -0.1 |      12.0y     12.0y         4380        4380
+  12  40   0.008                 total cost | HOLD    hybrid 1/250 + balancer 5%      0.2   -0.1            -0.1 |      12.0y     12.0y         4380        4380
+  12  40   0.020                 total cost | BUY     late switches                  32.8   27.8            18.8 |       7.4y      9.8y         2710        3586
+  12   1   0.008 extra cost only (3.5x BMS) | BUY     late switches                  31.9   16.3            12.9 |      10.7y     12.0y         3896        4380
+  12  40   0.008 extra cost only (3.5x BMS) | HOLD    hybrid 1/250 + balancer 5%      0.2   -0.1            -0.0 |      12.0y     12.0y         4380        4380

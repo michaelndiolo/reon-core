@@ -11,6 +11,10 @@ from hackkit import reon_wear as W
 from hackkit import reon_guard as G
 from hackkit import reon_rank as RK
 from hackkit import reon_presets as PR
+from hackkit import reon_reliability as RL
+from hackkit import reon_balance as BAL
+from hackkit import reon_ladder as LAD
+from hackkit import reon_system as SYS
 
 st.set_page_config(page_title="REON decision layer", layout="wide")
 st.title("Beyond the weakest cell: what cell-level control is worth")
@@ -27,7 +31,7 @@ def real_packs():
 
 
 BE = pd.DataFrame({"fade spread 0.20": [16.2, 27.3, 45.7, None], "0.45": [25.4, 42.9, None, None], "0.60": [29.1, 49.4, None, None]}, index=["value 12", "value 22", "value 40", "value 80"])
-t1, t2, t3, t4, t5, t6, t7, t8 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting", "8 Where the money comes from"])
+t1, t2, t3, t4, t5, t6, t7, t8, t9, t10 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting", "8 Where the money comes from", "9 System view", "10 Balancing and modules"])
 
 with t1:
     c = st.columns(5)
@@ -38,6 +42,9 @@ with t1:
     fcv = c[1].slider("Spread of fade rates between cells (real cars 0.20-0.60)", 0.05, 0.8, 0.45)
     elec = c[2].slider("Switch cost per kWh nameplate (Tim Ren: 7-24)", 2.0, 40.0, 15.5)
     loss = c[3].slider("Usable-energy loss: switches + voltage floor", 0.0, 0.10, 0.04)
+    extra = st.checkbox("Count only the extra cost over a conventional BMS (Tim Ren: REON electronics are 3 to 4 times a BMS, so the extra is 67 to 75% of the total)", False)
+    if extra:
+        elec = SYS.incremental_cost(elec, 3.5)
     if st.button("Run the engine") or True:
         rng = np.random.default_rng(3)
         start = 100.0 * (1.0 + 0.02 * rng.standard_normal(16))
@@ -106,8 +113,12 @@ with t4:
                         "managed + load shed": [min(S.hours(v, 60.0, load, True, cold, ff, power_fraction=shed), 72) for v in pk.values()]}, index=list(pk))
     st.bar_chart(tab)
     st.write(f"Median hours over the 12 real packs (72 h outage, 60 kWh, no solar): plain {tab['plain'].median():.1f}, managed {tab['managed'].median():.1f}, managed with load shed {tab['managed + load shed'].median():.1f}.")
-    st.caption(f"Effective fade used: {fade:.3f} per year. In the 120-draw stress test, capacity gain beat the best rival 29% of the time below 0.006 a year, 70% at 0.006-0.012, and 88% above 0.012 (hot or heavily cycled sites).")
     st.write("In bypass mode the remaining cells carry n/(n-k) more current: wear x1.06 for 1 of 16 bypassed, x1.28 for 4 (DoD exponent 0.87). Storm days cost cents of pack life; leaving healthy cells bypassed all year does not.")
+    sd = pd.read_csv("examples/data/eia_reliability_by_state.csv", comment="#").set_index("state")
+    stt = st.selectbox("State (EIA-861 reliability, 2025 and 2024)", list(sd.index), index=list(sd.index).index("California"))
+    r = sd.loc[stt]
+    st.write(f"{stt}: a typical customer lost power {r.saidi_no_major_2025:.0f} min in 2025 without major events and {r.saidi_major_2025:.0f} min with them ({r.saidi_major_2024:.0f} in 2024), over {r.saifi_major_2025:.1f} interruptions; one interruption lasted about {r.caidi_major_2025/60:.1f} h on average ({r.caidi_major_2024/60:.1f} h in 2024). "
+             f"The managed pack above lasts {tab['managed'].median():.1f} h at this load. Real data, tagged REAL in docs/SOURCES.md; they are utility-wide averages, a single store can be far worse.")
 
 with t5:
     vm = st.slider("System minimum voltage as a fraction of nominal string voltage (REON's value is UNKNOWN)", 0.60, 0.80, 0.70, 0.05)
@@ -158,3 +169,61 @@ with t8:
     lb, ld = fault_breakeven(tuple(sorted(kw8.items())))
     st.write("Fault rate at which automatic bypass starts to pay at this site: " + (f"{lb:.4f} per cell-year (about {100*(1-(1-lb)**16):.0f}% of 16-cell strings a year)" if lb is not None and ld == "above" else ("it pays at any fault rate here" if ld == "always a" else "it does not pay at any fault rate up to 0.1 here")) + ". The fault rate is the number to ask REON for.")
     st.caption("At slow fade the capacity stream is near zero or negative: the case rests on faults, crew visits and downtime, and the downtime cost is assumed.")
+
+with t9:
+    st.write("System level, the way Tim Ren frames it: how many charges does the whole string last, and how likely is it to survive? Life is cell-limited here (30-year horizon, retire at 70% of day-1); the bankable value in tab 1 stops at 12 years.")
+    c = st.columns(5)
+    n9 = c[0].select_slider("Cells in series per string", [16, 48, 112, 250], 250, key="n9")
+    p9 = c[1].select_slider("Cells in parallel per series element (unknown: ask REON)", [1, 4, 16, 40], 1, key="p9")
+    f9 = c[2].select_slider("Fade per year at 25 C", [0.004, 0.008, 0.012, 0.02], 0.008, key="f9")
+    v9 = c[3].select_slider("Value per kWh-year", [12, 22, 40, 80], 40, key="v9")
+    e9 = c[4].select_slider("Switch cost per kWh", [7.0, 11.0, 15.5, 24.0], 15.5, key="e9")
+
+    @st.cache_data(show_spinner="Running the engine")
+    def rec9(n, p, f, v, e):
+        rng9 = np.random.default_rng(3)
+        start = 100.0 * (1.0 + 0.02 / np.sqrt(p) * rng9.standard_normal(n))
+        ks = tuple(k for k in (1, 2, 4, 8, 16, 25) if k < n) or (1,)
+        out, _ = G.safe_recommend(start, n, value_per_kwh_year=float(v), electronics_per_kwh=float(e), fade_cv=0.45 / np.sqrt(p), fade_mean=float(f), loss=0.04, years=30.0, eol_frac=0.7, trials=8, steps=60, ks=ks)
+        return out
+
+    o9 = rec9(n9, p9, f9, v9, e9)
+    sv = SYS.system_view(o9["table"])
+    names = ["plain", o9["ours_best"], o9["rival_best"]]
+    rows = [{"build": nm, "service life (y)": sv[nm]["years"], "system cycles": sv[nm]["system_cycles"], "share of the 20,000-cycle cell rating": sv[nm]["share_of_cell_rating"], "lifetime kWh per kWh nameplate": sv[nm]["lifetime_kwh_per_kwh_nameplate"],
+             "cost per kWh delivered": sv[nm]["cost_per_kwh_delivered"]} for nm in dict.fromkeys(names)]
+    st.dataframe(pd.DataFrame(rows).round(2).set_index("build"))
+    st.caption("System cycles at one cycle a day. Warranty standard 10 years / 8,000 cycles (Tim Ren). Cost per kWh delivered uses an assumed 98 per kWh cell cost plus the build's electronics. Life stops at 30 years in this view.")
+    d = st.columns(3)
+    lam9 = d[0].select_slider("Faults per cell-year (assumed; ask REON)", [0.0005, 0.001, 0.002, 0.005, 0.01], 0.002, key="lam9")
+    yr9 = d[1].select_slider("Years", [5, 10, 15, 20], 10, key="yr9")
+    vm9 = d[2].select_slider("Lowest string voltage the inverter accepts (share of full)", [0.7, 0.8, 0.9], 0.9, key="vm9")
+    pc = RL.p_from_rate(lam9, yr9)
+    kcap = RL.bypass_cap(n9, vm9)
+    ks9 = list(range(0, max(kcap, 1) + 1))
+    surv = pd.DataFrame({"chance the string survives": [RL.survival(n9, pc, k) for k in ks9]}, index=ks9)
+    st.line_chart(surv)
+    st.write(f"Each cell fails over {yr9} years with probability {100*pc:.1f}%. A plain string of {n9} cells survives {100*RL.survival(n9, pc, 0):.1f}% of the time. Tolerating {kcap} dead cells (the voltage limit) it survives {100*RL.survival(n9, pc, kcap):.2f}%. "
+             f"Each cell would need {100*RL.required_cell_survival(n9, 0.99):.4f}% survival for a plain string to reach 99%. Independent failures assumed; bypass does not fix a short or a thermal event, and REON's hardware keeps safety authority.")
+
+with t10:
+    st.write("Why not just balance? Passive balancers move about 0.25 A and only waste energy as heat; active balancers move 0.5 to 6 A. Keeping one weak cell in step needs about load current x capacity gap. Loss goes as current squared (Tim Ren). Switches move no charge.")
+    c = st.columns(3)
+    ah = c[0].select_slider("Cell size (Ah)", [20, 50, 100], 50, key="ah10")
+    cr = c[1].select_slider("Discharge rate (C)", [0.15, 0.3, 0.5], 0.3, key="cr10")
+    gp = c[2].select_slider("Capacity gap of the weak cell", [0.03, 0.08, 0.15, 0.32], 0.15, key="gp10")
+    a = BAL.assess(ah, cr, gp)
+    st.write(f"Needed balancing current {a['needed_a']:.2f} A. Passive (0.25 A max): {'enough' if a['passive_ok'] else 'not enough'}. Active (6 A max): {'enough' if a['active_ok'] else 'NOT enough'}; efficiency {100*a['efficiency']:.0f}%, heat {a['heat_w']:.1f} W per channel, "
+             f"energy lost {a['energy_lost_pct_of_throughput']:.1f}% of throughput. Passive balancing 20 Ah of imbalance at 1 A takes 20 h; at 0.25 A, 80 h. Path resistance is ASSUMED (90% efficient at 3 A).")
+    rowsb = [{"gap": g, **{f"{cc} C needs (A)": BAL.assess(ah, cc, g)["needed_a"] for cc in (0.15, 0.3, 0.5)}, "active can": all(BAL.assess(ah, cc, g)["active_ok"] for cc in (0.15, 0.3, 0.5))} for g in (0.03, 0.08, 0.15, 0.32)]
+    st.dataframe(pd.DataFrame(rowsb).round(2).set_index("gap"))
+    st.write("Module-level versus cell-level switching (second life): gain over a plain string, 240 cells in modules of 24, 10% mean capacity loss. Cells inside a module age differently by position, so module-level keeps only part of the gain.")
+    bs = st.select_slider("Share of the fade spread that is BETWEEN modules", [0.0, 0.3, 0.6, 0.9], 0.3, key="bs10")
+
+    @st.cache_data(show_spinner=False)
+    def lad(b):
+        return LAD.ladder(between_share=b, trials=500)
+
+    r10 = lad(bs)
+    st.bar_chart(pd.DataFrame({"gain over plain, %": [100 * r10[g] for g in (1, 6, 12, 24, 48)]}, index=["each cell", "6 cells per switch", "12 per switch", "module of 24", "2 modules (48)"]))
+    st.caption(f"Switching whole modules keeps {100*r10[24]/r10[1]:.0f}% of the cell-level gain here. Our own simulation, independent lognormal draws; ask REON for teardown data.")

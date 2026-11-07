@@ -43,3 +43,6 @@ Source: live call notes and Discord. The call transcripts are speech-to-text and
 5. Visit cost and fault-to-fix time; second-life disassembly and testing cost.
 6. Does REON offer module-level switching, and how many cells per switch?
 7. Command interface, latency, update rate, sensing definition and rate.
+
+## Built from these notes (7 Nov, night)
+See `docs/STRESS.md`, section "Fixes from Tim Ren's problems". Key result: the capacity-gain headline depends on whether a series element is a single cell (large gain) or a parallel group (small at slow fade). Ask REON first.

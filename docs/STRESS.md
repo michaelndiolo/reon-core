@@ -28,6 +28,38 @@ Every run is reproducible from `examples/`; saved outputs sit beside the scripts
 | Where the money comes from | `reon_events.value_streams`, `numbers.json` | Remote minigrid preset (visit 3,000, lead 3 months, detect 3 months, fault rate 0.01, downtime cost 20 ASSUMED), fade 0.004: capacity and switch cost -7, dead cells kept working +16, crew visits avoided +80, downtime avoided +201, total +289. With downtime cost 0 the total is +89. C&I site with a crew nearby (visit 500): total +5 to +9 per kWh, so the case there is thin |
 | Break-even fault rate | `reon_events.break_even` | Automatic bypass starts to beat replace-on-failure at 0.002 faults per cell-year at the remote preset (about 3% of 16-cell strings a year), and at 0.0044 at the C&I preset with 0.004 fade. The field fault rate is the number to get from REON |
 
+## Fixes from Tim Ren's problems (7 Nov, night)
+| Tim's problem | Fix | Where |
+|---|---|---|
+| Strings are 200 to 300 cells, not 16 | Hero rerun at 250 series elements, single cell versus parallel group of p small cells (spread shrinks by the square root of p) | `examples/reon_hero_250.py`, outputs `reon_hero_250_h12_output.txt` and `_h30_output.txt` |
+| System life, not cell life; cell 20,000 cycles vs system guarantee 8,000 | System view: service life, system cycles, share of the cell rating, lifetime kWh per kWh, cost per kWh delivered | `hackkit/reon_system.py`, dashboard tab 9 |
+| Weak cells condemn the pack; reliability comes from architecture | Survival of n cells in series versus tolerating k dead cells; budget limited by the inverter voltage floor | `hackkit/reon_reliability.py`, dashboard tab 9 |
+| Why not balance? Loss goes as I squared R | Balancer feasibility: needed current, efficiency, heat, hours to balance, passive and active limits | `hackkit/reon_balance.py`, dashboard tab 10 |
+| Module-level second life still has within-module spread | Granularity ladder: cell, module, none; between-module share swept | `hackkit/reon_ladder.py`, dashboard tab 10 |
+| REON costs 3 to 4 times a BMS | Extra-cost-only switch: (k-1)/k of the total | `reon_system.incremental_cost`, dashboard tab 1 |
+| Use state blackout statistics; midnight storm scenario | State picker with SAIDI, SAIFI, CAIDI beside the backup hours | `examples/data/eia_reliability_by_state.csv`, dashboard tab 4 |
+| Do not publish sensor data; value is in curves and trends | Sample first-look script; REON samples blocked from git | `examples/reon_bms_sample_check.py`, `.gitignore` |
+
+### 250 series elements, value 40 per kWh-year, switch loss 4%, 8 trials (verdict picked on one seed, checked on another)
+12-year bankable horizon (warranty is 10 years):
+- Single cells (p = 1): fade 0.004 a year, gain over plain +11.8 per kWh and a tie with a balancer (margin -0.5); 0.008, +27.3 (margin +8.2); 0.02, +99.4 (margin +88.7).
+- Parallel groups of 4: gain +6.2 at 0.004 and +8.0 at 0.008, ties with a balancer; +70.2 at 0.02.
+- Parallel groups of 16: +1.1 and +2.7 at slow fade; +44.5 at 0.02.
+- Parallel groups of 40: HOLD at 0.004 and 0.008 (gain about 0); +32.8 at 0.02.
+- Counting only the extra cost over a BMS (x0.7): p = 1, 0.008, +31.9 (from +27.3); p = 40 still HOLD.
+
+Cell-limited life (30-year horizon), system cycles at one cycle a day, plain versus best of ours:
+- p = 1, fade 0.004: 7,825 vs 10,950 (capped); 0.008: 3,992 vs 8,669; 0.02: 1,711 vs 3,536.
+- p = 40, fade 0.008: 6,775 vs 8,965; 0.02: 2,806 vs 3,650.
+
+What this says: with single large cells the plain string reaches 70% at about 4,000 cycles (fade 0.008), half the 8,000-cycle system standard, and per-cell control roughly doubles that. With parallel groups and slow fade, the capacity case disappears inside a bankable horizon, so uptime and avoided visits carry the argument. Gains beyond about 15 years are not bankable (inverter and enclosure life), which is why the 30-year figures are shown as cell-limited life only.
+
+### Balancing (Monolithic Power for the 0.25 A and 6 A limits; path resistance assumed)
+Needed balancing current is load current times the capacity gap. A 15% gap at 0.5C on a 100 Ah cell needs 7.5 A, over the 6 A limit; a 32% gap exceeds it at all but the gentlest settings.
+
+### Module versus cell (our simulation)
+240 cells in modules of 24, 10% mean capacity loss: switching whole modules keeps 42% of the cell-level gain if all the spread is inside modules and 76% if 90% of it is between modules.
+
 ## What this means for the pitch
 - If the cells really fade 0.4 to 1.2% a year, lead with reliability and avoided crew visits at remote sites, not with extra capacity. Capacity gain returns above about 0.006 a year, which hot cabinets and two cycles a day reach. Lead with reliability and avoided crew visits at remote sites, not with extra capacity. Capacity gain is the headline only at normal lithium-like fade rates.
 - The 20,000-cycle figure is the cell maker's claim and Tim said so himself. Ask him for a measured cell-to-cell spread on sodium.
