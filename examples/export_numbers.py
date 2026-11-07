@@ -6,12 +6,14 @@ from hackkit import reon_events as E, reon_guard as G, reon_presets as PR, reon_
 
 out = {"generated": datetime.date.today().isoformat(), "units": "net value per kWh nameplate, present value, unless stated", "note": "Simulations and replays only. Hardware keeps safety authority."}
 
-rng = np.random.default_rng(3); start = 100.0 * (1.0 + 0.02 * rng.standard_normal(16))
+# Hero numbers come from the SAME precomputed 250-cell cases the dashboard shows (examples/data/storefront_cases.json), so no page can disagree with another.
+# 60 kWh, switch cost 15.5 per kWh, value 40 per kWh-year, one large cell per position; gain is the 12-year net value per kWh nameplate against a plain string.
+from hackkit import reon_storefront as SF
 hero = []
 for fade in (0.004, 0.008, 0.02):
-    r = G.robust_recommend(start, 16, value_per_kwh_year=40.0, electronics_per_kwh=15.5, fade_cv=0.45, loss=0.04, fade_mean=fade, trials=10, steps=32)
-    hero.append(dict(fade_per_year=fade, verdict=r["verdict"], build=r["build"], gain_vs_plain=round(r["mean_gain"], 1), p10_gain_vs_plain=round(r["p10_gain"], 1), reasons=r["reasons"], warnings=r["warnings"]))
-out["hero_capacity"] = dict(tags="fade ASSUMED (Tim Ren 20,000-cycle claim implies 0.004 to 0.012); value CITED/DERIVED; switch cost CITED range 7 to 24", rows=hero)
+    c = SF.cached_core(1, fade, 40)
+    hero.append(dict(fade_per_year=fade, verdict=c["verdict"], build=c["build"], gain_vs_plain=round(c["dollars_per_kwh"], 1), p10_gain_vs_plain=round(c["p10_per_kwh"], 1), reasons=c["reasons"], warnings=[]))
+out["hero_capacity"] = dict(tags="250 cells in series, one large cell per position; fade ASSUMED (Tim Ren 20,000-cycle claim implies 0.004 to 0.012); value CITED/DERIVED; switch cost 15.5 (CITED range 7 to 24). Does NOT enforce the inverter voltage window for the late-switch build: see docs/SOURCES.md", rows=hero)
 
 sites = {}
 for name, base in PR.PRESETS.items():
@@ -29,9 +31,9 @@ car = {}
 for p, _, _, late in rows:
     car.setdefault(p, []).append(float(late))
 packs = [np.array(v) for v in car.values()]
-out["backup_hours"] = dict(tags="cell data REAL (Nature Energy 2026, 12 cars); 60 kWh, 5 kW load, no solar; grid restoration times REAL (EIA-861 Table 11.3)",
-                           plain=round(float(np.median([min(S.hours(c, 60.0, 5.0, False, 1.0, None), 72) for c in packs])), 1), managed=round(float(np.median([min(S.hours(c, 60.0, 5.0, True, 1.0, None), 72) for c in packs])), 1),
-                           managed_shed60=round(float(np.median([min(S.hours(c, 60.0, 5.0, True, 1.0, None, 0.6), 72) for c in packs])), 1),
+_pl, _mg, _sh = SF.backup_policies({k: np.array(v) for k, v in car.items()}, 60.0, 5.0)
+out["backup_hours"] = dict(tags="cell data REAL (Nature Energy 2026, 12 cars); 60 kWh, 5 kW, cold-weather capacity 80% (same as the dashboard); boundary: string DC terminals, no inverter loss, no solar; grid restoration times REAL (EIA-861 Table 11.3)",
+                           plain=round(_pl, 1), managed=round(_mg, 1), managed_shed50=round(_sh, 1),
                            grid_restoration_hours=dict(us_typical=1.9, us_major_events_2025=3.3, maine_2024=8.0, florida_2024=12.4))
 
 def win(path):

@@ -110,3 +110,10 @@
 | What "slope and curve" meant | Tim Ren's recorded wording is garbled; this is our reading | OPEN | confirm with Tim; REON per-cell history would give the real curve |
 | Gain against wear | 12-year gain per kWh at fade 0.004 to 0.02, four parallel arrangements, four values of a kWh-year | DERIVED | `reon_storefront.gain_vs_fade` reads only the cached cases |
 | State tile map | 51 tiles in an NPR-style grid; layers Exposure (SAIDI major events 2025), Coverage (cell-level backup hours / CAIDI major 2025 in hours), Where to pilot (SAIDI hours x kW x value of lost load) | REAL (EIA-861) / DERIVED | `hackkit/reon_map.py`; utility-wide state averages, not a store's own record; the only sourced value of lost load is the Texas anchor (35.7 $/kWh), everything else on the slider is the user's choice |
+
+## Added 7 Nov (night): checks after a teammate's review
+| Item | Finding | Tag | Note |
+|---|---|---|---|
+| numbers.json | was a stale 16-cell export (11.4 per kWh, 9.8 h plain, no cold factor); regenerated from the same 250-cell cached cases the dashboard shows (27.3 per kWh, 7.9 / 8.4 / 16.7 h) | FIXED | `examples/export_numbers.py` now reads `storefront_cases.json` and `reon_storefront.backup_policies` |
+| System boundary | energy and hours are counted at the string DC terminals; no inverter loss, no solar; kW power capability not modelled | OPEN (stated on the page) | a lifetime delivered-kWh figure, plain against ours, is still to add |
+| Voltage floor in the life simulation | the late-switch and level-switch builds in `reon_wear` bypass any number of empty cells; only the selective and hybrid builds are limited (at most 25 of 250 switches); `reon_events` limits a count (n_min), not a voltage | OPEN | one test (pick seed, typical wear, value 40): late switches 30.8, balancer alone 22.9, hybrid 1 switch + balancer 18.3, selective 25 switches 2.6 per kWh; inverter minimum UNKNOWN |

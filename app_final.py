@@ -72,7 +72,8 @@ with eng_wrap:
     t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting", "8 Where the money comes from", "9 System view", "10 Balancing and modules", "11 What to ask REON first", "12 Who buys and how it ships"])
 
 with front:
-    st.markdown("**Scope, in one sentence:** one application, a 60 kWh sodium-ion backup battery at a chain store or small commercial site, where we add a decision layer on top of REON's existing per-cell sensing and switches to keep the lights on longer, make the battery last longer, and avoid buying cells twice.")
+    st.markdown("One application: a 60 kWh sodium-ion backup battery at a chain store or small commercial site. We add a decision layer on top of REON's per-cell sensing and switches. "
+                "The same engine fits any stationary backup customer; only the load, the value of a kWh and the outage length change.")
     sd0 = pd.read_csv("examples/data/eia_reliability_by_state.csv", comment="#").set_index("state")
     ss0 = st.session_state
     ss0.setdefault("map_ver", 0)
@@ -103,12 +104,14 @@ with front:
         st.caption("Click a tile to set your state below. State averages from the utilities' reports (EIA-861), not a store's own outage record. "
                       + ("Coverage uses your load setting and the cell-level backup hours." if layer == "Coverage" else "")
                       + (" Load at risk = hours without power x your load x the value above; one sourced anchor (Texas), the rest is your call." if layer == "Where to pilot" else ""))
-    a = st.columns(5)
-    state0 = a[0].selectbox("Your state", list(sd0.index), index=list(sd0.index).index("California"), key="f_state")
-    load0 = a[1].slider("Critical load during an outage (kW)", 1.0, 10.0, 5.0, key="f_load")
-    kind0 = a[2].radio("What is one position in the string?", ["One large cell", "4 cells in parallel", "16 cells in parallel"], key="f_kind", help="REON has not said which. The answer changes the result (see engineering tab 9).")
-    hard0 = a[3].radio("How hard is the battery used?", ["Gentle (maker's 20,000-cycle claim)", "Typical", "Hot or hard"], index=1, key="f_hard")
-    val0 = a[4].select_slider("What a kWh of battery earns per year ($)", [12, 22, 40, 80], 40, key="f_val", help="12 grid services, 22 EV, 40 to 80 sites that pay demand charges")
+    ctrl, res = st.columns([1, 2.6], gap="large")
+    with ctrl:
+        st.markdown("**Your site**")
+        state0 = st.selectbox("State", list(sd0.index), index=list(sd0.index).index("California"), key="f_state")
+        load0 = st.slider("Critical load during an outage (kW)", 1.0, 10.0, 5.0, key="f_load")
+        kind0 = st.radio("What is one position in the string?", ["One large cell", "4 cells in parallel", "16 cells in parallel"], key="f_kind", help="REON has not said which. The answer changes the result (see engineering tab 9).")
+        hard0 = st.radio("How hard is the battery used?", ["Gentle (maker's 20,000-cycle claim)", "Typical", "Hot or hard"], index=1, key="f_hard")
+        val0 = st.select_slider("What a kWh of battery earns per year ($)", [12, 22, 40, 80], 40, key="f_val", help="12 grid services, 22 EV, 40 to 80 sites that pay demand charges")
     p0 = {"One large cell": 1, "4 cells in parallel": 4, "16 cells in parallel": 16}[kind0]
     fade0 = {"Gentle (maker's 20,000-cycle claim)": 0.004, "Typical": 0.008, "Hot or hard": 0.02}[hard0]
 
@@ -120,29 +123,38 @@ with front:
     r0["backup_plain_h"], r0["backup_managed_h"] = SF.backup_hours(real_packs(), 60.0, load0)
     r0["load_kw"] = load0
     ci = float(sd0.loc[state0, "caidi_major_2025"]) / 60.0
-    st.subheader(f"{'Worth it' if r0['verdict'] == 'BUY' else 'Not worth it here'}")
-    (st.success if r0["verdict"] == "BUY" else st.warning)(SF.headline(r0, state0, ci).replace("$", "\\$"))
-    m = st.columns(3)
-    m[0].metric("Backup on a storm night", f"{r0['backup_managed_h']:.1f} h", f"{r0['backup_managed_h'] - r0['backup_plain_h']:+.1f} h vs a plain string")
-    m[1].metric("Battery life", f"{r0['life_ours']:.0f} years" if r0["verdict"] == "BUY" else f"{r0['life_plain']:.0f} years", f"{r0['life_ours'] - r0['life_plain']:+.0f} years vs plain" if r0["verdict"] == "BUY" else None)
-    m[2].metric("Worth over the first 12 years", f"${r0['dollars_total']:,.0f}" if r0["verdict"] == "BUY" else "$0", f"pessimistic case ${r0['p10_total']:,.0f}" if r0["verdict"] == "BUY" else None)
-    st.caption(f"Backup is the median over 12 real car packs (Nature Energy 2026) at {load0:.0f} kW, cold-weather capacity 80%. Switching adds a modest amount of hours on day one; the payoff is life and money. "
-               f"{state0}: a typical customer lost power {sd0.loc[state0, 'saidi_major_2025']:.0f} minutes in 2025 across {sd0.loc[state0, 'saifi_major_2025']:.1f} interruptions (EIA-861, utility-wide averages; one store can be far worse).")
     pp, pm, ps = SF.backup_policies(real_packs(), 60.0, load0)
-    st.markdown("**Same battery, three ways to run it**")
-    st.altair_chart(VZ.policies_chart(pp, pm, ps), use_container_width=True)
-    st.caption("Median of 12 real car packs at this load, cold-weather capacity 80%. 'Shed load' keeps half the load running (the site chooses which loads count as life-safety). A plain string with one open cell delivers nothing; cell-level control bypasses it.")
-    if r0["verdict"] == "BUY" and r0["life_ours"] > r0["life_plain"]:
-        H0 = st.slider("Environmental horizon (years of service)", 10, 30, 20, key="f_h")
-        e0 = EN.environmental(60.0, r0["life_plain"], r0["life_ours"], H0)
-        st.subheader("Environmental value")
-        k = st.columns(3)
-        k[0].metric("Battery cells not manufactured", f"{e0['kwh_cells_avoided']:.0f} kWh", help="over the horizon, because the string lasts longer")
-        k[1].metric("Battery material not made", f"about {e0['material_kg']:,.0f} kg", help="assumes 10 kg of battery per kWh of cells: a placeholder until REON gives pack mass")
-        k[2].metric("Manufacturing carbon avoided, net", f"{e0['net_t']:.1f} t CO2e", f"range {round(e0['low_t'], 1) + 0.0:.1f} to {e0['high_t']:.1f} t")
-        st.caption("Embodied carbon: sodium-ion pack 56.8 kg CO2e/kWh (EIA Review study via ess-news.com); Fraunhofer/RWTH cell-level 75 to 87 for sodium-ion. Those figures ignore cycle life, which we supply. "
-                   "Two inputs are assumed, shown as a range: how many avoided cells would really have been replaced (50 to 100%) and the carbon of REON's electronics (1 to 10 kg per kWh, counted in full). "
-                   + ("The sign of the result does not flip inside these ranges." if not e0["sign_can_flip"] else "At the low end this is close to zero: the sign can flip, so treat the carbon claim as small here."))
+    with res:
+        st.subheader(f"{'Worth it' if r0['verdict'] == 'BUY' else 'Not worth it here'}")
+        (st.success if r0["verdict"] == "BUY" else st.warning)(SF.headline(r0, state0, ci).replace("$", "\\$"))
+        m = st.columns(3)
+        m[0].metric("Backup on a storm night", f"{r0['backup_managed_h']:.1f} h", f"{r0['backup_managed_h'] - r0['backup_plain_h']:+.1f} h vs a plain string")
+        m[1].metric("Battery life", f"{r0['life_ours']:.0f} years" if r0["verdict"] == "BUY" else f"{r0['life_plain']:.0f} years", f"{r0['life_ours'] - r0['life_plain']:+.0f} years vs plain" if r0["verdict"] == "BUY" else None)
+        m[2].metric("Worth over the first 12 years", f"${r0['dollars_total']:,.0f}" if r0["verdict"] == "BUY" else "$0", f"pessimistic case ${r0['p10_total']:,.0f}" if r0["verdict"] == "BUY" else None)
+        st.markdown("**Same battery, three ways to run it**")
+        st.altair_chart(VZ.policies_chart(pp, pm, ps), use_container_width=True)
+        if r0["verdict"] == "BUY" and r0["life_ours"] > r0["life_plain"]:
+            st.markdown("**Environmental value**")
+            H0 = st.select_slider("Years of service counted", [10, 15, 20, 25, 30], 20, key="f_h")
+            e0 = EN.environmental(60.0, r0["life_plain"], r0["life_ours"], H0)
+            k = st.columns(3)
+            k[0].metric("Battery cells not manufactured", f"{e0['kwh_cells_avoided']:.0f} kWh", help="over the horizon, because the string lasts longer")
+            k[1].metric("Battery material not made", f"about {e0['material_kg']:,.0f} kg", help="assumes 10 kg of battery per kWh of cells: a placeholder until REON gives pack mass")
+            k[2].metric("Manufacturing carbon avoided, net", f"{e0['net_t']:.1f} t CO2e", f"range {round(e0['low_t'], 1) + 0.0:.1f} to {e0['high_t']:.1f} t")
+        else:
+            e0 = None
+    with st.expander("How to read this page"):
+        st.markdown(f"**Backup hours.** Median over 12 real car packs (Nature Energy 2026) at {load0:.0f} kW, cold-weather capacity 80%. Switching adds a modest amount of hours on day one; the payoff is life and money. "
+                    "A plain string with one open cell delivers nothing; cell-level control bypasses it. In the third bar the site sheds half the load (it chooses which loads count as life-safety).")
+        st.markdown(f"**Outages in {state0}.** A typical customer lost power {sd0.loc[state0, 'saidi_major_2025']:.0f} minutes in 2025 across {sd0.loc[state0, 'saifi_major_2025']:.1f} interruptions (EIA-861, utility-wide averages; one store can be far worse).")
+        if e0:
+            st.markdown("**Carbon.** Sodium-ion pack 56.8 kg CO2e/kWh (EIA Review study via ess-news.com); Fraunhofer/RWTH cell-level 75 to 87 for sodium-ion. Those figures ignore cycle life, which we supply. "
+                        "Two inputs are assumed and shown as a range: how many avoided cells would really have been replaced (50 to 100%) and the carbon of REON's electronics (1 to 10 kg per kWh, counted in full). "
+                        + ("The sign of the result does not flip inside these ranges." if not e0["sign_can_flip"] else "At the low end this is close to zero: the sign can flip, so treat the carbon claim as small here."))
+        st.markdown("**Where the numbers are counted.** Energy and hours are measured at the battery string's DC terminals: usable kWh (cell capacities, 80% in the cold, a small switch loss) divided by the load you set. No inverter loss and no solar. Power capability in kW is not modelled; the only kW is your load.")
+        st.markdown("**Voltage limit.** The dollar and life figures come from a model where switches may bypass any empty cell, without checking the inverter's minimum voltage (REON has not given it; about 90% of cells staying in is the CTO's unclear remark). "
+                    "The string view and engineering tab 5 do enforce a floor. Where the floor binds the gain is smaller: in one test at typical wear, builds limited to 25 bypassed cells gave about \\$18 per kWh (a switch plus a balancer) against \\$27 here.")
+        st.markdown("**Where it comes from.** Every input is tagged in docs/SOURCES.md. Sodium-ion cell behaviour is assumed; there is no live REON data in this yet.")
     with st.expander("What would have to be true: gain against how fast the cells wear"):
         vsel = st.select_slider("Value of a kWh of backup per year ($)", [12, 22, 40, 80], 40, key="f_gv")
         grows = SF.gain_vs_fade(vsel)
