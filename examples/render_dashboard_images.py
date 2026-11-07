@@ -30,4 +30,8 @@ wl_ = int(np.argmin(l_))
 png(V.slope_lines_chart(e_, l_, fl_, wl_), "slope_lines", 560)
 png(V.position_chart(e_, l_, fl_, wl_, lm_), "slope_position", 760)
 png(V.gain_fade_chart(SF.gain_vs_fade(40)), "gain_vs_fade", 560)
+import pandas as pd
+from hackkit import reon_map as MP
+_eia = pd.read_csv("examples/data/eia_reliability_by_state.csv", comment="#").set_index("state")
+open("docs/img/state_map.png", "wb").write(vlc.vegalite_to_png(V.tile_map_chart(MP.tile_frame(_eia, "Where to pilot"), "California", "$ of load at risk per store-year").to_dict(), scale=2))
 print("wrote docs/img/*.png")

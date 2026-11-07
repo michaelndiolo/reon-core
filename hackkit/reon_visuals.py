@@ -116,3 +116,21 @@ def gain_fade_chart(rows, claim_fade: float = 0.004):
     claim = alt.Chart(pd.DataFrame({"x": [claim_fade], "t": ["maker's claim"]})).mark_rule(color="#999", strokeDash=[2, 3]).encode(x="x:Q")
     lab = alt.Chart(pd.DataFrame({"x": [claim_fade], "y": [150.0], "t": ["maker's claim"]})).mark_text(align="left", dx=5, color="#555", fontSize=11).encode(x="x:Q", y="y:Q", text="t:N")
     return (zero + claim + lab + line + pts).properties(height=300)
+
+
+def tile_map_chart(frame: pd.DataFrame, selected: str | None = None, title: str = "", fmt: str = ",.0f"):
+    """US tile map: one square per state, one-hue ramp (light = little, dark = a lot), abbreviation in each tile, the selected state outlined. Click a tile to pick it (selection 'pick', field 'state').
+    `frame` comes from hackkit.reon_map.tile_frame."""
+    df = frame.copy()
+    lo, hi = float(df.value.min()), float(df.value.max())
+    df["dark"] = (df.value - lo) / ((hi - lo) or 1.0) > 0.55
+    df["chosen"] = df.state == selected
+    pick = alt.selection_point(name="pick", fields=["state"], on="click", clear=False)
+    x = alt.X("col:O", axis=None, scale=alt.Scale(domain=list(range(12)), paddingInner=0.08))
+    y = alt.Y("row:O", axis=None, scale=alt.Scale(domain=list(range(8)), paddingInner=0.08))
+    tip = [alt.Tooltip("state:N", title="State"), alt.Tooltip("text:N", title=title or "Value"), alt.Tooltip("unit:N", title="Measure")]
+    tiles = alt.Chart(df).mark_rect(cornerRadius=3).encode(
+        x=x, y=y, color=alt.Color("value:Q", scale=alt.Scale(range=["#e3eef0", "#1f5e6b"]), legend=alt.Legend(title=title, orient="bottom", format=fmt, gradientLength=220, direction="horizontal")),
+        stroke=alt.condition(alt.datum.chosen, alt.value("#c0392b"), alt.value("#ffffff")), strokeWidth=alt.condition(alt.datum.chosen, alt.value(3), alt.value(0.5)), tooltip=tip).add_params(pick)
+    labels = alt.Chart(df).mark_text(fontSize=12, fontWeight="bold").encode(x=x, y=y, text="abbr:N", color=alt.condition(alt.datum.dark, alt.value("#ffffff"), alt.value("#1e2a2e")), tooltip=tip)
+    return (tiles + labels).properties(height=300, width=560).configure_view(stroke=None)

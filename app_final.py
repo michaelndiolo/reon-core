@@ -22,6 +22,7 @@ from hackkit import reon_secondlife as SL
 from hackkit import reon_grid as GR
 from hackkit import reon_visuals as VZ
 from hackkit import reon_slope as SLP
+from hackkit import reon_map as MP
 
 st.set_page_config(page_title="REON decision layer", layout="wide")
 st.title("Beyond the weakest cell: what cell-level control is worth")
@@ -73,6 +74,35 @@ with eng_wrap:
 with front:
     st.markdown("**Scope, in one sentence:** one application, a 60 kWh sodium-ion backup battery at a chain store or small commercial site, where we add a decision layer on top of REON's existing per-cell sensing and switches to keep the lights on longer, make the battery last longer, and avoid buying cells twice.")
     sd0 = pd.read_csv("examples/data/eia_reliability_by_state.csv", comment="#").set_index("state")
+    ss0 = st.session_state
+    ss0.setdefault("map_ver", 0)
+    with st.expander("Pick your state on a map (and see where this matters most)"):
+        mc = st.columns([2, 2, 3])
+        layer = mc[0].radio("Show", list(MP.LAYERS), key="m_layer", help="Exposure: minutes without power. Coverage: backup hours against the typical outage. Where to pilot: load at risk in dollars.")
+        mload = ss0.get("f_load", 5.0)
+        voll = mc[1].slider("Value of lost load ($ per kWh)", 0.0, 100.0, MP.VOLL_TEXAS, key="m_voll", help="Only the Texas figure (about 35.7) is sourced; a store's own number can be far lower or higher.") if layer == "Where to pilot" else MP.VOLL_TEXAS
+
+        @st.cache_data
+        def eia_tbl():
+            return pd.read_csv("examples/data/eia_reliability_by_state.csv", comment="#").set_index("state")
+
+        @st.cache_data
+        def backup_h(load):
+            return SF.backup_hours(real_packs(), 60.0, load)[1]
+
+        mf = MP.tile_frame(eia_tbl(), layer, backup_h(float(mload)), float(mload), float(voll))
+        try:
+            clicked = MP.clicked_state(ss0.get(f"mapchart{ss0.map_ver}").selection)
+        except Exception:
+            clicked = None
+        if clicked:
+            ss0["f_state"] = clicked
+            ss0.map_ver += 1
+        mtitle = {"Exposure": "Minutes without power, 2025", "Coverage": "Backup hours / typical outage", "Where to pilot": "$ of load at risk per store-year"}[layer]
+        st.altair_chart(VZ.tile_map_chart(mf, ss0.get("f_state"), mtitle, ",.1f" if layer == "Coverage" else ",.0f"), on_select="rerun", key=f"mapchart{ss0.map_ver}", use_container_width=False)
+        mc[2].caption("Click a tile to set your state below. State averages from the utilities' reports (EIA-861), not a store's own outage record. "
+                      + ("Coverage uses your load setting and the cell-level backup hours." if layer == "Coverage" else "")
+                      + (" Load at risk = hours without power x your load x the value above; one sourced anchor (Texas), the rest is your call." if layer == "Where to pilot" else ""))
     a = st.columns(5)
     state0 = a[0].selectbox("Your state", list(sd0.index), index=list(sd0.index).index("California"), key="f_state")
     load0 = a[1].slider("Critical load during an outage (kW)", 1.0, 10.0, 5.0, key="f_load")
