@@ -1,0 +1,11 @@
+500 stress draws grouped by the knee share (share of cells that fade 2.4x faster from ~85 % capacity; Iowa State lab lithium cells, ASSUMED to carry over)
+knee share   draws   beat best rival   beat plain   median net vs plain
+     0.00     156            74 %        92 %           28.0
+     0.30     179            87 %        95 %           31.9
+     0.65     165            85 %        96 %           37.7
+
+Same, split by DoD exponent g (0 = wear does not depend on depth of discharge):
+g=0.0     133            83 %        94 %           34.2
+g=0.6     120            80 %        94 %           21.5
+g=0.9     133            83 %        96 %           36.6
+g=1.2     114            82 %        93 %           37.2

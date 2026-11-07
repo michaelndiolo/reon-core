@@ -19,7 +19,9 @@ data-center presets run on the same engine as evidence that the method is not ti
 | `hackkit/contract.py` | `check_cells`: weak cell vs bad sensor |
 | `hackkit/flex.py` | Price-driven dispatch (LP) |
 | `hackkit/reon_carbon.py` | CO2e balance |
-| `app_reon.py` | Streamlit dashboard (v0; to be split into pages, see `docs/PLAN.md`) |
+| `app_final.py` | Streamlit dashboard v1: engine verdict with go/no-go, break-even map, life of the string, storm hours, voltage limit, sources (`streamlit run app_final.py`) |
+| `app_reon.py` | Earlier dashboard (v0) |
+| `hackkit/reon_response.py`, `reon_events.py`, `reon_storm.py`, `reon_voltage.py` | Five responses and when they fire; life-of-string simulation; storm backup hours; voltage floor |
 | `examples/` | Real-pack runs (Nature Energy 2026, 12 cars) and stress tests, each with its saved output |
 | `recheck/` | Independent pack-model spec and reference implementation |
 | `docs/SPEC.md` | Inputs and outputs for the hardware, the algorithm and the dashboard |

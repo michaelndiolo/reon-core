@@ -1,0 +1,14 @@
+false bypass rate per healthy REAL cell over 200 cycles (injected cold, 2 % sensing error; cells compared with their segment median in the same cycle)
+ambient C  edge cells colder by   naive rule   conditioned on temperature   (cell injected at 0.70 detected: naive / conditioned)
+      25              0 K         0.00 %                 0.00 %       100.0% / 100.0%
+      25              5 K         0.18 %                 0.00 %       100.0% / 100.0%
+      25             10 K         0.26 %                 0.00 %       100.0% / 100.0%
+       0              0 K         0.00 %                 0.00 %       100.0% / 100.0%
+       0              5 K         0.09 %                 0.00 %       100.0% / 100.0%
+       0             10 K         0.44 %                 0.00 %       100.0% / 100.0%
+     -10              0 K         0.00 %                 0.00 %       100.0% / 100.0%
+     -10              5 K         0.26 %                 0.00 %       100.0% / 100.0%
+     -10             10 K         0.53 %                 0.00 %       100.0% / 100.0%
+     -20              0 K         0.00 %                 0.00 %       100.0% / 100.0%
+     -20              5 K         0.26 %                 0.00 %       100.0% / 100.0%
+     -20             10 K         0.79 %                 0.00 %       100.0% / 100.0%
