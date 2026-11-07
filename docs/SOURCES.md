@@ -86,7 +86,7 @@
 ## Added 7 Nov (late night): precomputed cases and second life
 | Item | Value | Tag | Source / note |
 |---|---|---|---|
-| Precomputed demo cases | 56 engine results at 250 cells (p 1/4/16/40 x fade 0.004/0.008/0.02 x value 12/22/40/80, plus 8 tariff-screen values) | DERIVED | `examples/data/storefront_cases.json`, made by `examples/reon_precompute_cases.py`; a test recomputes one case and fails if the file is stale |
+| Precomputed demo cases | 88 engine results at 250 cells (p 1/4/16/40 x fade 0.004/0.006/0.008/0.012/0.02 x value 12/22/40/80, plus 8 tariff-screen values; 0.006 and 0.012 feed the gain-versus-wear chart) | DERIVED | `examples/data/storefront_cases.json`, made by `examples/reon_precompute_cases.py`; a test recomputes one case and fails if the file is stale |
 | Second life, cell data | 12 retired EV packs, 95 cells each, capacity at 280,000 km | REAL | Nature Energy 2026 Fig 4 (`examples/data/nature_fig4_cells.csv`) |
 | Second life, voltage window | at least 50/70/90% of cells stay in the string; modules obey the same window | CITED (REON CTO: about 90% connected in normal use, unclear) / ASSUMED | `hackkit/reon_secondlife.py` |
 | Second life, flip cost | value per kWh-year x years x extra usable share, after switch loss; compared with REON's 7 to 24 per kWh | DERIVED | static, no further ageing; testing and disassembly not priced (REON has not said) |
@@ -100,3 +100,12 @@
 | Open cell in a plain string | delivers nothing; control bypasses it | DERIVED (series circuit); REON to confirm bypass time and whether the inverter trips | open question added for REON |
 | Battery material not made | cells avoided x 10 kg per kWh | ASSUMED | placeholder from the team's earlier candidate-solutions file; replace with REON's pack mass |
 | Three-policy hours | plain, cell-level, cell-level with half the load shed; median of 12 real packs, 80% cold capacity | REAL cell data, ASSUMED sodium behaviour | `reon_storefront.backup_policies` |
+
+## Added 7 Nov (night): cell trends and gain against wear
+| Item | Value | Tag | Source / note |
+|---|---|---|---|
+| Fade slope per cell | capacity lost between 80,000 and 280,000 km for each of 95 cells in 12 retired EV packs | REAL | Nature Energy 2026 Fig 4 (`examples/data/nature_fig4_cells.csv`); `hackkit/reon_slope.py` |
+| Neighbour comparison | each cell against the median of the 8 nearest cells in the order the data give; flagged when its excess is above 3 robust standard deviations | DERIVED | In a real string the order would be the wiring order |
+| Snapshot versus trend | final-weakest cell was also weakest early in only 1 of 12 packs; the steepest fader was the final weakest in 8 of 12; fade spread above start spread in 12 of 12 | DERIVED | Two ages give a slope, not a curve; this is not an out-of-sample forecast |
+| What "slope and curve" meant | Tim Ren's recorded wording is garbled; this is our reading | OPEN | confirm with Tim; REON per-cell history would give the real curve |
+| Gain against wear | 12-year gain per kWh at fade 0.004 to 0.02, four parallel arrangements, four values of a kWh-year | DERIVED | `reon_storefront.gain_vs_fade` reads only the cached cases |

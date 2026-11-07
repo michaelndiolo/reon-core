@@ -1,4 +1,5 @@
 """Precompute the engine results the dashboard demo needs, so nothing takes 12 seconds on stage. Writes/merges examples/data/storefront_cases.json.
+usage (add fades=0.006,0.012 to run those wear levels instead of the default three; they feed the gain-versus-wear chart)
 usage (one call fits the 120 s limit per 1-2 values): PYTHONPATH=. python examples/reon_precompute_cases.py 12 22   |   ... 40 80   |   ... tab12
   numbers = value of a kWh per year; each runs p in (1, 4, 16, 40) x fade in (0.004, 0.008, 0.02) at 250 cells, switch cost 15.5.
   'tab12' runs the tariff-screen values (single cells, fade 0.008) from the 'Who buys' tab.
@@ -20,11 +21,16 @@ def job(a):
 
 if __name__ == "__main__":
     jobs = []
-    for arg in sys.argv[1:] or ["40"]:
+    fades = (0.004, 0.008, 0.02)
+    args = [a for a in sys.argv[1:] if not a.startswith("fades=")]
+    for a in sys.argv[1:]:
+        if a.startswith("fades="):
+            fades = tuple(float(x) for x in a[6:].split(","))
+    for arg in args or ["40"]:
         if arg == "tab12":
             jobs += [(1, 0.008, v) for v in TAB12_VALUES]
         else:
-            jobs += [(p, f, float(arg)) for p in (1, 4, 16, 40) for f in (0.004, 0.008, 0.02)]
+            jobs += [(p, f, float(arg)) for p in (1, 4, 16, 40) for f in fades]
     with Pool(4) as pool:
         res = pool.map(job, jobs)
     try:

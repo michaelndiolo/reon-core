@@ -35,6 +35,25 @@ def load_cases(path=CASES_PATH):
 def cached_core(p, fade, value, cases=None):
     """The precomputed result for this (p, fade, value) at 250 cells and switch cost 15.5, or None. Fields: verdict, build, reasons, dollars_per_kwh, p10_per_kwh, life_plain, life_ours."""
     return (load_cases() if cases is None else cases).get(case_key(p, fade, value))
+
+
+GAIN_FADES = (0.004, 0.006, 0.008, 0.012, 0.02)
+GAIN_PARALLEL = (1, 4, 16, 40)
+
+
+def gain_vs_fade(value, cases=None, fades=GAIN_FADES, parallels=GAIN_PARALLEL):
+    """Rows for the 'what would have to be true' chart: 12-year gain per kWh against cell fade, one line per cells-in-parallel, at one value of a kWh-year.
+    Only precomputed cases are used (nothing runs live); missing combinations are skipped. Each row: parallel, fade, gain, verdict."""
+    cs = load_cases() if cases is None else cases
+    rows = []
+    for p in parallels:
+        for f in fades:
+            c = cs.get(case_key(p, f, value))
+            if c:
+                rows.append(dict(parallel=int(p), fade=float(f), gain=float(c["dollars_per_kwh"]), verdict=c["verdict"], p10=float(c["p10_per_kwh"])))
+    return rows
+
+
 KS = (1, 2, 4, 8, 16, 25)
 OURS = ("selective", "late", "level", "hybrid")
 

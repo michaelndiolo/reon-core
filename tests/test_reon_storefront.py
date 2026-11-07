@@ -38,3 +38,12 @@ def test_cache_matches_live_engine_and_covers_front_page():
     live = SF.core(40, 0.02, 40.0)                       # one case recomputed: the saved file must not be stale
     saved = SF.cached_core(40, 0.02, 40.0)
     assert live["verdict"] == saved["verdict"] and abs(live["dollars_per_kwh"] - saved["dollars_per_kwh"]) < 1e-6 and abs(live["life_ours"] - saved["life_ours"]) < 1e-6
+
+
+def test_gain_vs_fade_rows_come_from_cache_and_are_complete():
+    for value in (12, 22, 40, 80):
+        rows = SF.gain_vs_fade(value)
+        assert len(rows) == len(SF.GAIN_FADES) * len(SF.GAIN_PARALLEL)
+        assert all(r["verdict"] in ("BUY", "HOLD") for r in rows)
+    one = [r for r in SF.gain_vs_fade(40) if r["parallel"] == 1 and r["fade"] == 0.008][0]
+    assert abs(one["gain"] - 27.25) < 0.1 and one["verdict"] == "BUY"

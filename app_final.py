@@ -113,6 +113,16 @@ with front:
         st.caption("Embodied carbon: sodium-ion pack 56.8 kg CO2e/kWh (EIA Review study via ess-news.com); Fraunhofer/RWTH cell-level 75 to 87 for sodium-ion. Those figures ignore cycle life, which we supply. "
                    "Two inputs are assumed, shown as a range: how many avoided cells would really have been replaced (50 to 100%) and the carbon of REON's electronics (1 to 10 kg per kWh, counted in full). "
                    + ("The sign of the result does not flip inside these ranges." if not e0["sign_can_flip"] else "At the low end this is close to zero: the sign can flip, so treat the carbon claim as small here."))
+    with st.expander("What would have to be true: gain against how fast the cells wear"):
+        vsel = st.select_slider("Value of a kWh of backup per year ($)", [12, 22, 40, 80], 40, key="f_gv")
+        grows = SF.gain_vs_fade(vsel)
+        if grows:
+            st.altair_chart(VZ.gain_fade_chart(grows), use_container_width=True)
+            st.caption("Each line is one way of wiring cells in parallel. Above the dashed zero line the cell-level control pays for itself over 12 years; a cross means the engine says hold. "
+                       "Read it from the right: the faster the cells wear, the more control is worth, and the more cells share a position, the more wear it takes before it pays. "
+                       "The maker's claim is the far left. Steps in the lines come from replacement dates. Simulated at 250 cells, switch cost 15.5 per kWh; not REON data.")
+        else:
+            st.info("No precomputed cases found for this value.")
     with st.expander("What we are not doing"):
         st.markdown("- We are not changing REON's hardware. We add the decision layer: which cell to switch out, when to bypass, when to call a crew. REON's hardware keeps safety authority.\n"
                     "- We are not claiming this for homes, EVs or scooters; the numbers are for a commercial backup battery.\n"

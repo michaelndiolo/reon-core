@@ -91,3 +91,28 @@ def position_chart(early, late, flagged, end_weakest: int, local_median):
         tooltip=[alt.Tooltip("cell:Q", title="Cell"), alt.Tooltip("fade:Q", title="Lost, points", format=".1f"), alt.Tooltip("neighbours:Q", title="Neighbours' median", format=".1f")])
     line = base.mark_line(color="#555", strokeWidth=1.5, strokeDash=[3, 2]).encode(y="neighbours:Q")
     return (line + pts).properties(height=220)
+
+
+PAR_COLORS = ["#2a7f8e", "#5b8fc9", "#d9922b", "#8a6bbf"]
+
+
+def gain_fade_chart(rows, claim_fade: float = 0.004):
+    """12-year gain per kWh against cell fade per year, one line per cells-in-parallel. A cross marks HOLD (we would not recommend building it there); a dot marks Build.
+    The vertical rule is the maker's own wear claim: left of the data is where it holds up. The y axis is a symmetric-log scale so the small wins and the big ones both show."""
+    df = pd.DataFrame(rows)
+    df["parallel_label"] = df.parallel.map(lambda p: "1 cell" if p == 1 else f"{p} in parallel")
+    order = [("1 cell" if p == 1 else f"{p} in parallel") for p in sorted(df.parallel.unique())]
+    df["Verdict"] = df.verdict.map({"BUY": "Build it", "HOLD": "Hold"})
+    base = alt.Chart(df).encode(
+        x=alt.X("fade:Q", title="Cell fade per year (share of capacity)", axis=alt.Axis(format=".3f", grid=False, values=sorted(df.fade.unique().tolist())), scale=alt.Scale(domain=[0.003, 0.021])),
+        y=alt.Y("gain:Q", title="12-year gain, $ per kWh", scale=alt.Scale(type="symlog", constant=2, domain=[-0.8, 260]), axis=alt.Axis(values=[0, 2, 5, 10, 25, 50, 100, 200], grid=True, gridOpacity=0.25)),
+        color=alt.Color("parallel_label:N", scale=alt.Scale(domain=order, range=PAR_COLORS[:len(order)]), legend=alt.Legend(title=None, orient="bottom")))
+    line = base.mark_line(strokeWidth=2)
+    tip = [alt.Tooltip("parallel_label:N", title="Arrangement"), alt.Tooltip("fade:Q", title="Fade per year", format=".3f"), alt.Tooltip("gain:Q", title="Gain, $/kWh", format=".1f"), alt.Tooltip("p10:Q", title="Pessimistic, $/kWh", format=".1f"), alt.Tooltip("Verdict:N")]
+    built = base.transform_filter(alt.datum.Verdict == "Build it").mark_point(shape="circle", size=80, filled=True, opacity=1).encode(tooltip=tip)
+    held = base.transform_filter(alt.datum.Verdict == "Hold").mark_point(shape="cross", size=150, filled=False, strokeWidth=3, opacity=1).encode(tooltip=tip)
+    pts = built + held
+    zero = alt.Chart(pd.DataFrame({"y": [0.0]})).mark_rule(color="#555", strokeDash=[4, 3]).encode(y="y:Q")
+    claim = alt.Chart(pd.DataFrame({"x": [claim_fade], "t": ["maker's claim"]})).mark_rule(color="#999", strokeDash=[2, 3]).encode(x="x:Q")
+    lab = alt.Chart(pd.DataFrame({"x": [claim_fade], "y": [150.0], "t": ["maker's claim"]})).mark_text(align="left", dx=5, color="#555", fontSize=11).encode(x="x:Q", y="y:Q", text="t:N")
+    return (zero + claim + lab + line + pts).properties(height=300)

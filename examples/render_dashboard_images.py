@@ -21,4 +21,13 @@ def png(chart, name, w=720):
 png(V.grid_chart(h, failed, a["early"]), "string_grid")
 png(V.voltage_chart(a["v_now"], 0.9), "string_voltage")
 png(V.policies_chart(*SF.backup_policies(packs, 60.0, 5.0)), "three_policies")
+from hackkit import reon_slope as SLP
+tp = SLP.load_cells()
+pk = sorted(tp)[0]
+e_, l_ = tp[pk]
+fl_, lm_, _ = SLP.outliers(SLP.fade_pp(e_, l_))
+wl_ = int(np.argmin(l_))
+png(V.slope_lines_chart(e_, l_, fl_, wl_), "slope_lines", 560)
+png(V.position_chart(e_, l_, fl_, wl_, lm_), "slope_position", 760)
+png(V.gain_fade_chart(SF.gain_vs_fade(40)), "gain_vs_fade", 560)
 print("wrote docs/img/*.png")
