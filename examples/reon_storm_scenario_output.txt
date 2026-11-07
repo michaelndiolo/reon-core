@@ -1,0 +1,34 @@
+72 h outage, 60 kWh nameplate, 12 real packs; hours of supply (median, worst, best over packs); '-' means covered the full 72 h
+load 1 kW, cold x1.0, no failure                       plain      49.2 h  (worst  43.4, best  54.4)
+load 1 kW, cold x1.0, no failure                       managed    52.2 h  (worst  49.2, best  54.5)
+load 1 kW, cold x1.0, no failure                       managed + load shed to 50 %    72.0 h  (worst  72.0, best  72.0)
+load 1 kW, cold x1.0, one cell fails open at hour 24   plain      24.0 h  (worst  24.0, best  24.0)
+load 1 kW, cold x1.0, one cell fails open at hour 24   managed    51.9 h  (worst  49.0, best  54.1)
+load 1 kW, cold x1.0, one cell fails open at hour 24   managed + load shed to 50 %    72.0 h  (worst  72.0, best  72.0)
+load 1 kW, cold x0.8, no failure                       plain      39.3 h  (worst  34.7, best  43.5)
+load 1 kW, cold x0.8, no failure                       managed    41.8 h  (worst  39.4, best  43.6)
+load 1 kW, cold x0.8, no failure                       managed + load shed to 50 %    72.0 h  (worst  72.0, best  72.0)
+load 1 kW, cold x0.8, one cell fails open at hour 24   plain      24.0 h  (worst  24.0, best  24.0)
+load 1 kW, cold x0.8, one cell fails open at hour 24   managed    41.6 h  (worst  39.2, best  43.4)
+load 1 kW, cold x0.8, one cell fails open at hour 24   managed + load shed to 50 %    72.0 h  (worst  72.0, best  72.0)
+load 2 kW, cold x1.0, no failure                       plain      24.6 h  (worst  21.7, best  27.2)
+load 2 kW, cold x1.0, no failure                       managed    26.1 h  (worst  24.6, best  27.2)
+load 2 kW, cold x1.0, no failure                       managed + load shed to 50 %    52.2 h  (worst  49.2, best  54.5)
+load 2 kW, cold x1.0, one cell fails open at hour 24   plain      24.0 h  (worst  21.7, best  24.0)
+load 2 kW, cold x1.0, one cell fails open at hour 24   managed    26.1 h  (worst  24.6, best  27.2)
+load 2 kW, cold x1.0, one cell fails open at hour 24   managed + load shed to 50 %    51.9 h  (worst  49.0, best  54.1)
+load 2 kW, cold x0.8, no failure                       plain      19.7 h  (worst  17.3, best  21.8)
+load 2 kW, cold x0.8, no failure                       managed    20.9 h  (worst  19.7, best  21.8)
+load 2 kW, cold x0.8, no failure                       managed + load shed to 50 %    41.8 h  (worst  39.4, best  43.6)
+load 2 kW, cold x0.8, one cell fails open at hour 24   plain      19.7 h  (worst  17.3, best  21.8)
+load 2 kW, cold x0.8, one cell fails open at hour 24   managed    20.9 h  (worst  19.7, best  21.8)
+load 2 kW, cold x0.8, one cell fails open at hour 24   managed + load shed to 50 %    41.6 h  (worst  39.2, best  43.4)
+
+Extra gain of managed over plain with no failure (energy): median 6.8 %, range 0.0 to 13.6 %
+
+Wear price of staying in bypass mode (16-cell string, constant power, DoD exponent 0.87 from the Iowa State fit):
+  1 cell(s) bypassed for good: current and depth of discharge x1.067, wear rate x1.058, heating x1.138
+  2 cell(s) bypassed for good: current and depth of discharge x1.143, wear rate x1.123, heating x1.306
+  4 cell(s) bypassed for good: current and depth of discharge x1.333, wear rate x1.284, heating x1.778
+  one storm day with 1 bypassed costs about 0.08 of pack life value (pack 5880, 12 y); the same outage with one failed cell delivers 28 kWh more than plain (1 kW, no cold, failure at hour 24): break-even value of lost load 0.0028 per kWh
+  one storm day with 4 bypassed costs about 0.38 of pack life value (pack 5880, 12 y); the same outage with one failed cell delivers 28 kWh more than plain (1 kW, no cold, failure at hour 24): break-even value of lost load 0.0137 per kWh
