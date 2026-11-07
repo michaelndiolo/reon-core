@@ -8,6 +8,8 @@ from hackkit import reon_events as E
 from hackkit import reon_storm as S
 from hackkit import reon_voltage as V
 from hackkit import reon_wear as W
+from hackkit import reon_guard as G
+from hackkit import reon_rank as RK
 
 st.set_page_config(page_title="REON decision layer", layout="wide")
 st.title("Beyond the weakest cell: what cell-level control is worth")
@@ -24,7 +26,7 @@ def real_packs():
 
 
 BE = pd.DataFrame({"fade spread 0.20": [16.2, 27.3, 45.7, None], "0.45": [25.4, 42.9, None, None], "0.60": [29.1, 49.4, None, None]}, index=["value 12", "value 22", "value 40", "value 80"])
-t1, t2, t3, t4, t5, t6 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits"])
+t1, t2, t3, t4, t5, t6, t7 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting"])
 
 with t1:
     c = st.columns(4)
@@ -35,8 +37,11 @@ with t1:
     if st.button("Run the engine") or True:
         rng = np.random.default_rng(3)
         start = 100.0 * (1.0 + 0.02 * rng.standard_normal(16))
-        out = W.recommend_build(start, 16, balancer_r=0.05, balancer_per_kwh=4.0, ks=(1, 2, 3, 4), fade_mean=0.02, fade_cv=fcv, loss=loss, electronics_per_kwh=elec, sort_cost_per_kwh=0.0, value_per_kwh_year=value,
-                                rate=0.07, years=12.0, eol_frac=0.7, duty=0.7, dod_exp=0.87, knee_share=0.65, start_soh=1.0, balancer_eta=0.9, closed_loss=0.0, test_sigma=0.02, trials=14, steps=40, seed=5)
+        rob = G.robust_recommend(start, 16, value_per_kwh_year=value, electronics_per_kwh=elec, fade_cv=fcv, loss=loss)
+        out, _ = G.safe_recommend(start, 16, value_per_kwh_year=value, electronics_per_kwh=elec, fade_cv=fcv, loss=loss)
+        (st.success if rob["verdict"] == "BUY" else st.warning)(f"Verdict on a fresh seed: {rob['verdict']} ({rob['build']}). " + "; ".join(rob["reasons"]))
+        for w in rob["warnings"]:
+            st.caption(f"Note: {w}")
         t = out["table"]
         m = st.columns(4)
         m[0].metric("Recommended build", out["build"])
@@ -97,3 +102,12 @@ with t5:
 
 with t6:
     st.markdown(open("docs/SOURCES.md").read())
+
+with t7:
+    st.write("Rule, then money, then rank: for each cell of a plain string, what bypassing it would be worth per year, and what the response layer would do with it.")
+    packs = real_packs()
+    car = st.selectbox("Real car pack (Nature Energy 2026, 95 cells; first 16 shown as one string)", list(packs))
+    v7 = st.slider("Value per kWh-year", 5.0, 100.0, 40.0, key="v7")
+    rows = RK.rank_cells(packs[car][:16], 60.0, v7)
+    st.dataframe(pd.DataFrame(rows).round(2).set_index("cell"))
+    st.caption("Negative dollars: bypassing a healthy cell loses more than it gains. Responses come from reon_response.decide; hardware keeps safety authority.")

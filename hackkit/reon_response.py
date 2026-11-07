@@ -12,6 +12,8 @@ Every threshold is a field of Limits and carries a tag. weak_frac is calibrated 
 The rest are ASSUMED placeholders to be replaced by the cell maker's datasheet (Tim Ren: temperature limits are the cell manufacturer's spec)."""
 from dataclasses import dataclass, field
 from typing import List, Optional
+import math
+from hackkit.reon_guard import need
 
 NORMAL, SWITCH_OUT, BYPASS, REDUCE_POWER, KILL = "normal", "switch_out", "bypass", "reduce_power", "kill"
 RANK = {NORMAL: 0, SWITCH_OUT: 1, BYPASS: 2, REDUCE_POWER: 3, KILL: 4}
@@ -74,6 +76,12 @@ def fault_sign(c: Cell, lim: Limits) -> bool:
 
 def decide(cells: List[Cell], ctx: Context, lim: Limits = Limits()) -> List[Action]:
     """Actions for this frame, most severe first. An empty-handed frame returns [Action(NORMAL)]."""
+    need(len(cells) >= 1, "decide: no cells given")
+    bad = [c.i for c in cells if not all(math.isfinite(x) for x in (c.v, c.t, c.soc, c.cap_rel, c.r_rel, c.dT_dt))]
+    if bad:   # never bypass or kill on a reading we cannot trust: slow down, and ask for a sensor check
+        cells = [c for c in cells if c.i not in bad]
+        if not cells:
+            return [Action(REDUCE_POWER, bad, "no valid cell readings: sensor check needed", 0.5)]
     acts: List[Action] = []
     hard = [c.i for c in cells if c.t >= lim.t_hard or c.v >= lim.v_hard_hi or c.v <= lim.v_hard_lo]
     faulty = [c.i for c in cells if fault_sign(c, lim)]
@@ -104,4 +112,6 @@ def decide(cells: List[Cell], ctx: Context, lim: Limits = Limits()) -> List[Acti
     done = [c.i for c in cells if c.i not in to_bypass and c.i not in hot and ((c.discharging and c.soc <= lim.soc_lo) or (not c.discharging and c.soc >= lim.soc_hi))]
     if done:
         acts.append(Action(SWITCH_OUT, done, "cell reached its own SOC limit: skip it this half-cycle, string keeps running"))
+    if bad:
+        acts.append(Action(REDUCE_POWER, bad, "invalid sensor reading on these cells: not judged, check the sensors", 0.7))
     return sorted(acts, key=lambda a: -RANK[a.kind]) or [Action(NORMAL, [], "all cells inside their limits")]
