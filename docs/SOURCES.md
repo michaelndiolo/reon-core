@@ -91,3 +91,12 @@
 | Second life, voltage window | at least 50/70/90% of cells stay in the string; modules obey the same window | CITED (REON CTO: about 90% connected in normal use, unclear) / ASSUMED | `hackkit/reon_secondlife.py` |
 | Second life, flip cost | value per kWh-year x years x extra usable share, after switch loss; compared with REON's 7 to 24 per kWh | DERIVED | static, no further ageing; testing and disassembly not priced (REON has not said) |
 | Value of lost load (an anchor) | $35,685 per MWh = about $35.7 per kWh, blended residential, commercial and large industrial, ERCOT region; PUC of Texas adopted Brattle's study 29 Aug 2024 | CITED | https://www.utilitydive.com/news/texas-power-outages-cost-consumers-VOLL/726807/ (article only; the Brattle report itself not read). Small commercial and industrial said to have "disproportionately high" VOLL, no number given. A teammate's $5.92 per kWh "summary of 90 estimates" and a $6 to $54 band were NOT verified |
+
+## Added 7 Nov (night): string view and material
+| Item | Value | Tag | Source / note |
+|---|---|---|---|
+| String view, cell health | 250 cells drawn from the pooled REAL relative spread of the 12 retired EV packs, scaled to mean health 0.85, plus planted weak cells at 0.70 and 0.78 | REAL spread, ASSUMED mean | `hackkit/reon_grid.py`; the planted cells echo REON's 16-cell example |
+| String view, how many cells may leave | floor(n x (1 - window)); window 0.9 gives 25 of 250 | CITED (REON CTO: about 90% connected, unclear) | `reon_reliability.bypass_cap` |
+| Open cell in a plain string | delivers nothing; control bypasses it | DERIVED (series circuit); REON to confirm bypass time and whether the inverter trips | open question added for REON |
+| Battery material not made | cells avoided x 10 kg per kWh | ASSUMED | placeholder from the team's earlier candidate-solutions file; replace with REON's pack mass |
+| Three-policy hours | plain, cell-level, cell-level with half the load shed; median of 12 real packs, 80% cold capacity | REAL cell data, ASSUMED sodium behaviour | `reon_storefront.backup_policies` |

@@ -19,6 +19,8 @@ from hackkit import reon_system as SYS
 from hackkit import reon_storefront as SF
 from hackkit import reon_enviro as EN
 from hackkit import reon_secondlife as SL
+from hackkit import reon_grid as GR
+from hackkit import reon_visuals as VZ
 
 st.set_page_config(page_title="REON decision layer", layout="wide")
 st.title("Beyond the weakest cell: what cell-level control is worth")
@@ -35,7 +37,7 @@ def real_packs():
 
 
 BE = pd.DataFrame({"fade spread 0.20": [16.2, 27.3, 45.7, None], "0.45": [25.4, 42.9, None, None], "0.60": [29.1, 49.4, None, None]}, index=["value 12", "value 22", "value 40", "value 80"])
-front, eng_wrap = st.tabs(["Customer view: a storm night", "Engineering and evidence"])
+front, sv_tab, eng_wrap = st.tabs(["Customer view: a storm night", "String view: click a cell", "Engineering and evidence"])
 with eng_wrap:
     t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting", "8 Where the money comes from", "9 System view", "10 Balancing and modules", "11 What to ask REON first", "12 Who buys and how it ships"])
 
@@ -67,13 +69,18 @@ with front:
     m[2].metric("Worth over the first 12 years", f"${r0['dollars_total']:,.0f}" if r0["verdict"] == "BUY" else "$0", f"pessimistic case ${r0['p10_total']:,.0f}" if r0["verdict"] == "BUY" else None)
     st.caption(f"Backup is the median over 12 real car packs (Nature Energy 2026) at {load0:.0f} kW, cold-weather capacity 80%. Switching adds a modest amount of hours on day one; the payoff is life and money. "
                f"{state0}: a typical customer lost power {sd0.loc[state0, 'saidi_major_2025']:.0f} minutes in 2025 across {sd0.loc[state0, 'saifi_major_2025']:.1f} interruptions (EIA-861, utility-wide averages; one store can be far worse).")
+    pp, pm, ps = SF.backup_policies(real_packs(), 60.0, load0)
+    st.markdown("**Same battery, three ways to run it**")
+    st.altair_chart(VZ.policies_chart(pp, pm, ps), use_container_width=True)
+    st.caption("Median of 12 real car packs at this load, cold-weather capacity 80%. 'Shed load' keeps half the load running (the site chooses which loads count as life-safety). A plain string with one open cell delivers nothing; cell-level control bypasses it.")
     if r0["verdict"] == "BUY" and r0["life_ours"] > r0["life_plain"]:
         H0 = st.slider("Environmental horizon (years of service)", 10, 30, 20, key="f_h")
         e0 = EN.environmental(60.0, r0["life_plain"], r0["life_ours"], H0)
         st.subheader("Environmental value")
-        k = st.columns(2)
+        k = st.columns(3)
         k[0].metric("Battery cells not manufactured", f"{e0['kwh_cells_avoided']:.0f} kWh", help="over the horizon, because the string lasts longer")
-        k[1].metric("Manufacturing carbon avoided, net", f"{e0['net_t']:.1f} t CO2e", f"range {round(e0['low_t'], 1) + 0.0:.1f} to {e0['high_t']:.1f} t")
+        k[1].metric("Battery material not made", f"about {e0['material_kg']:,.0f} kg", help="assumes 10 kg of battery per kWh of cells: a placeholder until REON gives pack mass")
+        k[2].metric("Manufacturing carbon avoided, net", f"{e0['net_t']:.1f} t CO2e", f"range {round(e0['low_t'], 1) + 0.0:.1f} to {e0['high_t']:.1f} t")
         st.caption("Embodied carbon: sodium-ion pack 56.8 kg CO2e/kWh (EIA Review study via ess-news.com); Fraunhofer/RWTH cell-level 75 to 87 for sodium-ion. Those figures ignore cycle life, which we supply. "
                    "Two inputs are assumed, shown as a range: how many avoided cells would really have been replaced (50 to 100%) and the carbon of REON's electronics (1 to 10 kg per kWh, counted in full). "
                    + ("The sign of the result does not flip inside these ranges." if not e0["sign_can_flip"] else "At the low end this is close to zero: the sign can flip, so treat the carbon claim as small here."))
@@ -83,6 +90,48 @@ with front:
                     "- We are not claiming a grid-emissions saving. The carbon figure is manufacturing only.\n"
                     "- Everything here is a simulation or a replay on assumed sodium-ion behaviour; there is no live REON data in it yet. Cell fade, fault rates and switch cost are assumptions or REON statements, tagged in the evidence tab.\n"
                     "- We do not count benefits beyond the 12-year bankable horizon in the dollar figure. Life beyond that is a projection.")
+
+with sv_tab:
+    st.write("A 250-cell string (REON's CTO: 200 to 300 in series), drawn from the real spread of late-life cells. Click a cell to fail it. The voltage bar shows how many cells the inverter lets leave; fail one cell too many and the string is refused. Simulation, not REON data.")
+    ss = st.session_state
+    ss.setdefault("gfail", [])
+    ss.setdefault("gprev", [])
+    ss.setdefault("gver", 0)
+    a1 = st.columns(4)
+    gwin = a1[0].select_slider("Share of cells that must stay in the string (REON: about 90%)", [0.5, 0.7, 0.9], 0.9, key="g_win")
+    gload = a1[1].slider("Load (kW)", 1.0, 10.0, 5.0, key="g_load")
+    h0 = GR.make_string(GR.pooled_relative(real_packs()))
+    if a1[2].button("Fail a random cell", key="g_rand"):
+        live = [i for i in range(len(h0)) if i not in ss.gfail]
+        ss.gfail = ss.gfail + [int(np.random.default_rng(len(ss.gfail) + 100 * ss.gver).choice(live))]
+    if a1[3].button("Reset", key="g_reset"):
+        ss.gfail, ss.gprev, ss.gver = [], [], ss.gver + 1
+    gkey = f"gchart{ss.gver}"
+    try:
+        sel = [int(d["cell"]) for d in ss.get(gkey).selection.get("pick", [])]
+    except Exception:
+        sel = []
+    for c0 in sel:
+        if c0 not in ss.gprev and c0 not in ss.gfail:
+            ss.gfail = ss.gfail + [c0]
+    ss.gprev = sel
+    an = GR.analyse(h0, ss.gfail, gwin, 60.0, 0.04, gload)
+    if an["refused"]:
+        st.error(an["message"])
+    elif an["failed"]:
+        st.info(f"{an['failed']} cell(s) open. A plain string with an open cell delivers nothing; here the switches bypass them and the string carries on. {an['room']} more can leave before the inverter minimum.")
+    mm = st.columns(4)
+    mm[0].metric("Plain string", f"{an['plain_kwh']:.0f} kWh", f"{an['plain_h']:.1f} h at {gload:.0f} kW", delta_color="off")
+    mm[1].metric("With cell-level control", f"{an['ours_kwh']:.0f} kWh", f"{an['ours_h']:.1f} h at {gload:.0f} kW", delta_color="off")
+    mm[2].metric("Cells that can still leave", f"{max(an['room'], 0)} of {an['K']}")
+    mm[3].metric("Cells failed", f"{an['failed']}")
+    st.altair_chart(VZ.grid_chart(h0, ss.gfail, an["early"]), on_select="rerun", key=gkey, use_container_width=True)
+    st.altair_chart(VZ.voltage_chart(an["v_now"], gwin), use_container_width=True)
+    st.caption(f"String voltage {100*an['v_now']:.0f}% of full now. As the weakest cells empty and leave, it falls to {100*an['v_end']:.0f}% by the end of discharge; the inverter minimum is {100*gwin:.0f}%. Amber cells are the ones allowed to leave early. Lighter cells are weaker (health from 60% to 100%).")
+    for ac in an["actions"]:
+        if ac["kind"] != "normal":
+            st.write(f"**{ac['kind'].replace('_', ' ').upper()}** on {len(ac['cells'])} cell(s): {ac['reason']}")
+    st.caption("Responses come from the decision layer (reon_response); REON's hardware keeps safety authority. Planted weak cells at 70% and 78% echo the brief's 16-cell example. Switch loss 4% is assumed.")
 
 with t1:
     c = st.columns(5)

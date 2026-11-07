@@ -55,6 +55,14 @@ def backup_hours(packs, nameplate_kwh, load_kw, cold=0.8):
     return float(np.median(plain)), float(np.median(managed))
 
 
+def backup_policies(packs, nameplate_kwh, load_kw, cold=0.8, keep=0.5):
+    """Median hours at the same load for: plain string, cell-level control, cell-level control that also sheds the load to `keep` of its size (the site decides which loads are life-safety)."""
+    plain = [S.hours(v, nameplate_kwh, load_kw, False, cold) for v in packs.values()]
+    managed = [S.hours(v, nameplate_kwh, load_kw, True, cold) for v in packs.values()]
+    shed = [S.hours(v, nameplate_kwh, load_kw, True, cold, None, power_fraction=keep) for v in packs.values()]
+    return float(np.median(plain)), float(np.median(managed)), float(np.median(shed))
+
+
 def core(p, fade, value, elec=ELEC, n=N_SERIES):
     """Run the engine (about 12 s at 250 cells): verdict on an independent seed, 12-year gain per kWh, and simulated lives over 30 years."""
     start = _start(p, n)

@@ -20,6 +20,7 @@ from hackkit import reon_carbon as C
 from hackkit.atstake import Lever
 
 EMBODIED_LOW, EMBODIED_BASE, EMBODIED_HIGH = 56.8, 68.9, 87.0
+MATERIAL_KG_PER_KWH = 10.0     # ASSUMED: battery mass per kWh of cells (the team's earlier candidate-solutions file used about 10); replace with REON's pack mass
 DISPLACED_LOW, DISPLACED_BASE, DISPLACED_HIGH = 0.5, 0.8, 1.0
 CONTROL_LOW, CONTROL_BASE, CONTROL_HIGH = 1.0, 4.0, 10.0   # kg CO2e per kWh nameplate
 
@@ -43,11 +44,18 @@ def levers(nameplate_kwh, life_plain, life_ours, horizon):
     ]
 
 
+def material_kg(kwh_cells_avoided, kg_per_kwh=MATERIAL_KG_PER_KWH):
+    """kg of battery material (cells) not manufactured. The mass per kWh is ASSUMED."""
+    if kwh_cells_avoided < 0 or kg_per_kwh <= 0:
+        raise ValueError("enviro: kWh must be nonnegative and mass per kWh positive")
+    return kwh_cells_avoided * kg_per_kwh
+
+
 def environmental(nameplate_kwh, life_plain, life_ours, horizon):
     """Dict: kwh_cells_avoided, net_t (base), low_t, high_t (all corners), sign_can_flip, avoided_t_base, control_t_base, table (one at a time)."""
     lv = levers(nameplate_kwh, life_plain, life_ours, horizon)
     s = C.sensitivity(lv)
     b = C.carbon_balance({l.name: l.base for l in lv})
-    return {"kwh_cells_avoided": lv[1].base, "net_t": s["base_net_t"], "low_t": s["min_net_t"], "high_t": s["max_net_t"], "sign_can_flip": s["min_net_t"] < -1e-9,
+    return {"kwh_cells_avoided": lv[1].base, "material_kg": material_kg(lv[1].base), "net_t": s["base_net_t"], "low_t": s["min_net_t"], "high_t": s["max_net_t"], "sign_can_flip": s["min_net_t"] < -1e-9,
             "avoided_t_base": b["items"]["Avoided new-battery manufacturing"], "control_t_base": -b["items"]["Control electronics (cost)"],
             "assumed": s["assumed_inputs"], "table": s["table"]}
