@@ -36,7 +36,7 @@ def real_packs():
 BE = pd.DataFrame({"fade spread 0.20": [16.2, 27.3, 45.7, None], "0.45": [25.4, 42.9, None, None], "0.60": [29.1, 49.4, None, None]}, index=["value 12", "value 22", "value 40", "value 80"])
 front, eng_wrap = st.tabs(["Customer view: a storm night", "Engineering and evidence"])
 with eng_wrap:
-    t1, t2, t3, t4, t5, t6, t7, t8, t9, t10 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting", "8 Where the money comes from", "9 System view", "10 Balancing and modules"])
+    t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting", "8 Where the money comes from", "9 System view", "10 Balancing and modules", "11 What to ask REON first"])
 
 with front:
     st.markdown("**Scope, in one sentence:** one application, a 60 kWh sodium-ion backup battery at a chain store or small commercial site, where we add a decision layer on top of REON's existing per-cell sensing and switches to keep the lights on longer, make the battery last longer, and avoid buying cells twice.")
@@ -95,18 +95,28 @@ with t1:
     extra = st.checkbox("Count only the extra cost over a conventional BMS (Tim Ren: REON electronics are 3 to 4 times a BMS, so the extra is 67 to 75% of the total)", False)
     if extra:
         elec = SYS.incremental_cost(elec, 3.5)
-    if st.button("Run the engine") or True:
+    g = st.columns(2)
+    n1 = g[0].select_slider("Cells in series (Tim Ren: 200 to 300; 16 is the quick demo size)", [16, 250], 250, key="n1")
+    p1 = g[1].select_slider("Cells in parallel per position (unknown: ask REON)", [1, 4, 16, 40], 1, key="p1")
+
+    @st.cache_data(show_spinner="Running the engine (about 15 seconds at 250 cells)")
+    def eng1(n, p, value, elec, fcv, loss, fade):
         rng = np.random.default_rng(3)
-        start = 100.0 * (1.0 + 0.02 * rng.standard_normal(16))
-        rob = G.robust_recommend(start, 16, value_per_kwh_year=value, electronics_per_kwh=elec, fade_cv=fcv, loss=loss, fade_mean=fade)
-        out, _ = G.safe_recommend(start, 16, value_per_kwh_year=value, electronics_per_kwh=elec, fade_cv=fcv, loss=loss, fade_mean=fade)
+        start = 100.0 * (1.0 + 0.02 / np.sqrt(p) * rng.standard_normal(n))
+        kw = dict(value_per_kwh_year=float(value), electronics_per_kwh=float(elec), fade_cv=fcv / np.sqrt(p), loss=loss, fade_mean=fade, ks=tuple(k for k in (1, 2, 4, 8, 16, 25) if k < n) or (1,))
+        if n >= 100:
+            kw.update(trials=8, steps=60)
+        return G.robust_recommend(start, n, **kw), G.safe_recommend(start, n, **kw)[0]
+
+    if True:
+        rob, out = eng1(n1, p1, value, elec, fcv, loss, fade)
         (st.success if rob["verdict"] == "BUY" else st.warning)(f"Verdict on a fresh seed: {rob['verdict']} ({rob['build']}). " + "; ".join(rob["reasons"]))
         for w in rob["warnings"]:
             st.caption(f"Note: {w}")
         t = out["table"]
         m = st.columns(4)
         m[0].metric("Recommended build", out["build"])
-        m[1].metric("Net value vs plain string", f"{t[out['ours_best']]['mean']:+.1f} per kWh")
+        m[1].metric("Net value vs plain string", f"{rob['mean_gain']:+.1f} per kWh", help=f"scored on an independent seed, the number the customer view uses. The table below is the seed the build was picked on and reads higher ({t[out['ours_best']]['mean']:+.1f}): picking the best of several always flatters it.")
         m[2].metric("Margin over best rival", f"{out['margin']:+.1f}", help=f"best rival: {out['rival_best']}")
         m[3].metric("Service life", f"{t[out['ours_best']]['years']:.1f} y vs {t['plain']['years']:.1f} y plain")
         if out["margin"] <= 0:
@@ -114,7 +124,7 @@ with t1:
         else:
             st.success("Go: switches beat the best alternative at these inputs.")
         st.dataframe(pd.DataFrame({k: {"net value per kWh": v["mean"], "10th percentile": v["p10"], "service years": v["years"], "cost": v["cost"]} for k, v in t.items()}).T.round(1))
-    st.caption("Plain string = the brief's baseline. Balancer rival: 5 % transfer, cost 4. Start spread 2 %, 12 years, retire at 70 %. Stress tests: examples/reon_hero_stress_output.txt.")
+    st.caption("Plain string = the brief's baseline. Balancer rival: 5 % transfer, cost 4. Start spread 2 % (divided by the square root of cells in parallel), 12 years, retire at 70 %. The customer view uses the same engine. Stress tests: examples/reon_hero_stress_output.txt.")
 
 with t2:
     st.subheader("Break-even switch cost against a typical balancer (per kWh nameplate)")
@@ -277,3 +287,12 @@ with t10:
     r10 = lad(bs)
     st.bar_chart(pd.DataFrame({"gain over plain, %": [100 * r10[g] for g in (1, 6, 12, 24, 48)]}, index=["each cell", "6 cells per switch", "12 per switch", "module of 24", "2 modules (48)"]))
     st.caption(f"Switching whole modules keeps {100*r10[24]/r10[1]:.0f}% of the cell-level gain here. Our own simulation, independent lognormal draws; ask REON for teardown data.")
+
+with t11:
+    st.write("Which unanswered question moves the answer most? Net gain over a plain string, 12 years, per kWh nameplate, 250 cells, one input changed at a time from the base case (single cells, fade 0.008, value 40, switch cost 15.5). A HOLD counts as zero. Ask REON in this order.")
+    tor = pd.read_csv("examples/data/tornado_250.csv")
+    base_gain = float(tor["base_gain"].iloc[0])
+    st.metric("Base case", f"{base_gain:+.1f} per kWh")
+    st.bar_chart(tor.set_index("input")[["gain_low", "gain_high"]].rename(columns={"gain_low": "input at its low end", "gain_high": "input at its high end"}))
+    st.dataframe(tor[["input", "low", "high", "gain_low", "gain_high", "swing", "tag", "who_can_answer"]].set_index("input"))
+    st.caption("Source: examples/reon_tornado_250.py. Each input stays BUY at both ends of its range in this base case, so the question is how much, not whether (the parallel-group case alone approaches HOLD at 40 cells). Switch loss barely matters; fade, the value of a kWh, and how much cells differ matter most.")
