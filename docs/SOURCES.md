@@ -13,3 +13,12 @@
 | Cost of one site visit | not found | ASSUMED | still needed for the remote-site case |
 | Life, fade rate for sodium C&I unit | 12 years, 2 % a year | ASSUMED | no REON data |
 | Sodium LCA | not done yet | CITED | Tim Ren, Discord 7 Nov |
+
+## Added 7 Nov (afternoon): storm, cold and safety sources for the four responses
+| Item | Value | Tag | Source / note |
+|---|---|---|---|
+| Maine wind storm, 18-19 Dec 2023 | More than 420,000 outages statewide at the peak (early Tuesday). Five days later (Sunday) Versant still had 1,327 customers out, 900 of them in Penobscot County, and CMP 513 | CITED | Bangor Daily News: https://www.bangordailynews.com/2023/12/19/weather/maine-wind-storm-power-outages-chart/ and https://www.bangordailynews.com/2023/12/23/news/nearly-12000-mainers-still-without-power-saturday (the second article is internally inconsistent about counties; use the numbers with care). The claim "Penobscot out three days" is NOT confirmed here: ask the person who stated it for the source |
+| Cold, sodium-ion vs lithium-ion | At or below -20 C lithium-ion keeps about 30 to 50 % of room-temperature capacity, engineered sodium-ion about 50 to 70 %; hard carbon shows strong polarization and early voltage cutoffs; charge-transfer resistance 3 to 5 times higher at -40 C | CITED | RSC review https://pubs.rsc.org/en/content/articlehtml/2025/eb/d5eb00121h (a review of other studies, mostly lab cells) |
+| Cold charging, sodium-ion | Vendor says sodium-ion can be safely charged down to -20 C and keeps 70 % at -40 C and 2C | CITED (vendor claim) | Acculon blog https://acculonenergy.com/powering-through-the-freeze-sodium-ion-cold-temperature-testing-insights/ . Marketing page, no test data shown; do not rely without REON's own limit |
+| Thermal runaway warning | In 30 mechanical-abuse tests (20 reached runaway) the best model gave about 15.6 s warning; runaway onset 150 C or 3 C/s; regimes safe below 60 C, warning 60 to 120 C, danger above 120 C | CITED | arXiv 2607.18860 (lithium, lab). Meaning for us: runaway is too fast for a policy layer that works over minutes, so the KILL for it belongs to the certified hardware; our layer handles slow fault signs |
+| PMC thermal-runaway review | not read (page returned a bot check; not worked around) | - | https://pmc.ncbi.nlm.nih.gov/articles/PMC12152129 |
