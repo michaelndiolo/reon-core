@@ -66,3 +66,25 @@ Limits to show, not hide:
 - A false bypass wastes good capacity, so act only on a persistent signal and let the system abstain when unsure.
 - Hard safety limits stay in certified hardware. This layer recommends and logs; it never overrides them.
 - No sourced value for a site visit yet. It is an input with a range and a slider, tagged ASSUMED until sourced.
+
+## 6. Interface with REON hardware (DRAFT, not locked, 7 Nov)
+
+REON already has the hardware and BMS/EMS. We build the slow policy layer and the dashboard. Their hardware
+handles switch timing, current, sensing and safety; we decide, over minutes to days, which cells take part,
+which rest, which are bypassed for good, and when a string is finished. The dashboard replays recorded or
+simulated frames; it is not a live link.
+
+Cell-state frame (hardware to us), one per time step: time, string current, and per cell voltage, temperature,
+SOC, SOH, capacity, resistance, state (engaged / bypassed / resting).
+
+Action plan (us to hardware): per cell engage, rest until a stated time, or bypass for good, each with a reason
+code; pack level current limit, SOC window, and "open string / call crew".
+
+Hardware stays the authority. A refused command is treated as data and the plan is redone.
+
+Known from Tim (Discord, 7 Nov): chemistry-agnostic BMS/EMS; a hot cell can be bypassed to rest; forced-air
+cooling today; temperature limits follow the cell maker's spec.
+
+Open questions for REON: data format and reporting rate; sensing accuracy; command format (flags or schedule);
+reaction time; which decisions the hardware already makes itself; sodium-ion limits for temperature, voltage and
+resistance.
