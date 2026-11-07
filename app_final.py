@@ -36,7 +36,7 @@ def real_packs():
 BE = pd.DataFrame({"fade spread 0.20": [16.2, 27.3, 45.7, None], "0.45": [25.4, 42.9, None, None], "0.60": [29.1, 49.4, None, None]}, index=["value 12", "value 22", "value 40", "value 80"])
 front, eng_wrap = st.tabs(["Customer view: a storm night", "Engineering and evidence"])
 with eng_wrap:
-    t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting", "8 Where the money comes from", "9 System view", "10 Balancing and modules", "11 What to ask REON first"])
+    t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting", "8 Where the money comes from", "9 System view", "10 Balancing and modules", "11 What to ask REON first", "12 Who buys and how it ships"])
 
 with front:
     st.markdown("**Scope, in one sentence:** one application, a 60 kWh sodium-ion backup battery at a chain store or small commercial site, where we add a decision layer on top of REON's existing per-cell sensing and switches to keep the lights on longer, make the battery last longer, and avoid buying cells twice.")
@@ -128,7 +128,7 @@ with t1:
 
 with t2:
     st.subheader("Break-even switch cost against a typical balancer (per kWh nameplate)")
-    st.dataframe(BE.fillna(">60 (never flips)"))
+    st.dataframe(BE.fillna(">60 (never flips)").astype(str))
     st.write("Above the number in a cell, a typical balancer is better than switches. Tim Ren's overhead range is 7 to 24. Only the lowest-value, narrowest-spread corner puts that range partly in the losing zone. Source: examples/reon_losing_regimes_output.txt.")
     st.write("A logistic go/no-go screen on all inputs, tested on held-out draws, is right 88.5 % of the time against 82.7 % for always saying go, and catches about half the cases we lose: use it as a screen, not a verdict.")
 
@@ -296,3 +296,19 @@ with t11:
     st.bar_chart(tor.set_index("input")[["gain_low", "gain_high"]].rename(columns={"gain_low": "input at its low end", "gain_high": "input at its high end"}))
     st.dataframe(tor[["input", "low", "high", "gain_low", "gain_high", "swing", "tag", "who_can_answer"]].set_index("input"))
     st.caption("Source: examples/reon_tornado_250.py. Each input stays BUY at both ends of its range in this base case, so the question is how much, not whether (the parallel-group case alone approaches HOLD at 40 cells). Switch loss barely matters; fade, the value of a kWh, and how much cells differ matter most.")
+
+with t12:
+    st.write("Who buys, how it reaches a site, and what policy touches it. The tariff screen turns a demand charge into the value of a kWh and reruns the engine at 250 cells (single cells, typical wear).")
+    c = st.columns(2)
+    dem = c[0].select_slider("Demand charge ($ per kW-month)", [5, 10, 15, 20, 25], 15, key="dem12")
+    hrs = c[1].select_slider("Hours of storage per kW (2 or 4)", [2, 4], 2, key="hrs12")
+    v12 = dem * 12.0 / hrs
+    rob12, _ = eng1(250, 1, v12, 15.5, 0.45, 0.04, 0.008)
+    st.metric(f"Value of a kWh at this tariff", f"${v12:.0f} per year")
+    (st.success if rob12["verdict"] == "BUY" else st.warning)(f"{rob12['verdict']}: net gain over a plain string {rob12['mean_gain']:+.1f} per kWh, about ${rob12['mean_gain'] * 60:,.0f} on a 60 kWh battery over 12 years.")
+    st.markdown("- **Buyers.** About 5 million US commercial customers can subscribe to demand charges above $15/kW, about 3 million above $20/kW (NREL survey). Only the top quarter reach the 40 to 90 per kWh-year range.\n"
+                "- **Market.** Community, commercial and industrial storage was about 95.6 MW of 18.9 GW installed in 2025; Wood Mackenzie expects 39% growth from 2025 to 2030 with a dip in 2026 (via ESS News). Small today, growing.\n"
+                "- **How it ships.** Software on REON modules, which can be added in series with an existing battery (REON CTO). Sealed EV packs are typically not retrofittable.\n"
+                "- **Policy.** The storage investment tax credit (Sections 48 and 48E) outlasts the wind and solar sunset, but prohibited-foreign-entity material-assistance rules are stricter for storage; preliminary Treasury guidance came in February 2026. Whether a REON battery qualifies depends on where its cells are made: ask REON.\n"
+                "- **Certification.** Commercial storage normally meets UL 9540, UL 1973 and NFPA 855. Our layer stays out of the safety loop; REON's hardware keeps final authority. REON's engineers should confirm.")
+    st.markdown("**Next 90 days:** (1) REON answers the seven questions in tab 11; (2) run `examples/reon_bms_sample_check.py` on a small per-cell sample; (3) shadow mode at one site: the layer recommends and logs, the hardware acts; (4) pick a pilot from the tariff screen and rerun with its load, outage record and tariff.")

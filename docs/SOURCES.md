@@ -72,3 +72,13 @@
 | Cells not replaced | nameplate x horizon x (1/life plain - 1/life ours) | DERIVED | lives come from the simulated engine (cell-limited, capped at 30 years) |
 | Storm-night backup hours | median over 12 real car packs, 60 kWh, steady load, 80 % cold capacity | REAL cell data, ASSUMED sodium behaviour | `reon_storefront.backup_hours`; switching adds under an hour on day one |
 | Front-page dollars | first 12 years only, whole 60 kWh battery | DERIVED | `reon_storefront.storefront`; cases in `examples/reon_storefront_cases_output.txt` |
+
+## Added 7 Nov (late): deployment and policy
+| Item | Value | Tag | Source / note |
+|---|---|---|---|
+| Commercial storage installed 2025 | Community, commercial and industrial about 95.6 MW of 18.9 GW (51 GWh) total; Wood Mackenzie forecast: 39% growth 2025 to 2030, dip in 2026 | CITED | https://www.ess-news.com/2026/03/25/us-energy-storage-installations-reach-record-51-gwh-in-2025/ (ACP release gave only Q4 2025 C&I, 77 MW). The roughly 0.5 GW by 2030 figure is OUR extrapolation (95.6 x 1.39^5, ignores the 2026 dip) |
+| Storage tax credit and FEOC | Sections 48 and 48E; storage escapes the early wind/solar sunset; prohibited-foreign-entity material-assistance rules stricter for storage; preliminary Treasury guidance Feb 2026 | CITED | https://www.morganlewis.com/pubs/2026/03/how-feoc-rules-are-reshaping-energy-storage-tax-credit-eligibility . The article gives no percentage or thresholds: check the statute and IRS guidance before quoting any number |
+| Where REON's cells are made | unknown | UNKNOWN | decides tax-credit eligibility; ask REON |
+| Certification path | UL 9540, UL 1973, NFPA 855 named in industry guidance | CITED (named only, not read) | not verified for REON; REON engineers to confirm. Claim that our layer sits outside the safety loop is DESIGN INTENT |
+| Value from a tariff | demand charge x 12 / hours of storage per kW | DERIVED | tab 12; at $5/kW-month and 2 h about 30 per kWh-year |
+| Sensitivity ranking | `examples/reon_tornado_250_output.txt` | DERIVED | tab 11; 250 cells, single cells, one input at a time |
