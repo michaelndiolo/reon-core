@@ -35,6 +35,13 @@ for kw in (dict(lam=0.0), dict(lam=1.0), dict(lam=-1.0), dict(n=1), dict(n=2, n_
            dict(n_min=0), dict(n_min=100), dict(crew_at=0), dict(persist=0), dict(rate=-0.5), dict(retire=0.0), dict(retire=2.0), dict(nameplate=0.0), dict(g=-3.0), dict(weak_line=0.0), dict(weak_line=5.0), dict(start_cv=5.0), dict(detect=-1.0), dict(detect=1e6), dict(down_cost=-1.0), dict(down_cost=1e9), dict(thr_pays_loss=False)):
     for pol in E.EXTENDED:
         check(f"events {pol} {kw}", lambda: E.simulate(pol, 1, **kw))
+from hackkit import reon_presets as P
+for a in ((1.0, 25.0), (0.0, 25.0), (1.0, -50.0), (1.0, 200.0), (1e6, 25.0)):
+    check(f"fade_per_year {a}", lambda: P.fade_per_year(*a))
+check("fade_per_year negative", lambda: P.fade_per_year(-1.0))
+for pr in ("loss", "e", "lam", "visit_cost"):
+    check(f"break_even {pr}", lambda: E.break_even(pr, 0.0, 0.1 if pr != "e" else 80.0, seeds=range(2), iters=4))
+check("value_streams extreme", lambda: E.value_streams(seeds=range(2), lam=0.0, visit_cost=0.0, down_cost=0.0))
 check("events unknown policy", lambda: E.simulate("nonsense", 1))
 KW = dict(balancer_r=0.05, balancer_per_kwh=4.0, ks=(1, 2), fade_mean=0.02, fade_cv=0.45, loss=0.02, electronics_per_kwh=15.0, sort_cost_per_kwh=0.0, value_per_kwh_year=40.0, rate=0.07, years=12.0, eol_frac=0.7,
           duty=0.7, dod_exp=0.87, knee_share=0.65, start_soh=1.0, balancer_eta=0.9, closed_loss=0.0, test_sigma=0.02, trials=3, steps=20, seed=5)

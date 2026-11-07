@@ -8,7 +8,7 @@ from multiprocessing import Pool
 import numpy as np
 from hackkit import reon_wear as W
 
-OUT = {"random": "examples/reon_hero_stress_random.jsonl", "sourced": "examples/reon_hero_stress_sourced.jsonl", "sourcedv": "examples/reon_hero_stress_sourced_voltage.jsonl", "longlife": "examples/reon_hero_stress_longlife.jsonl"}
+OUT = {"random": "examples/reon_hero_stress_random.jsonl", "sourced": "examples/reon_hero_stress_sourced.jsonl", "sourcedv": "examples/reon_hero_stress_sourced_voltage.jsonl", "longlife": "examples/reon_hero_stress_longlife.jsonl", "sitefade": "examples/reon_hero_stress_sitefade.jsonl"}
 
 
 def real_fade_cvs():
@@ -47,6 +47,9 @@ def draw(rng, mode, cvs):
         p.update(fcv=float(rng.choice(cvs)), elec=u(rng, 7.0, 24.0), r=min(amps / (crate * ah), 1.0), bcost=per_cell / (ah * 3.2 / 1000.0), eta=u(rng, 0.85, 0.95), amps=amps, ah=ah)
     if mode == "longlife":   # Tim Ren 7 Nov: the NFPP sodium cells are specified at 20,000 cycles (maker claim, UNVERIFIED). Roughly 0.003 to 0.012 per year of capacity fade at 1 cycle a day; life 10 to 25 y
         p["fade"] = lg(rng, 0.003, 0.012); p["years"] = u(rng, 10.0, 25.0)
+    if mode == "sitefade":   # fade from the 20,000-cycle claim and the SITE: cycles a day 0.8 to 2, cell temperature 15 to 45 C (doubling per 10 C is an ASSUMED rule of thumb)
+        from hackkit.reon_presets import fade_per_year
+        p["cyc"] = u(rng, 0.8, 2.0); p["temp"] = u(rng, 15.0, 45.0); p["fade"] = fade_per_year(p["cyc"], p["temp"]); p["years"] = u(rng, 10.0, 25.0)
     if volt:
         p["loss"] = 0.02 + float(rng.choice([0.023, 0.029, 0.039, 0.050]))
     return p
@@ -82,7 +85,7 @@ def report(mode):
 
 if __name__ == "__main__":
     if sys.argv[1] == "report":
-        for md in ("random", "sourced", "sourcedv", "longlife"):
+        for md in ("random", "sourced", "sourcedv", "longlife", "sitefade"):
             try:
                 report(md)
             except FileNotFoundError:

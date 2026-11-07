@@ -1,0 +1,9 @@
+site-driven fade (20,000-cycle claim x cycles a day 0.8-2 x temperature 15-45 C, doubling per 10 C ASSUMED), life 10-25 y, 120 draws, other inputs as the sourced stress
+overall: beats best rival 57 %, plain 87 %
+  fade 0-0.006/yr: n=49 beats rival 29% plain 73% median margin -0.7
+  fade 0.006-0.012/yr: n=46 beats rival 70% plain 93% median margin +1.6
+  fade 0.012-0.02/yr: n=17 beats rival 88% plain 100% median margin +21.9
+  fade 0.02-0.06/yr: n=8 beats rival 88% plain 100% median margin +30.2
+  cell temperature 15-25 C: n=41 beats rival 27% plain 78% median margin -0.8
+  cell temperature 25-35 C: n=41 beats rival 61% plain 85% median margin +1.0
+  cell temperature 35-46 C: n=38 beats rival 84% plain 97% median margin +9.4

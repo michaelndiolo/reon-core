@@ -55,3 +55,7 @@
 | Time for a utility to restore power | EIA-861 Table 11.3 (2025 / 2024), CAIDI, minutes per interruption. U.S. without major events 115 / 121; with major events 196 / 402. Maine with major events 162 / 481; Florida 82 / 747 | REAL | https://www.eia.gov/electricity/annual/html/epa_11_03.html. This is grid restoration, not time to service a battery cell |
 | Time to identify, dispatch and repair a battery fault | not found | ASSUMED | lead 0.5 to 3 months and detect 0 to 6 months are swept in `examples/reon_crew_time.py` |
 | Cost per month a string is down | not found | ASSUMED | swept 0 to 60 per kWh nameplate per month |
+| Fade from the cell claim | 20,000 cycles to 80 % = 0.01 of capacity per 1,000 cycles at 25 C; 0.0037 a year at one cycle a day | CITED claim, unverified | `reon_presets.fade_per_year` |
+| Temperature effect on ageing | doubling per 10 C | ASSUMED (common rule of thumb, not measured on sodium) | stress mode `sitefade` |
+| Site presets | C&I with a crew nearby; remote minigrid with no crew: visit cost, lead, detect, downtime cost, fault rate | ASSUMED | `hackkit/reon_presets.py` |
+| Current shedding lowers switch loss | conduction loss share = I x R / V | DERIVED (physics) | `slack` in `reon_events.simulate` |

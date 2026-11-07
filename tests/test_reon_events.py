@@ -43,3 +43,12 @@ def test_bridge_and_detect_and_down_cost():
     import pytest
     with pytest.raises(ValueError):
         E.simulate("ours", 1, detect=-1)
+
+
+def test_break_even_and_streams_and_slack():
+    star, d = E.break_even("loss", 0.0, 0.3, seeds=range(4), iters=8, visit_cost=100.0, lam=0.008)
+    assert star is None or (0.0 <= star <= 0.3)
+    vs = E.value_streams(seeds=range(4), lam=0.01, visit_cost=3000.0, down_cost=20.0)
+    assert abs(vs["spread"] + vs["faults"] + vs["crew"] + vs["downtime"] - vs["total"]) < 1e-6
+    lo = E.simulate("ours", 1, loss=0.10, slack=0.5)["net"]; hi = E.simulate("ours", 1, loss=0.10, slack=0.0)["net"]
+    assert lo >= hi

@@ -10,6 +10,7 @@ from hackkit import reon_voltage as V
 from hackkit import reon_wear as W
 from hackkit import reon_guard as G
 from hackkit import reon_rank as RK
+from hackkit import reon_presets as PR
 
 st.set_page_config(page_title="REON decision layer", layout="wide")
 st.title("Beyond the weakest cell: what cell-level control is worth")
@@ -26,11 +27,13 @@ def real_packs():
 
 
 BE = pd.DataFrame({"fade spread 0.20": [16.2, 27.3, 45.7, None], "0.45": [25.4, 42.9, None, None], "0.60": [29.1, 49.4, None, None]}, index=["value 12", "value 22", "value 40", "value 80"])
-t1, t2, t3, t4, t5, t6, t7 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting"])
+t1, t2, t3, t4, t5, t6, t7, t8 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting", "8 Where the money comes from"])
 
 with t1:
     c = st.columns(5)
-    fade = c[4].slider("Cell fade per year (assumed 0.02; Tim Ren says 20,000-cycle cells, which is about 0.004-0.012)", 0.003, 0.04, 0.02, format="%.3f")
+    fade25 = c[4].slider("Cell fade per year at 25 C (20,000-cycle claim = 0.004 at one cycle a day; lithium EVs about 0.02)", 0.003, 0.04, 0.008, format="%.3f")
+    temp = c[4].slider("Average cell temperature, C (ageing about doubles per 10 C, assumed)", 15, 45, 25)
+    fade = fade25 * 2.0 ** ((temp - 25) / 10.0)
     value = c[0].slider("Value per kWh-year (12 grid, 22 EV, 30-90 demand-charge sites)", 5.0, 100.0, 40.0)
     fcv = c[1].slider("Spread of fade rates between cells (real cars 0.20-0.60)", 0.05, 0.8, 0.45)
     elec = c[2].slider("Switch cost per kWh nameplate (Tim Ren: 7-24)", 2.0, 40.0, 15.5)
@@ -63,20 +66,32 @@ with t2:
     st.write("A logistic go/no-go screen on all inputs, tested on held-out draws, is right 88.5 % of the time against 82.7 % for always saying go, and catches about half the cases we lose: use it as a screen, not a verdict.")
 
 with t3:
-    c = st.columns(6)
+    c = st.columns(7)
     lam = c[0].select_slider("Cell fault rate per cell-year", [0.0002, 0.001, 0.002, 0.01, 0.03], 0.01)
     visit = c[1].select_slider("Cost of one crew visit", [250, 1000, 3000, 6000], 1000)
     lead = c[2].select_slider("Crew lead time (months)", [0.5, 1.0, 2.0, 4.0], 1.0)
     wl = c[3].select_slider("Weak line (fraction of the others)", [0.80, 0.85, 0.90], 0.80)
     detect = c[4].select_slider("Months before a plain string notices a fault", [0.0, 1.0, 3.0, 6.0], 0.0)
     dcost = c[5].select_slider("Cost per month down, per kWh nameplate (assumed)", [0, 5, 20, 60], 0)
+    slack = c[6].select_slider("Share of current the site can shed (loss falls with current)", [0.0, 0.3, 0.5], 0.0)
     rows = []
     for pol in E.EXTENDED:
-        r = [E.simulate(pol, s, lam=lam, visit_cost=float(visit), lead=lead, weak_line=wl, detect=detect, down_cost=float(dcost)) for s in range(40)]
+        r = [E.simulate(pol, s, lam=lam, visit_cost=float(visit), lead=lead, weak_line=wl, detect=detect, down_cost=float(dcost), slack=slack) for s in range(40)]
         rows.append({"policy": pol, "net value per kWh": np.mean([x["net"] for x in r]), "crew visits": np.mean([x["visits"] for x in r]), "months down": np.mean([x["down_months"] for x in r]), "life (years)": np.mean([x["life_years"] for x in r])})
     st.dataframe(pd.DataFrame(rows).round(1).set_index("policy"))
-    pick = E.choose_policy(E.EXTENDED, lam=lam, visit_cost=float(visit), lead=lead, weak_line=wl, detect=detect, down_cost=float(dcost))
-    (st.success if pick["auto_wins"] else st.warning)(f"For this site the policy to use is: {pick['policy']} (picked on one set of random seeds, confirmed on another). " + ("Automatic bypass pays here." if pick["auto_wins"] else "Automatic bypass does NOT pay here: cheap crew visits or a threshold rule do better."))
+    site = dict(lam=lam, visit_cost=float(visit), lead=lead, weak_line=wl, detect=detect, down_cost=float(dcost), slack=slack)
+    pick = E.choose_policy(E.EXTENDED, **site)
+    if pick["auto_wins"]:
+        st.success(f"For this site the policy to use is: {pick['policy']} (picked on one set of random seeds, confirmed on another). Automatic bypass pays here.")
+    else:
+        ls, ld = E.break_even("loss", 0.0, 0.3, seeds=range(6), iters=10, **{k: v for k, v in site.items() if k != "slack"})
+        es, ed = E.break_even("e", 0.0, 80.0, seeds=range(6), iters=10, **site)
+        tip = []
+        if ls is not None and ld == "below":
+            tip.append(f"switch conduction loss below {100*ls:.1f}% (now 2%)")
+        if es is not None and ed == "below":
+            tip.append(f"switch cost below {es:.0f} per kWh (assumed 15.5)")
+        st.warning(f"For this site the policy to use is: {pick['policy']}. Automatic bypass does not pay here yet. It would if: " + (" or ".join(tip) if tip else "visits cost more or faults are more frequent (no switch loss or cost in range fixes it)") + ". Shedding current (the slider above) also lowers the loss.")
     st.write("replace = detect, wait for a crew, swap the cell. thr = fixed-threshold automatic bypass. ours = persistent-fault bypass plus per-cycle switching; ours+crew also books one visit to restore bypassed cells; ours+crew1/2 book it after 1 or 2 bypassed cells (cheap-visit sites). Fault rates and visit cost are ASSUMED.")
 
 with t4:
@@ -91,6 +106,7 @@ with t4:
                         "managed + load shed": [min(S.hours(v, 60.0, load, True, cold, ff, power_fraction=shed), 72) for v in pk.values()]}, index=list(pk))
     st.bar_chart(tab)
     st.write(f"Median hours over the 12 real packs (72 h outage, 60 kWh, no solar): plain {tab['plain'].median():.1f}, managed {tab['managed'].median():.1f}, managed with load shed {tab['managed + load shed'].median():.1f}.")
+    st.caption(f"Effective fade used: {fade:.3f} per year. In the 120-draw stress test, capacity gain beat the best rival 29% of the time below 0.006 a year, 70% at 0.006-0.012, and 88% above 0.012 (hot or heavily cycled sites).")
     st.write("In bypass mode the remaining cells carry n/(n-k) more current: wear x1.06 for 1 of 16 bypassed, x1.28 for 4 (DoD exponent 0.87). Storm days cost cents of pack life; leaving healthy cells bypassed all year does not.")
 
 with t5:
@@ -116,3 +132,29 @@ with t7:
     rows = RK.rank_cells(packs[car][:16], 60.0, v7)
     st.dataframe(pd.DataFrame(rows).round(2).set_index("cell"))
     st.caption("Negative dollars: bypassing a healthy cell loses more than it gains. Responses come from reon_response.decide; hardware keeps safety authority.")
+
+with t8:
+    st.write("Where the extra money comes from, automatic bypass minus replace-on-failure, per kWh nameplate. Presets are assumptions, tagged in docs/SOURCES.md.")
+    name = st.selectbox("Site", list(PR.PRESETS))
+    base = PR.PRESETS[name]
+    c = st.columns(4)
+    fade8 = c[0].select_slider("Cell fade per year", [0.004, 0.008, 0.012, 0.02], base["fade"], key="f8")
+    lam8 = c[1].select_slider("Faults per cell-year", [0.001, 0.003, 0.01, 0.03], base["lam"], key="l8")
+    visit8 = c[2].select_slider("Crew visit cost", [250, 500, 1000, 3000, 6000], int(base["visit_cost"]), key="v8")
+    dc8 = c[3].select_slider("Cost per month down (assumed)", [0, 5, 20, 60], int(base["down_cost"]), key="d8")
+    kw8 = dict(base, fade=fade8, lam=lam8, visit_cost=float(visit8), down_cost=float(dc8))
+
+    @st.cache_data(show_spinner=False)
+    def streams(items):
+        return E.value_streams(**dict(items))
+
+    @st.cache_data(show_spinner=False)
+    def fault_breakeven(items):
+        return E.break_even("lam", 0.0, 0.1, **dict(items))
+
+    vs = streams(tuple(sorted(kw8.items())))
+    st.bar_chart(pd.DataFrame({"per kWh nameplate": [vs["spread"], vs["faults"], vs["crew"], vs["downtime"]]}, index=["capacity and switch cost", "dead cells kept working", "crew visits avoided", "downtime avoided"]))
+    st.metric("Total gain over replace-on-failure", f"{vs['total']:+.1f} per kWh", help=f"best automatic variant: {vs['variant']}")
+    lb, ld = fault_breakeven(tuple(sorted(kw8.items())))
+    st.write("Fault rate at which automatic bypass starts to pay at this site: " + (f"{lb:.4f} per cell-year (about {100*(1-(1-lb)**16):.0f}% of 16-cell strings a year)" if lb is not None and ld == "above" else ("it pays at any fault rate here" if ld == "always a" else "it does not pay at any fault rate up to 0.1 here")) + ". The fault rate is the number to ask REON for.")
+    st.caption("At slow fade the capacity stream is near zero or negative: the case rests on faults, crew visits and downtime, and the downtime cost is assumed.")

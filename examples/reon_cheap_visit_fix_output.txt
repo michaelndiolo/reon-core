@@ -1,0 +1,7 @@
+300 hostile site draws; chooser picked replace or a threshold at 43 (HOLD sites)
+  automatic bypass would pay if switch loss were below a break-even at 35 of 43 HOLD sites; median break-even 7.7% (their actual median 8.5%)
+  ... or if switch cost were below a break-even at 31 of 43; median 12.8 per kWh vs the assumed 15.5 (REON range 7 to 24)
+  shedding 30% of the current by stretching discharge flips 25 of 43 HOLD sites to automatic bypass
+  shedding 50% of the current by stretching discharge flips 27 of 43 HOLD sites to automatic bypass
+  HOLD sites with plausible loss (<= 4%): 3 of 43; their median visit cost 3576
+  sites where no loss or cost in range makes automatic bypass pay: 1

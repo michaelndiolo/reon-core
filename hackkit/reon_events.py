@@ -23,11 +23,12 @@ def _draw(rng, n, months, fade, fcv, start_cv, lam, reps=6):
 
 
 def simulate(policy, seed, n=16, months=144, fade=0.02, fcv=0.45, start_cv=0.02, lam=0.01, lead=1.0, visit_cost=1000.0, nameplate=60.0, value=40.0, e=15.5, cell_cost_per_kwh=98.0,
-             n_min=12, bypass_budget=4, crew_at=3, weak_line=None, g=0.87, loss=0.02, persist=3, retire=0.7, rate=0.07, detect=0.0, thr_pays_loss=True, down_cost=0.0):
+             n_min=12, bypass_budget=4, crew_at=3, weak_line=None, g=0.87, loss=0.02, persist=3, retire=0.7, rate=0.07, detect=0.0, thr_pays_loss=True, down_cost=0.0, slack=0.0):
     need(policy in EXTENDED, f"events: unknown policy {policy!r}")
     need(n >= 2 and months >= 1 and nameplate > 0 and 0 <= lam <= 1 and fade >= 0 and fcv >= 0 and start_cv >= 0 and visit_cost >= 0 and lead >= 0 and 0 <= loss < 1 and 0 < retire < 1 and 0 <= rate <= 1,
          "events: n >= 2, months >= 1, nameplate > 0, 0 <= fault rate <= 1, costs and spreads >= 0, 0 < retire < 1")
-    need(1 <= n_min <= n and bypass_budget >= 0 and crew_at >= 1 and persist >= 1 and detect >= 0 and down_cost >= 0 and (weak_line is None or 0 < weak_line < 1), "events: 1 <= n_min <= n, budget >= 0, crew_at >= 1, persist >= 1, 0 < weak line < 1")
+    need(1 <= n_min <= n and bypass_budget >= 0 and crew_at >= 1 and persist >= 1 and detect >= 0 and down_cost >= 0 and 0 <= slack < 1 and (weak_line is None or 0 < weak_line < 1), "events: 1 <= n_min <= n, budget >= 0, crew_at >= 1, persist >= 1, 0 < weak line < 1")
+    loss = loss * (1.0 - slack)   # conduction loss share = I x R_switch / V, so it falls in proportion to current; slack = share of current the site can shed by stretching discharge (physics, 0 = none)
     rng = np.random.default_rng(seed)
     f, c0, ft = _draw(rng, n, months, fade, fcv, start_cv, lam)
     gen = np.zeros(n, int)
@@ -115,3 +116,48 @@ def choose_policy(candidates=EXTENDED, seeds_pick=range(0, 8), seeds_check=range
     ours = [p for p in candidates if p.startswith("ours")]
     return dict(policy=best, net=check[best], finalists=check, auto_wins=best.startswith("ours"),
                 best_auto=max(ours, key=first.get) if ours else None)
+
+
+
+AUTO_FAMILY = ("ours", "ours+crew", "ours+crew1", "ours+crew2")
+
+
+def _net(p, seeds, kw):
+    return float(np.mean([simulate(p, s, **kw)["net"] for s in seeds]))
+
+
+def _gap(a, b, seeds, kw):
+    """a minus b, mean net over seeds. a = 'auto' means the best automatic-bypass variant for these inputs (the site would pick it)."""
+    na = max(_net(p, seeds, kw) for p in AUTO_FAMILY) if a == "auto" else _net(a, seeds, kw)
+    return na - _net(b, seeds, kw)
+
+
+def break_even(param, lo, hi, a="auto", b="replace", seeds=range(8), iters=14, **kw):
+    """Value of `param` in [lo, hi] at which policy a and policy b earn the same. Returns (value, direction): direction 'below' means a wins for values below it.
+    (None, 'always a') or (None, 'never a') when there is no crossing in the range. Used to turn a HOLD into a target: 'REON wins here if conduction loss stays under x'."""
+    ga, gb = _gap(a, b, seeds, {**kw, param: lo}), _gap(a, b, seeds, {**kw, param: hi})
+    if ga >= 0 and gb >= 0:
+        return None, "always a"
+    if ga < 0 and gb < 0:
+        return None, "never a"
+    x0, x1 = lo, hi
+    for _ in range(iters):
+        mid = 0.5 * (x0 + x1)
+        if (_gap(a, b, seeds, {**kw, param: mid}) >= 0) == (ga >= 0):
+            x0 = mid
+        else:
+            x1 = mid
+    return 0.5 * (x0 + x1), ("below" if ga >= 0 else "above")
+
+
+def value_streams(a="auto", b="replace", seeds=range(10), **kw):
+    """Where the extra money comes from, a minus b, by switching mechanisms on one at a time:
+    spread = capacity and electronics effect with no faults and free visits; faults = cells that would die; crew = visits avoided; downtime = outage cost avoided. They add to the total."""
+    if a == "auto":   # fix the variant on the full inputs so the four steps compare like with like
+        a = max(AUTO_FAMILY, key=lambda p: _net(p, seeds, kw))
+    z = {**kw, "lam": 0.0, "visit_cost": 0.0, "down_cost": 0.0}
+    c0 = _gap(a, b, seeds, z)
+    c1 = _gap(a, b, seeds, {**z, "lam": kw.get("lam", 0.01)})
+    c2 = _gap(a, b, seeds, {**z, "lam": kw.get("lam", 0.01), "visit_cost": kw.get("visit_cost", 1000.0)})
+    c3 = _gap(a, b, seeds, kw)
+    return dict(spread=c0, faults=c1 - c0, crew=c2 - c1, downtime=c3 - c2, total=c3, variant=a)
