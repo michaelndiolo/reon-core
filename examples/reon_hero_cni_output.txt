@@ -1,0 +1,39 @@
+value/kWh-yr  switch cost  fade CV   best build            net vs plain   net vs sort-only
+      12          7.0      0.20   late switches, sorted       +1.1           +1.1
+      12          7.0      0.45   late switches, sorted      +13.1          +13.1
+      12          7.0      0.60   late switches             +18.7          +18.7
+      12         15.5      0.20   selective: only the 1 weakest cell of the pack       +0.1           +0.1
+      12         15.5      0.45   late switches, sorted       +4.6           +4.6
+      12         15.5      0.60   late switches             +10.2          +10.2
+      12         24.0      0.20   selective: only the 1 weakest cell of the pack       -0.5           -0.5
+      12         24.0      0.45   selective: only the 1 weakest cell of the pack       -0.7           -0.7
+      12         24.0      0.60   late switches, sorted       +1.7           +1.7
+      22          7.0      0.20   late switches, sorted       +7.8           +7.8
+      22          7.0      0.45   late switches, sorted      +29.9          +29.9
+      22          7.0      0.60   late switches             +40.1          +40.1
+      22         15.5      0.20   selective: only the 2 weakest cells of the pack       +1.6           +1.6
+      22         15.5      0.45   late switches, sorted      +21.4          +21.4
+      22         15.5      0.60   late switches             +31.6          +31.6
+      22         24.0      0.20   selective: only the 2 weakest cells of the pack       +0.5           +0.5
+      22         24.0      0.45   late switches, sorted      +12.9          +12.9
+      22         24.0      0.60   late switches             +23.1          +23.1
+      40          7.0      0.20   late switches, sorted      +20.0          +20.0
+      40          7.0      0.45   late switches, sorted      +60.1          +60.1
+      40          7.0      0.60   late switches             +78.7          +78.7
+      40         15.5      0.20   late switches, sorted      +11.5          +11.5
+      40         15.5      0.45   late switches, sorted      +51.6          +51.6
+      40         15.5      0.60   late switches             +70.2          +70.2
+      40         24.0      0.20   selective: only the 2 weakest cells of the pack       +3.4           +3.4
+      40         24.0      0.45   late switches             +43.1          +43.1
+      40         24.0      0.60   late switches             +61.7          +61.7
+      80          7.0      0.20   late switches, sorted      +47.0          +47.0
+      80          7.0      0.45   late switches, sorted     +127.3         +127.3
+      80          7.0      0.60   late switches            +164.3         +164.3
+      80         15.5      0.20   late switches, sorted      +38.5          +38.5
+      80         15.5      0.45   late switches, sorted     +118.8         +118.8
+      80         15.5      0.60   late switches            +155.8         +155.8
+      80         24.0      0.20   late switches, sorted      +30.0          +30.0
+      80         24.0      0.45   late switches, sorted     +110.3         +110.3
+      80         24.0      0.60   late switches            +147.3         +147.3
+
+wins vs plain: 34 of 36 ; vs sort-only: 34 of 36
