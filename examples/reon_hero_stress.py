@@ -1,4 +1,4 @@
-"""STRESS TEST of the hero case (new sodium-style pack, commercial/industrial duty, retire at 70 %). Run: PYTHONPATH=. python examples/reon_hero_stress.py random|sourced <seed> <n>  |  report
+"""STRESS TEST of the hero case (new sodium-style pack, commercial/industrial duty, retire at 70 %). Run: PYTHONPATH=. python examples/reon_hero_stress.py random|sourced|sourcedv <seed> <n>  |  report
 Each draw moves EVERY input at once and asks: does reon_wear.recommend_build beat the best rival (plain, sort only, balancer)? and does it beat the plain string (the brief's baseline)?
 random: wide ASSUMED ranges on every input (balancer strength and cost drawn independently, on purpose harsh).
 sourced: fade-rate spread drawn from the 12 REAL cars (Nature Energy 2026 Fig 4); switch cost from Tim Ren's 7 to 24 per kWh; balancer strength and cost tied together by real parts (as in reon_stress.draw_sourced); value per kWh-year 10 to 90
@@ -8,7 +8,7 @@ from multiprocessing import Pool
 import numpy as np
 from hackkit import reon_wear as W
 
-OUT = {"random": "examples/reon_hero_stress_random.jsonl", "sourced": "examples/reon_hero_stress_sourced.jsonl"}
+OUT = {"random": "examples/reon_hero_stress_random.jsonl", "sourced": "examples/reon_hero_stress_sourced.jsonl", "sourcedv": "examples/reon_hero_stress_sourced_voltage.jsonl"}
 
 
 def real_fade_cvs():
@@ -33,6 +33,8 @@ def lg(rng, lo, hi):
 
 
 def draw(rng, mode, cvs):
+    volt = mode == "sourcedv"      # sourced draws PLUS the voltage-floor derating of docs: extra usable-energy loss of 2.3 to 5.0 points (sodium curve, minimum voltage 0.60 to 0.75 of nominal; examples/reon_voltage_limit.py); the minimum voltage is UNKNOWN
+    mode = "sourced" if volt else mode
     p = dict(value=lg(rng, 10, 90), years=u(rng, 8, 15), fade=u(rng, 0.01, 0.04), duty=u(rng, 0.5, 0.95), g=float(rng.choice([0.0, 0.6, 0.9, 1.2])), knee=float(rng.choice([0.0, 0.3, 0.65])),
              loss=u(rng, 0.005, 0.05), start_cv=u(rng, 0.01, 0.04), sigma=lg(rng, 0.01, 0.10), sort=u(rng, 0.0, 5.0), closed=float(rng.choice([0.0, 0.005, 0.01])), n=int(rng.choice([16, 48])), seed=int(rng.integers(1, 10**6)))
     if mode == "random":
@@ -43,6 +45,8 @@ def draw(rng, mode, cvs):
         crate = u(rng, 0.15, 0.5)              # ASSUMED C&I discharge rate
         per_cell = u(rng, 2.1, 3.2) * u(rng, 1.0, 2.5) if amps >= 5.5 else u(rng, 0.5, 2.0)
         p.update(fcv=float(rng.choice(cvs)), elec=u(rng, 7.0, 24.0), r=min(amps / (crate * ah), 1.0), bcost=per_cell / (ah * 3.2 / 1000.0), eta=u(rng, 0.85, 0.95), amps=amps, ah=ah)
+    if volt:
+        p["loss"] = 0.02 + float(rng.choice([0.023, 0.029, 0.039, 0.050]))
     return p
 
 
@@ -76,7 +80,7 @@ def report(mode):
 
 if __name__ == "__main__":
     if sys.argv[1] == "report":
-        for md in ("random", "sourced"):
+        for md in ("random", "sourced", "sourcedv"):
             try:
                 report(md)
             except FileNotFoundError:

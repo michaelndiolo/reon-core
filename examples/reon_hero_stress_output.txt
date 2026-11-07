@@ -22,3 +22,14 @@ sourced: 280 draws
   elec 7-15: n=136, win vs rival 92%, vs plain 96%
   elec 15-24: n=144, win vs rival 78%, vs plain 94%
   losing draws, median input vs all draws: {'value': (20.802, 30.738), 'fcv': (0.376, 0.456), 'elec': (20.385, 15.372), 'r': (0.159, 0.185), 'bcost': (9.768, 14.095), 'start_cv': (0.026, 0.024), 'fade': (0.016, 0.025)}
+sourcedv: 100 draws
+  beat best rival in 80%  (margin median +12.4, 10th pct -0.8, worst -9.7 per kWh nameplate)
+  beat plain string (brief baseline) in 91%  (median +34.6, 10th pct +3.1)
+  value 10-20: n=29, win vs rival 66%, vs plain 76%
+  value 20-40: n=35, win vs rival 86%, vs plain 94%
+  value 40-90: n=36, win vs rival 86%, vs plain 100%
+  fcv 0.2-0.4: n=33, win vs rival 76%, vs plain 85%
+  fcv 0.4-0.6: n=67, win vs rival 82%, vs plain 94%
+  elec 7-15: n=48, win vs rival 94%, vs plain 98%
+  elec 15-24: n=52, win vs rival 67%, vs plain 85%
+  losing draws, median input vs all draws: {'value': (20.635, 30.241), 'fcv': (0.456, 0.456), 'elec': (19.219, 15.392), 'r': (0.318, 0.268), 'bcost': (15.491, 15.491), 'start_cv': (0.022, 0.023), 'fade': (0.025, 0.026)}
