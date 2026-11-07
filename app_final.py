@@ -77,8 +77,8 @@ with front:
     ss0 = st.session_state
     ss0.setdefault("map_ver", 0)
     with st.expander("Pick your state on a map (and see where this matters most)"):
-        mc = st.columns([2, 2, 3])
-        layer = mc[0].radio("Show", list(MP.LAYERS), key="m_layer", help="Exposure: minutes without power. Coverage: backup hours against the typical outage. Where to pilot: load at risk in dollars.")
+        mc = st.columns([3, 2])
+        layer = mc[0].radio("Show", list(MP.LAYERS), key="m_layer", horizontal=True, help="Exposure: minutes without power. Coverage: backup hours against the typical outage. Where to pilot: load at risk in dollars.")
         mload = ss0.get("f_load", 5.0)
         voll = mc[1].slider("Value of lost load ($ per kWh)", 0.0, 100.0, MP.VOLL_TEXAS, key="m_voll", help="Only the Texas figure (about 35.7) is sourced; a store's own number can be far lower or higher.") if layer == "Where to pilot" else MP.VOLL_TEXAS
 
@@ -100,7 +100,7 @@ with front:
             ss0.map_ver += 1
         mtitle = {"Exposure": "Minutes without power, 2025", "Coverage": "Backup hours / typical outage", "Where to pilot": "$ of load at risk per store-year"}[layer]
         st.altair_chart(VZ.tile_map_chart(mf, ss0.get("f_state"), mtitle, ",.1f" if layer == "Coverage" else ",.0f"), on_select="rerun", key=f"mapchart{ss0.map_ver}", use_container_width=False)
-        mc[2].caption("Click a tile to set your state below. State averages from the utilities' reports (EIA-861), not a store's own outage record. "
+        st.caption("Click a tile to set your state below. State averages from the utilities' reports (EIA-861), not a store's own outage record. "
                       + ("Coverage uses your load setting and the cell-level backup hours." if layer == "Coverage" else "")
                       + (" Load at risk = hours without power x your load x the value above; one sourced anchor (Texas), the rest is your call." if layer == "Where to pilot" else ""))
     a = st.columns(5)
@@ -121,7 +121,7 @@ with front:
     r0["load_kw"] = load0
     ci = float(sd0.loc[state0, "caidi_major_2025"]) / 60.0
     st.subheader(f"{'Worth it' if r0['verdict'] == 'BUY' else 'Not worth it here'}")
-    (st.success if r0["verdict"] == "BUY" else st.warning)(SF.headline(r0, state0, ci))
+    (st.success if r0["verdict"] == "BUY" else st.warning)(SF.headline(r0, state0, ci).replace("$", "\\$"))
     m = st.columns(3)
     m[0].metric("Backup on a storm night", f"{r0['backup_managed_h']:.1f} h", f"{r0['backup_managed_h'] - r0['backup_plain_h']:+.1f} h vs a plain string")
     m[1].metric("Battery life", f"{r0['life_ours']:.0f} years" if r0["verdict"] == "BUY" else f"{r0['life_plain']:.0f} years", f"{r0['life_ours'] - r0['life_plain']:+.0f} years vs plain" if r0["verdict"] == "BUY" else None)
@@ -452,8 +452,8 @@ with t12:
     c12 = SF.cached_core(1, 0.008, v12)
     rob12 = {"verdict": c12["verdict"], "mean_gain": c12["dollars_per_kwh"]} if c12 else eng1(250, 1, v12, 15.5, 0.45, 0.04, 0.008)[0]
     st.metric(f"Value of a kWh at this tariff", f"${v12:.0f} per year")
-    (st.success if rob12["verdict"] == "BUY" else st.warning)(f"{rob12['verdict']}: net gain over a plain string {rob12['mean_gain']:+.1f} per kWh, about ${rob12['mean_gain'] * 60:,.0f} on a 60 kWh battery over 12 years.")
-    st.markdown("- **Buyers.** About 5 million US commercial customers can subscribe to demand charges above $15/kW, about 3 million above $20/kW (NREL survey). Only the top quarter reach the 40 to 90 per kWh-year range.\n"
+    (st.success if rob12["verdict"] == "BUY" else st.warning)(f"{rob12['verdict']}: net gain over a plain string {rob12['mean_gain']:+.1f} per kWh, about ${rob12['mean_gain'] * 60:,.0f} on a 60 kWh battery over 12 years.".replace("$", "\\$"))
+    st.markdown("- **Buyers.** About 5 million US commercial customers can subscribe to demand charges above \\$15/kW, about 3 million above \\$20/kW (NREL survey). Only the top quarter reach the 40 to 90 per kWh-year range.\n"
                 "- **Market.** Community, commercial and industrial storage was about 95.6 MW of 18.9 GW installed in 2025; Wood Mackenzie expects 39% growth from 2025 to 2030 with a dip in 2026 (via ESS News). Small today, growing.\n"
                 "- **How it ships.** Software on REON modules, which can be added in series with an existing battery (REON CTO). Sealed EV packs are typically not retrofittable.\n"
                 "- **Policy.** The storage investment tax credit (Sections 48 and 48E) outlasts the wind and solar sunset, but prohibited-foreign-entity material-assistance rules are stricter for storage; preliminary Treasury guidance came in February 2026. Whether a REON battery qualifies depends on where its cells are made: ask REON.\n"

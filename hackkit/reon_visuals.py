@@ -28,7 +28,7 @@ def grid_chart(health, failed, early, cols: int = 25):
         opacity=alt.Opacity("health:Q", scale=alt.Scale(domain=[0.65, 1.0], range=[0.35, 1.0], clamp=True), legend=None),
         tooltip=[alt.Tooltip("cell:Q", title="Cell"), alt.Tooltip("health:Q", title="Health", format=".0%"), alt.Tooltip("state:N", title="State")]).add_params(pick)
     glyph = base.mark_text(color="white", fontSize=13, fontWeight="bold").encode(text="mark:N")
-    return (rect + glyph).properties(height=230)
+    return (rect + glyph).properties(height=400)
 
 
 def voltage_chart(v_now: float, window: float):
@@ -39,7 +39,7 @@ def voltage_chart(v_now: float, window: float):
         x=alt.X("lo:Q", scale=alt.Scale(domain=[0.4, 1.0]), axis=ax), x2="v:Q", y=alt.Y("label:N", axis=None))
     rule = alt.Chart(df).mark_rule(color="#444", strokeWidth=2, strokeDash=[4, 3]).encode(x="floor:Q")
     txt = alt.Chart(df).mark_text(align="right", dx=-4, dy=-18, fontSize=11, color="#444").encode(x="floor:Q", y=alt.Y("label:N", axis=None), text=alt.value("inverter floor"))
-    return (bar + rule + txt).properties(height=64)
+    return (bar + rule + txt).properties(height=100)
 
 
 def policies_chart(plain_h: float, managed_h: float, shed_h: float):
@@ -50,7 +50,7 @@ def policies_chart(plain_h: float, managed_h: float, shed_h: float):
         y=y, x=alt.X("hours:Q", axis=alt.Axis(title="Hours of backup at this load", grid=False, tickMinStep=2)),
         color=alt.Color("policy:N", scale=alt.Scale(domain=names, range=["#9aa3a8", COLORS[0], "#1f5f6b"]), legend=None))
     lab = alt.Chart(df).mark_text(align="left", dx=5, color="#444").encode(y=y, x="hours:Q", text=alt.Text("hours:Q", format=".1f"))
-    return (bars + lab).properties(height=130)
+    return (bars + lab).properties(height=210)
 
 
 TREND_CLASSES = ["Typical", "Fades faster than its neighbours", "Ends weakest"]
@@ -115,7 +115,7 @@ def gain_fade_chart(rows, claim_fade: float = 0.004):
     zero = alt.Chart(pd.DataFrame({"y": [0.0]})).mark_rule(color="#555", strokeDash=[4, 3]).encode(y="y:Q")
     claim = alt.Chart(pd.DataFrame({"x": [claim_fade], "t": ["maker's claim"]})).mark_rule(color="#999", strokeDash=[2, 3]).encode(x="x:Q")
     lab = alt.Chart(pd.DataFrame({"x": [claim_fade], "y": [150.0], "t": ["maker's claim"]})).mark_text(align="left", dx=5, color="#555", fontSize=11).encode(x="x:Q", y="y:Q", text="t:N")
-    return (zero + claim + lab + line + pts).properties(height=300)
+    return (zero + claim + lab + line + pts).properties(height=420)
 
 
 def tile_map_chart(frame: pd.DataFrame, selected: str | None = None, title: str = "", fmt: str = ",.0f"):
@@ -133,4 +133,4 @@ def tile_map_chart(frame: pd.DataFrame, selected: str | None = None, title: str 
         x=x, y=y, color=alt.Color("value:Q", scale=alt.Scale(range=["#e3eef0", "#1f5e6b"]), legend=alt.Legend(title=title, orient="bottom", format=fmt, gradientLength=220, direction="horizontal")),
         stroke=alt.condition(alt.datum.chosen, alt.value("#c0392b"), alt.value("#ffffff")), strokeWidth=alt.condition(alt.datum.chosen, alt.value(3), alt.value(0.5)), tooltip=tip).add_params(pick)
     labels = alt.Chart(df).mark_text(fontSize=12, fontWeight="bold").encode(x=x, y=y, text="abbr:N", color=alt.condition(alt.datum.dark, alt.value("#ffffff"), alt.value("#1e2a2e")), tooltip=tip)
-    return (tiles + labels).properties(height=300, width=560).configure_view(stroke=None)
+    return (tiles + labels).properties(height=440, width=720).configure_view(stroke=None)
