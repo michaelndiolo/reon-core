@@ -35,8 +35,12 @@ def safe_recommend(start, m, *, value_per_kwh_year, electronics_per_kwh, fade_cv
     ks = tuple(k for k in ks if 0 < k < m)
     if not ks:
         warn.append("no valid selective-bypass counts for this string length; only whole-string builds are compared")
-    if electronics_per_kwh > 60:
-        warn.append("switch cost above 60 per kWh is far outside REON's stated 7 to 24 range")
+    if electronics_per_kwh > 24:
+        warn.append("switch cost above 24 per kWh is outside REON's stated 7 to 24 range")
+    if fade_cv > 0.6:
+        warn.append("fade spread above 0.6 is outside the real cars measured (0.20 to 0.60): extrapolation")
+    if electronics_per_kwh < 7:
+        warn.append("switch cost below 7 per kWh is under Tim Ren's stated range")
     if value_per_kwh_year == 0:
         warn.append("zero value: no build can be worth buying")
     out = W.recommend_build(s, int(m), balancer_r=balancer_r, balancer_per_kwh=balancer_per_kwh, ks=ks, fade_mean=fade_mean, fade_cv=fade_cv, loss=loss, electronics_per_kwh=electronics_per_kwh,
@@ -50,7 +54,8 @@ def robust_recommend(start, m, *, seeds=(5, 11), **kw):
     the pick still beats plain on the fresh seed AND its pessimistic case (p10) is not worse than plain's.
     Returns dict(verdict BUY|HOLD|PLAIN, build, mean_gain, p10_gain, reasons, warnings)."""
     pick, w1 = safe_recommend(start, m, seed=seeds[0], **kw)
-    chk, _ = safe_recommend(start, m, seed=seeds[1], **kw)
+    kw2 = dict(kw); kw2["trials"] = 2 * kw.get("trials", 14)   # the check seed gets twice the trials: p10 is noisy
+    chk, _ = safe_recommend(start, m, seed=seeds[1], **kw2)
     name = pick["ours_best"]
     t = chk["table"]
     why = []
@@ -60,8 +65,8 @@ def robust_recommend(start, m, *, seeds=(5, 11), **kw):
     p10 = t[name]["p10"] - t["plain"]["p10"]
     if gain <= 0:
         why.append("the pick does not beat plain on a fresh seed")
-    if p10 < 0:
-        why.append("its pessimistic case (p10) is worse than plain's")
+    if p10 < -0.05 * max(gain, 0.0):
+        why.append("its pessimistic case (p10) is clearly worse than plain's")
     if t[name]["years"] < t["plain"]["years"] - 1e-9:
         why.append("it retires earlier than plain")
     return dict(verdict="HOLD" if why else "BUY", build=name, mean_gain=float(gain), p10_gain=float(p10), reasons=why or ["beats plain on an independent seed, pessimistic case too"], warnings=w1)

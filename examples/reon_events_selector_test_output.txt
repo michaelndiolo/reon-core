@@ -1,0 +1,7 @@
+240 hostile site draws; regret = net lost vs the best policy in hindsight on unseen seeds (per kWh nameplate, lower is better)
+  selector                 mean    1.3  p90    3.0  worst   34.0
+  always ours+crew         mean   10.9  p90   36.7  worst  110.0
+  always ours              mean   14.2  p90   46.4  worst  110.0
+  best fixed threshold     mean   36.2  p90   68.9  worst  122.9
+  always replace           mean   50.7  p90  166.5  worst  480.8
+selector chose an automatic-bypass policy in 147/240 sites; chose replace or a threshold in 93

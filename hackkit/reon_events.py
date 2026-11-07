@@ -97,3 +97,17 @@ def simulate(policy, seed, n=16, months=144, fade=0.02, fcv=0.45, start_cv=0.02,
         else:
             down += 1
     return dict(net=(pv_val - pv_cost) / nameplate, visits=visits, down_months=down, life_years=life / 12.0)
+
+
+def choose_policy(candidates=POLICIES, seeds_pick=range(0, 8), seeds_check=range(100, 108), **kw):
+    """Run every policy for THIS site, pick on one set of seeds, confirm on an independent set. The answer can be 'replace' or a fixed threshold:
+    automatic bypass is not always right (cheap site visits, tiny bypass budget, high switch loss). Returns dict(policy, net, rivals{name: net}, auto_wins)."""
+    def mean(p, seeds):
+        return float(np.mean([simulate(p, s, **kw)["net"] for s in seeds]))
+    first = {p: mean(p, seeds_pick) for p in candidates}
+    top = sorted(first, key=first.get, reverse=True)[:2]          # finalists on the first seeds
+    check = {p: mean(p, seeds_check) for p in top}                # winner decided on unseen seeds
+    best = max(check, key=check.get)
+    ours = [p for p in candidates if p.startswith("ours")]
+    return dict(policy=best, net=check[best], finalists=check, auto_wins=best.startswith("ours"),
+                best_auto=max(ours, key=first.get) if ours else None)

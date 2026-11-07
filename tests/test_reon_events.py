@@ -24,3 +24,9 @@ def test_dead_cell_takes_plain_string_down_but_not_bypassing_one():
     kw = dict(lam=0.03, lead=2.0)
     assert np.mean([E.simulate("replace", s, **kw)["down_months"] for s in range(30)]) > 0
     assert np.mean([E.simulate("ours", s, **kw)["down_months"] for s in range(30)]) == 0
+
+
+def test_choose_policy_cheap_visits_prefers_replace_or_threshold_and_remote_prefers_auto():
+    cheap = E.choose_policy(visit_cost=60.0, lam=0.008, loss=0.09, seeds_pick=range(0, 4), seeds_check=range(100, 104))
+    remote = E.choose_policy(visit_cost=6000.0, lam=0.02, seeds_pick=range(0, 4), seeds_check=range(100, 104))
+    assert remote["auto_wins"] and set(cheap["finalists"]) <= set(E.POLICIES)

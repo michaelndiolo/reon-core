@@ -72,6 +72,8 @@ with t3:
         r = [E.simulate(pol, s, lam=lam, visit_cost=float(visit), lead=lead, weak_line=wl) for s in range(40)]
         rows.append({"policy": pol, "net value per kWh": np.mean([x["net"] for x in r]), "crew visits": np.mean([x["visits"] for x in r]), "months down": np.mean([x["down_months"] for x in r]), "life (years)": np.mean([x["life_years"] for x in r])})
     st.dataframe(pd.DataFrame(rows).round(1).set_index("policy"))
+    pick = E.choose_policy(E.POLICIES, lam=lam, visit_cost=float(visit), lead=lead, weak_line=wl)
+    (st.success if pick["auto_wins"] else st.warning)(f"For this site the policy to use is: {pick['policy']} (picked on one set of random seeds, confirmed on another). " + ("Automatic bypass pays here." if pick["auto_wins"] else "Automatic bypass does NOT pay here: cheap crew visits or a threshold rule do better."))
     st.write("replace = detect, wait for a crew, swap the cell. thr = fixed-threshold automatic bypass. ours = persistent-fault bypass plus per-cycle switching; ours+crew also books one visit to restore bypassed cells. Fault rates and visit cost are ASSUMED.")
 
 with t4:
