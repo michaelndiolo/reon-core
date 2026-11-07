@@ -51,3 +51,43 @@ def policies_chart(plain_h: float, managed_h: float, shed_h: float):
         color=alt.Color("policy:N", scale=alt.Scale(domain=names, range=["#9aa3a8", COLORS[0], "#1f5f6b"]), legend=None))
     lab = alt.Chart(df).mark_text(align="left", dx=5, color="#444").encode(y=y, x="hours:Q", text=alt.Text("hours:Q", format=".1f"))
     return (bars + lab).properties(height=130)
+
+
+TREND_CLASSES = ["Typical", "Fades faster than its neighbours", "Ends weakest"]
+TREND_COLORS = ["#8aa9b0", "#d9922b", "#c0392b"]
+
+
+def trend_frame(early, late, flagged, end_weakest: int) -> pd.DataFrame:
+    e, l = np.asarray(early, float), np.asarray(late, float)
+    rows = []
+    for i in range(e.size):
+        cls = TREND_CLASSES[2] if i == end_weakest else (TREND_CLASSES[1] if flagged[i] else TREND_CLASSES[0])
+        rows.append(dict(cell=i, early=float(100 * e[i]), late=float(100 * l[i]), fade=float(100 * (e[i] - l[i])), cls=cls))
+    return pd.DataFrame(rows)
+
+
+def slope_lines_chart(early, late, flagged, end_weakest: int, km_early: int = 80, km_late: int = 280):
+    """Each cell as a line from its early capacity to its late capacity; the cell that ends weakest and the fast faders are drawn heavier."""
+    df = trend_frame(early, late, flagged, end_weakest)
+    long = pd.concat([df.assign(age=f"{km_early},000 km", cap=df.early), df.assign(age=f"{km_late},000 km", cap=df.late)])
+    long["order"] = long.cls.map({TREND_CLASSES[0]: 0, TREND_CLASSES[1]: 1, TREND_CLASSES[2]: 2})
+    long = long.sort_values(["order", "cell"])
+    return alt.Chart(long).mark_line(point=alt.OverlayMarkDef(size=18)).encode(
+        x=alt.X("age:N", sort=[f"{km_early},000 km", f"{km_late},000 km"], axis=alt.Axis(title=None, labelAngle=0), scale=alt.Scale(padding=0.15)),
+        y=alt.Y("cap:Q", scale=alt.Scale(zero=False), axis=alt.Axis(title="Capacity, % of day 1", grid=False)),
+        detail="cell:N", color=alt.Color("cls:N", scale=alt.Scale(domain=TREND_CLASSES, range=TREND_COLORS), legend=alt.Legend(title=None, orient="bottom")),
+        strokeWidth=alt.StrokeWidth("order:Q", scale=alt.Scale(domain=[0, 2], range=[1, 3.5]), legend=None), opacity=alt.Opacity("order:Q", scale=alt.Scale(domain=[0, 2], range=[0.4, 1.0]), legend=None),
+        tooltip=[alt.Tooltip("cell:Q", title="Cell"), alt.Tooltip("early:Q", title="Early, %", format=".1f"), alt.Tooltip("late:Q", title="Late, %", format=".1f"), alt.Tooltip("fade:Q", title="Lost, points", format=".1f")]).properties(height=260)
+
+
+def position_chart(early, late, flagged, end_weakest: int, local_median):
+    """Left to right along the pack: each cell's fade against the median of its neighbours."""
+    df = trend_frame(early, late, flagged, end_weakest)
+    df["neighbours"] = np.asarray(local_median, float)
+    base = alt.Chart(df).encode(x=alt.X("cell:Q", title="Position along the pack, left to right", axis=alt.Axis(grid=False)))
+    pts = base.mark_circle(size=55, opacity=0.9).encode(
+        y=alt.Y("fade:Q", title="Capacity lost, points of day 1", scale=alt.Scale(zero=True)),
+        color=alt.Color("cls:N", scale=alt.Scale(domain=TREND_CLASSES, range=TREND_COLORS), legend=None),
+        tooltip=[alt.Tooltip("cell:Q", title="Cell"), alt.Tooltip("fade:Q", title="Lost, points", format=".1f"), alt.Tooltip("neighbours:Q", title="Neighbours' median", format=".1f")])
+    line = base.mark_line(color="#555", strokeWidth=1.5, strokeDash=[3, 2]).encode(y="neighbours:Q")
+    return (line + pts).properties(height=220)

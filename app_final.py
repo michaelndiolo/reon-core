@@ -21,6 +21,7 @@ from hackkit import reon_enviro as EN
 from hackkit import reon_secondlife as SL
 from hackkit import reon_grid as GR
 from hackkit import reon_visuals as VZ
+from hackkit import reon_slope as SLP
 
 st.set_page_config(page_title="REON decision layer", layout="wide")
 st.title("Beyond the weakest cell: what cell-level control is worth")
@@ -37,7 +38,35 @@ def real_packs():
 
 
 BE = pd.DataFrame({"fade spread 0.20": [16.2, 27.3, 45.7, None], "0.45": [25.4, 42.9, None, None], "0.60": [29.1, 49.4, None, None]}, index=["value 12", "value 22", "value 40", "value 80"])
-front, sv_tab, eng_wrap = st.tabs(["Customer view: a storm night", "String view: click a cell", "Engineering and evidence"])
+front, sv_tab, trend_tab, eng_wrap = st.tabs(["Customer view: a storm night", "String view: click a cell", "Cell trends: slope and neighbours", "Engineering and evidence"])
+with trend_tab:
+    st.write("A snapshot ranks cells by where they are today. A trend asks how fast each one is falling, and whether it falls faster than the cells next to it. Real data: the Nature Energy 2026 packs (95 cells each, measured at 80,000 and 280,000 km). Not REON data.")
+
+    @st.cache_data
+    def trend_packs():
+        return SLP.load_cells()
+
+    tp = trend_packs()
+    summ = SLP.snapshot_vs_trend(tp)
+    pk = st.selectbox("Pack", list(tp), key="tr_pack")
+    e_, l_ = tp[pk]
+    f_ = SLP.fade_pp(e_, l_)
+    flag_, lm_, sc_ = SLP.outliers(f_)
+    wl_ = int(np.argmin(l_))
+    row = summ["per_pack"][pk]
+    tm = st.columns(4)
+    tm[0].metric("Weakest cell at the end", f"cell {wl_}", f"{100*l_[wl_]:.0f}% of day 1", delta_color="off")
+    tm[1].metric("Its rank at 80,000 km", f"{row['early_rank_of_final_weakest']} of {row['n']}", "1 = weakest then", delta_color="off")
+    tm[2].metric("Steepest fader is that cell", "yes" if row["steepest_is_final_weakest"] else "no")
+    tm[3].metric("Fading faster than neighbours", f"{int(flag_.sum())} cell(s)")
+    st.altair_chart(VZ.slope_lines_chart(e_, l_, flag_, wl_), use_container_width=True)
+    st.caption("Each line is one cell. Red ends weakest; amber fades faster than its neighbours. The lines fan out: where a cell starts says little about where it ends.")
+    st.altair_chart(VZ.position_chart(e_, l_, flag_, wl_, lm_), use_container_width=True)
+    st.caption("Left to right along the pack. The dashed line is the median of the eight nearest cells. Cells well above it are fading for their own reasons, not because the whole neighbourhood is hot.")
+    n_ = summ["packs"]
+    st.write(f"**Across all {n_} packs:** the cell that ended weakest was also the weakest at 80,000 km in only {summ['same_weakest']} of {n_}; its median rank then was {summ['median_early_rank']:.0f} of 95. The steepest fader was the final weakest in {summ['steepest_is_final_weakest']} of {n_}. The spread in how much cells fade was larger than the spread in where they started in {summ['fade_spread_larger']} of {n_}.")
+    st.caption("What this is and is not: two ages give a slope, not a full curve, and we cannot test a forecast out of sample, so this shows what a snapshot misses and does not predict failures. REON's own per-cell history would give the curve. The grouping by neighbours uses the order the data give; in a real string it would be the wiring order.")
+
 with eng_wrap:
     t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12 = st.tabs(["1 Is it worth it", "2 Where it flips", "3 Life of the string", "4 Storm", "5 Voltage limit", "6 Evidence and limits", "7 Which cell is hurting", "8 Where the money comes from", "9 System view", "10 Balancing and modules", "11 What to ask REON first", "12 Who buys and how it ships"])
 
