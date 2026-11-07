@@ -1,0 +1,9 @@
+*.part
+*.pyc
+.DS_Store
+.claude/
+.pytest_cache/
+.venv/
+__pycache__/
+data_external/
+venv/

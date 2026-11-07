@@ -1,0 +1,28 @@
+558 draws; ours wins (margin > 0) in 78%; margin quartiles [-1.   0.2  4.4 13.4 21.1]
+  Leaf 8    retired EV   wins  73%  median margin  +6.9  worst  -2.0
+  Leaf 8    grid         wins  82%  median margin +13.2  worst  -6.1
+  Leaf 8    data-center  wins  68%  median margin  +3.5  worst  -1.9
+  BMW 36    retired EV   wins  66%  median margin  +0.7  worst  -1.3
+  BMW 36    grid         wins  79%  median margin  +6.3  worst  -5.6
+  BMW 36    data-center  wins  66%  median margin  +0.3  worst  -1.1
+  brief 16  retired EV   wins  82%  median margin +10.0  worst  -1.0
+  brief 16  grid         wins  85%  median margin +16.6  worst  -7.0
+  brief 16  data-center  wins  97%  median margin +10.5  worst  -0.8
+
+median input in LOSING vs WINNING draws (all packs and applications)
+  elec   losing    9.269   winning    5.582
+  loss   losing    0.029   winning    0.026
+  closed losing    0.005   winning    0.005
+  r      losing    0.267   winning    0.055
+  bcost  losing    2.293   winning    9.531
+  eta    losing    0.868   winning    0.872
+  sigma  losing    0.040   winning    0.030
+  fcv    losing    0.286   winning    0.283
+  g      losing    0.900   winning    0.900
+  knee   losing    0.300   winning    0.300
+  duty   losing    0.712   winning    0.736
+  sort   losing    2.797   winning    3.104
+  vmul   losing    0.904   winning    0.938
+  emul   losing    1.384   winning    1.317
+
+builds recommended: {'balancer 11%': 1, 'balancer 13%': 7, 'balancer 16%': 4, 'balancer 17%': 13, 'balancer 2%': 3, 'balancer 26%': 5, 'balancer 27%': 22, 'balancer 3%': 2, 'balancer 30%': 5, 'balancer 31%': 6, 'balancer 32%': 5, 'balancer 36%': 9, 'balancer 39%': 4, 'balancer 49%': 7, 'balancer 5%': 2, 'balancer 50%': 2, 'balancer 6%': 2, 'balancer 7%': 2, 'balancer 9%': 8, 'hybrid 1/12 + balancer 2%': 1, 'hybrid 1/12 + balancer 3%': 2, 'hybrid 1/12 + balancer 50%': 1, 'hybrid 1/16 + balancer 13%': 1, 'hybrid 1/16 + balancer 5%': 1, 'hybrid 1/16 + balancer 50%': 1, 'hybrid 1/16 + balancer 9%': 2, 'hybrid 1/8 + balancer 50%': 1, 'late switches': 233, 'level switches': 26, 'plain': 16, 'selective 1/12 cells': 28, 'selective 1/16 cells': 82, 'selective 2/12 cells': 1, 'selective 2/16 cells': 10, 'selective 2/8 cells': 3, 'selective 3/12 cells': 5, 'selective 3/16 cells': 4, 'selective 3/8 cells': 2, 'selective 4/8 cells': 2, 'selective: only the 1 weakest cell of the pack': 21, 'selective: only the 3 weakest cells of the pack': 6}

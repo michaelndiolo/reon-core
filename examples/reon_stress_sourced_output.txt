@@ -1,0 +1,18 @@
+768 draws with balancer strength and cost tied to real parts; ours wins in 95%; margin quartiles [ 0.7  2.5  7.6 14.7 21.2]
+  Leaf 8    retired EV   wins  95%  median margin +11.6  worst  -0.4
+  Leaf 8    grid         wins  92%  median margin +20.9  worst  -3.8
+  Leaf 8    data-center  wins  97%  median margin  +7.5  worst  -0.6
+  BMW 36    retired EV   wins  86%  median margin  +1.4  worst  -1.0
+  BMW 36    grid         wins  92%  median margin  +8.3  worst  -2.0
+  BMW 36    data-center  wins  80%  median margin  +0.5  worst  -0.4
+  brief 16  retired EV   wins 100%  median margin +14.5  worst  +4.9
+  brief 16  grid         wins  98%  median margin +14.6  worst  -1.0
+  brief 16  data-center  wins 100%  median margin +14.1  worst  +7.9
+  STABL 96  retired EV   wins 100%  median margin  +4.3  worst  +2.3
+  STABL 96  grid         wins  97%  median margin +11.9  worst  -2.9
+  STABL 96  data-center  wins 100%  median margin  +2.3  worst  +1.3
+  balancer  1.0 A: we win  98% (n=173); median balancer limit 3%, median cost 5.0 per kWh
+  balancer  2.0 A: we win  91% (n=185); median balancer limit 5%, median cost 5.1 per kWh
+  balancer  5.5 A: we win  96% (n=187); median balancer limit 16%, median cost 16.1 per kWh
+  balancer 10.0 A: we win  95% (n=223); median balancer limit 27%, median cost 17.4 per kWh
+losing draws: 40; of them by pack: {'Leaf 8': 10, 'BMW 36': 27, 'brief 16': 1, 'STABL 96': 2}

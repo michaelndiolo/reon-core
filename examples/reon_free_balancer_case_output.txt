@@ -1,0 +1,23 @@
+PART 1: net value per kWh nameplate. Ours = best of selective / late / hybrid at that loss; rival = FREE balancer (20% limit) at efficiency 90%
+pack      application bypass loss | ours (net) which                          | bal 20% free bal unl free | margin vs bal 20%
+brief 16  retired EV         2.0% |      +18.8 hybrid 1/16 + balancer 20%     |        +19.4        +19.4 | -0.5
+brief 16  retired EV         1.0% |      +18.8 hybrid 1/16 + balancer 20%     |        +19.4        +19.4 | -0.5
+brief 16  retired EV         0.5% |      +18.8 hybrid 1/16 + balancer 20%     |        +19.4        +19.4 | -0.5
+brief 16  retired EV         0.2% |      +18.8 hybrid 1/16 + balancer 20%     |        +19.4        +19.4 | -0.5
+brief 16  grid               2.0% |      +35.1 hybrid 1/16 + balancer unlimited |        +34.7        +35.7 | +0.4
+brief 16  grid               1.0% |      +35.1 hybrid 1/16 + balancer unlimited |        +34.7        +35.7 | +0.4
+brief 16  grid               0.5% |      +35.1 hybrid 1/16 + balancer unlimited |        +34.7        +35.7 | +0.4
+brief 16  grid               0.2% |      +35.1 hybrid 1/16 + balancer unlimited |        +34.7        +35.7 | +0.4
+Leaf 8    retired EV         2.0% |      +16.8 hybrid 1/8 + balancer unlimited |        +17.6        +17.9 | -0.8
+Leaf 8    retired EV         1.0% |      +16.8 hybrid 1/8 + balancer unlimited |        +17.6        +17.9 | -0.8
+Leaf 8    retired EV         0.5% |      +16.8 hybrid 1/8 + balancer unlimited |        +17.6        +17.9 | -0.8
+Leaf 8    retired EV         0.2% |      +16.8 hybrid 1/8 + balancer unlimited |        +17.6        +17.9 | -0.8
+Leaf 8    grid               2.0% |      +37.0 hybrid 1/8 + balancer unlimited |        +36.6        +38.1 | +0.4
+Leaf 8    grid               1.0% |      +37.0 hybrid 1/8 + balancer unlimited |        +36.6        +38.1 | +0.4
+Leaf 8    grid               0.5% |      +37.0 hybrid 1/8 + balancer unlimited |        +36.6        +38.1 | +0.4
+Leaf 8    grid               0.2% |      +37.0 hybrid 1/8 + balancer unlimited |        +36.6        +38.1 | +0.4
+
+PART 2: BMW 36 cells, weakest/mean 0.933: ideal gain at day 1 7.2%
+  retired EV  ceiling (ideal control, no loss, no cost) gross +4.9; sort only gross +0.7; selective 1/12 per string net +2.0; ONLY the weakest cell of the pack (one switch) net +1.8, two cells +1.8; full late net -4.0
+  grid        ceiling (ideal control, no loss, no cost) gross +17.7; sort only gross +1.0; selective 1/12 per string net +1.6; ONLY the weakest cell of the pack (one switch) net +1.6, two cells +1.6; full late net +8.7
+  data-center ceiling (ideal control, no loss, no cost) gross +2.6; sort only gross +0.4; selective 1/12 per string net +0.7; ONLY the weakest cell of the pack (one switch) net +0.9, two cells +0.8; full late net -6.3

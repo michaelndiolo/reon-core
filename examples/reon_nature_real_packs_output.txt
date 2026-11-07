@@ -1,0 +1,31 @@
+PART 1: real packs. beta = weakest / mean capacity. per-cell loss = 1 - cap(280k km)/cap(80k km); its CV is the real fade-rate spread within a car.
+car     cells |  cv 80k beta 80k | cv 280k beta 280k | ideal gain 280k | loss mean loss cv | cells under 0.9 x median at 280k
+Fig4a      95 |   0.005    0.977 |   0.021     0.917 |            9.0% |     0.054    0.38 | 0
+Fig4b      95 |   0.006    0.988 |   0.063     0.884 |           13.1% |     0.114    0.51 | 1
+Fig4c      95 |   0.006    0.983 |   0.037     0.888 |           12.6% |     0.099    0.32 | 1
+Fig4d      95 |   0.005    0.988 |   0.030     0.905 |           10.4% |     0.062    0.45 | 0
+Fig4e      95 |   0.004    0.991 |   0.021     0.949 |            5.4% |     0.058    0.33 | 0
+Fig4f      95 |   0.005    0.991 |   0.027     0.911 |            9.8% |     0.048    0.56 | 0
+Fig4g      95 |   0.005    0.990 |   0.053     0.862 |           15.9% |     0.102    0.46 | 5
+Fig4h      95 |   0.006    0.987 |   0.019     0.941 |            6.3% |     0.039    0.53 | 0
+Fig4i      95 |   0.006    0.990 |   0.024     0.918 |            9.0% |     0.051    0.47 | 0
+Fig4j      95 |   0.023    0.892 |   0.033     0.927 |            7.9% |     0.097    0.42 | 0
+Fig4k      95 |   0.004    0.991 |   0.006     0.980 |            2.1% |     0.024    0.26 | 0
+Fig4l      95 |   0.011    0.966 |   0.017     0.954 |            4.8% |     0.038    0.57 | 0
+fade-rate spread (CV of per-cell loss) across the 12 cars: median 0.45, range 0.26 to 0.57  (Iowa State lab cells: median 0.20)
+
+PART 2: recommend_build margin over the best alternative, per kWh nameplate (positive = we win); build chosen in brackets for the typical-current balancer
+  retired EV  balancer 5%, cost 4   : we win in 5 of 12 cars; margin median  -0.1, min  -0.1, max  +6.0
+  retired EV  balancer 20%, cost 12 : we win in 11 of 12 cars; margin median  +1.7, min  -0.1, max  +3.2
+  retired EV  balancer 20%, FREE    : we win in 0 of 12 cars; margin median  -0.1, min  -0.1, max  -0.1
+  grid        balancer 5%, cost 4   : we win in 12 of 12 cars; margin median +28.6, min +14.0, max +35.3
+  grid        balancer 20%, cost 12 : we win in 12 of 12 cars; margin median +18.7, min  +7.4, max +23.4
+  grid        balancer 20%, FREE    : we win in 10 of 12 cars; margin median  +6.7, min  -0.1, max +11.4
+
+per car, retired EV, balancer 5% cost 4: Fig4a: -0.1 (balancer 5%); Fig4b: +4.3 (late switches, sorted); Fig4c: +2.6 (late switches); Fig4d: +0.9 (late switches, sorted); Fig4e: -0.1 (balancer 5%); Fig4f: +0.7 (late switches, sorted); Fig4g: +6.0 (late switches, sorted); Fig4h: -0.1 (balancer 5%); Fig4i: -0.0 (balancer 5%); Fig4j: -0.1 (balancer 5%); Fig4k: -0.1 (plain); Fig4l: -0.1 (balancer 5%)
+
+PART 3: break-even electronics cost (per kWh nameplate, switch on every cell) for each car against a typical-current balancer (5%, cost 4), sort only and plain; 0 = cannot win at any cost
+  retired EV : median  12.1, min   3.5, max  38.8; cars where break-even >= 8.8 (our assumed cost): 7 of 12;  >= 4: 11 of 12
+     per car: a:14.0, b:13.1, c:38.8, d:11.1, e:5.2, f:19.6, g:32.0, h:7.1, i:19.6, j:7.8, k:3.5, l:6.3
+  grid       : median  37.4, min  22.8, max  44.1; cars where break-even >= 8.8 (our assumed cost): 12 of 12;  >= 4: 12 of 12
+     per car: a:32.2, b:44.1, c:31.9, d:37.2, e:29.4, f:41.2, g:41.6, h:39.8, i:37.6, j:34.9, k:22.8, l:40.5

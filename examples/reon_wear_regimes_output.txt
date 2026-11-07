@@ -1,0 +1,88 @@
+
+######## balancer costs 0 per kWh nameplate ########
+
+== retired EV ==  (net value per kWh nameplate; winner in brackets)
+A linear        cv  0.5% | sort only:-0.0  late:-7.4  level:-8.7  bal 10%:+1.3  bal unlimited:+1.3 | best [balancer 10%] +1.3
+A linear        cv  2.0% | sort only:+0.6  late:-5.4  level:-7.6  bal 10%:+3.4  bal unlimited:+3.4 | best [balancer 10%] +3.4
+A linear        cv  5.0% | sort only:+3.5  late:-0.8  level:-3.0  bal 10%:+7.9  bal unlimited:+7.9 | best [balancer unlimited] +7.9
+A linear        cv 10.0% | sort only:+8.5  late:+6.9  level:+4.8  bal 10%:+10.6  bal unlimited:+15.6 | best [balancer unlimited] +15.6
+B wear g=0.8    cv  0.5% | sort only:-0.0  late:-7.4  level:-8.7  bal 10%:+1.4  bal unlimited:+1.4 | best [balancer 10%] +1.4
+B wear g=0.8    cv  2.0% | sort only:+0.7  late:-5.3  level:-7.6  bal 10%:+3.5  bal unlimited:+3.5 | best [balancer 10%] +3.5
+B wear g=0.8    cv  5.0% | sort only:+3.6  late:-0.6  level:-2.9  bal 10%:+8.1  bal unlimited:+8.1 | best [balancer unlimited] +8.1
+B wear g=0.8    cv 10.0% | sort only:+8.8  late:+7.3  level:+5.2  bal 10%:+10.9  bal unlimited:+16.0 | best [balancer unlimited] +16.0
+C wear + knees  cv  0.5% | sort only:-0.1  late:-4.4  level:-6.3  bal 10%:+4.4  bal unlimited:+4.4 | best [balancer unlimited] +4.4
+C wear + knees  cv  2.0% | sort only:+0.2  late:-3.4  level:-5.6  bal 10%:+5.4  bal unlimited:+5.4 | best [balancer unlimited] +5.4
+C wear + knees  cv  5.0% | sort only:+2.4  late:+0.2  level:-2.0  bal 10%:+8.6  bal unlimited:+8.9 | best [balancer unlimited] +8.9
+C wear + knees  cv 10.0% | sort only:+7.8  late:+7.9  level:+5.9  bal 10%:+11.7  bal unlimited:+16.7 | best [balancer unlimited] +16.7
+
+== grid ==  (net value per kWh nameplate; winner in brackets)
+A linear        cv  0.5% | sort only:-0.4  late:+4.2  level:+1.1  bal 10%:+11.3  bal unlimited:+12.9 | best [balancer unlimited] +12.9
+A linear        cv  2.0% | sort only:+0.2  late:+5.4  level:+2.0  bal 10%:+12.2  bal unlimited:+14.1 | best [balancer unlimited] +14.1
+A linear        cv  5.0% | sort only:+3.7  late:+10.4  level:+7.1  bal 10%:+16.1  bal unlimited:+19.1 | best [balancer unlimited] +19.1
+A linear        cv 10.0% | sort only:+13.9  late:+24.4  level:+21.3  bal 10%:+22.2  bal unlimited:+33.1 | best [balancer unlimited] +33.1
+B wear g=0.8    cv  0.5% | sort only:-0.3  late:+4.1  level:+0.7  bal 10%:+11.3  bal unlimited:+13.1 | best [balancer unlimited] +13.1
+B wear g=0.8    cv  2.0% | sort only:+0.3  late:+5.5  level:+1.6  bal 10%:+12.5  bal unlimited:+14.4 | best [balancer unlimited] +14.4
+B wear g=0.8    cv  5.0% | sort only:+4.3  late:+11.5  level:+7.6  bal 10%:+17.3  bal unlimited:+20.5 | best [balancer unlimited] +20.5
+B wear g=0.8    cv 10.0% | sort only:+15.7  late:+27.4  level:+23.8  bal 10%:+24.4  bal unlimited:+36.3 | best [balancer unlimited] +36.3
+C wear + knees  cv  0.5% | sort only:-0.3  late:+4.8  level:+2.5  bal 10%:+8.1  bal unlimited:+13.8 | best [balancer unlimited] +13.8
+C wear + knees  cv  2.0% | sort only:-0.0  late:+5.8  level:+2.9  bal 10%:+9.0  bal unlimited:+14.8 | best [balancer unlimited] +14.8
+C wear + knees  cv  5.0% | sort only:+2.2  late:+9.1  level:+6.1  bal 10%:+12.0  bal unlimited:+18.1 | best [balancer unlimited] +18.1
+C wear + knees  cv 10.0% | sort only:+9.1  late:+19.2  level:+16.3  bal 10%:+16.8  bal unlimited:+28.2 | best [balancer unlimited] +28.2
+
+== data-center ==  (net value per kWh nameplate; winner in brackets)
+A linear        cv  0.5% | sort only:+0.0  late:-8.2  level:-8.8  bal 10%:+0.6  bal unlimited:+0.6 | best [balancer 10%] +0.6
+A linear        cv  2.0% | sort only:+0.4  late:-7.0  level:-8.2  bal 10%:+1.8  bal unlimited:+1.8 | best [balancer 10%] +1.8
+A linear        cv  5.0% | sort only:+1.9  late:-4.5  level:-5.7  bal 10%:+4.2  bal unlimited:+4.2 | best [balancer unlimited] +4.2
+A linear        cv 10.0% | sort only:+4.6  late:-0.4  level:-1.5  bal 10%:+5.7  bal unlimited:+8.3 | best [balancer unlimited] +8.3
+B wear g=0.8    cv  0.5% | sort only:+0.0  late:-8.1  level:-8.8  bal 10%:+0.7  bal unlimited:+0.7 | best [balancer 10%] +0.7
+B wear g=0.8    cv  2.0% | sort only:+0.4  late:-7.0  level:-8.2  bal 10%:+1.8  bal unlimited:+1.8 | best [balancer 10%] +1.8
+B wear g=0.8    cv  5.0% | sort only:+1.9  late:-4.5  level:-5.7  bal 10%:+4.3  bal unlimited:+4.3 | best [balancer unlimited] +4.3
+B wear g=0.8    cv 10.0% | sort only:+4.7  late:-0.2  level:-1.3  bal 10%:+5.8  bal unlimited:+8.5 | best [balancer unlimited] +8.5
+C wear + knees  cv  0.5% | sort only:+0.0  late:-8.1  level:-8.8  bal 10%:+0.7  bal unlimited:+0.7 | best [balancer 10%] +0.7
+C wear + knees  cv  2.0% | sort only:+0.4  late:-7.0  level:-8.2  bal 10%:+1.8  bal unlimited:+1.8 | best [balancer 10%] +1.8
+C wear + knees  cv  5.0% | sort only:+1.9  late:-4.5  level:-5.7  bal 10%:+4.3  bal unlimited:+4.3 | best [balancer unlimited] +4.3
+C wear + knees  cv 10.0% | sort only:+4.7  late:-0.2  level:-1.3  bal 10%:+5.8  bal unlimited:+8.5 | best [balancer unlimited] +8.5
+
+######## balancer costs 4 per kWh nameplate ########
+
+== retired EV ==  (net value per kWh nameplate; winner in brackets)
+A linear        cv  0.5% | sort only:-0.0  late:-7.4  level:-8.7  bal 10%:-2.7  bal unlimited:-2.7 | best [sort only] -0.0
+A linear        cv  2.0% | sort only:+0.6  late:-5.4  level:-7.6  bal 10%:-0.6  bal unlimited:-0.6 | best [sort only] +0.6
+A linear        cv  5.0% | sort only:+3.5  late:-0.8  level:-3.0  bal 10%:+3.9  bal unlimited:+3.9 | best [balancer unlimited] +3.9
+A linear        cv 10.0% | sort only:+8.5  late:+6.9  level:+4.8  bal 10%:+6.6  bal unlimited:+11.6 | best [balancer unlimited] +11.6
+B wear g=0.8    cv  0.5% | sort only:-0.0  late:-7.4  level:-8.7  bal 10%:-2.6  bal unlimited:-2.6 | best [sort only] -0.0
+B wear g=0.8    cv  2.0% | sort only:+0.7  late:-5.3  level:-7.6  bal 10%:-0.5  bal unlimited:-0.5 | best [sort only] +0.7
+B wear g=0.8    cv  5.0% | sort only:+3.6  late:-0.6  level:-2.9  bal 10%:+4.1  bal unlimited:+4.1 | best [balancer unlimited] +4.1
+B wear g=0.8    cv 10.0% | sort only:+8.8  late:+7.3  level:+5.2  bal 10%:+6.9  bal unlimited:+12.0 | best [balancer unlimited] +12.0
+C wear + knees  cv  0.5% | sort only:-0.1  late:-4.4  level:-6.3  bal 10%:+0.4  bal unlimited:+0.4 | best [balancer unlimited] +0.4
+C wear + knees  cv  2.0% | sort only:+0.2  late:-3.4  level:-5.6  bal 10%:+1.4  bal unlimited:+1.4 | best [balancer unlimited] +1.4
+C wear + knees  cv  5.0% | sort only:+2.4  late:+0.2  level:-2.0  bal 10%:+4.6  bal unlimited:+4.9 | best [balancer unlimited] +4.9
+C wear + knees  cv 10.0% | sort only:+7.8  late:+7.9  level:+5.9  bal 10%:+7.7  bal unlimited:+12.7 | best [balancer unlimited] +12.7
+
+== grid ==  (net value per kWh nameplate; winner in brackets)
+A linear        cv  0.5% | sort only:-0.4  late:+4.2  level:+1.1  bal 10%:+7.3  bal unlimited:+8.9 | best [balancer unlimited] +8.9
+A linear        cv  2.0% | sort only:+0.2  late:+5.4  level:+2.0  bal 10%:+8.2  bal unlimited:+10.1 | best [balancer unlimited] +10.1
+A linear        cv  5.0% | sort only:+3.7  late:+10.4  level:+7.1  bal 10%:+12.1  bal unlimited:+15.1 | best [balancer unlimited] +15.1
+A linear        cv 10.0% | sort only:+13.9  late:+24.4  level:+21.3  bal 10%:+18.2  bal unlimited:+29.1 | best [balancer unlimited] +29.1
+B wear g=0.8    cv  0.5% | sort only:-0.3  late:+4.1  level:+0.7  bal 10%:+7.3  bal unlimited:+9.1 | best [balancer unlimited] +9.1
+B wear g=0.8    cv  2.0% | sort only:+0.3  late:+5.5  level:+1.6  bal 10%:+8.5  bal unlimited:+10.4 | best [balancer unlimited] +10.4
+B wear g=0.8    cv  5.0% | sort only:+4.3  late:+11.5  level:+7.6  bal 10%:+13.3  bal unlimited:+16.5 | best [balancer unlimited] +16.5
+B wear g=0.8    cv 10.0% | sort only:+15.7  late:+27.4  level:+23.8  bal 10%:+20.4  bal unlimited:+32.3 | best [balancer unlimited] +32.3
+C wear + knees  cv  0.5% | sort only:-0.3  late:+4.8  level:+2.5  bal 10%:+4.1  bal unlimited:+9.8 | best [balancer unlimited] +9.8
+C wear + knees  cv  2.0% | sort only:-0.0  late:+5.8  level:+2.9  bal 10%:+5.0  bal unlimited:+10.8 | best [balancer unlimited] +10.8
+C wear + knees  cv  5.0% | sort only:+2.2  late:+9.1  level:+6.1  bal 10%:+8.0  bal unlimited:+14.1 | best [balancer unlimited] +14.1
+C wear + knees  cv 10.0% | sort only:+9.1  late:+19.2  level:+16.3  bal 10%:+12.8  bal unlimited:+24.2 | best [balancer unlimited] +24.2
+
+== data-center ==  (net value per kWh nameplate; winner in brackets)
+A linear        cv  0.5% | sort only:+0.0  late:-8.2  level:-8.8  bal 10%:-3.4  bal unlimited:-3.4 | best [sort only] +0.0
+A linear        cv  2.0% | sort only:+0.4  late:-7.0  level:-8.2  bal 10%:-2.2  bal unlimited:-2.2 | best [sort only] +0.4
+A linear        cv  5.0% | sort only:+1.9  late:-4.5  level:-5.7  bal 10%:+0.2  bal unlimited:+0.2 | best [sort only] +1.9
+A linear        cv 10.0% | sort only:+4.6  late:-0.4  level:-1.5  bal 10%:+1.7  bal unlimited:+4.3 | best [sort only] +4.6
+B wear g=0.8    cv  0.5% | sort only:+0.0  late:-8.1  level:-8.8  bal 10%:-3.3  bal unlimited:-3.3 | best [sort only] +0.0
+B wear g=0.8    cv  2.0% | sort only:+0.4  late:-7.0  level:-8.2  bal 10%:-2.2  bal unlimited:-2.2 | best [sort only] +0.4
+B wear g=0.8    cv  5.0% | sort only:+1.9  late:-4.5  level:-5.7  bal 10%:+0.3  bal unlimited:+0.3 | best [sort only] +1.9
+B wear g=0.8    cv 10.0% | sort only:+4.7  late:-0.2  level:-1.3  bal 10%:+1.8  bal unlimited:+4.5 | best [sort only] +4.7
+C wear + knees  cv  0.5% | sort only:+0.0  late:-8.1  level:-8.8  bal 10%:-3.3  bal unlimited:-3.3 | best [sort only] +0.0
+C wear + knees  cv  2.0% | sort only:+0.4  late:-7.0  level:-8.2  bal 10%:-2.2  bal unlimited:-2.2 | best [sort only] +0.4
+C wear + knees  cv  5.0% | sort only:+1.9  late:-4.5  level:-5.7  bal 10%:+0.3  bal unlimited:+0.3 | best [sort only] +1.9
+C wear + knees  cv 10.0% | sort only:+4.7  late:-0.2  level:-1.3  bal 10%:+1.8  bal unlimited:+4.5 | best [sort only] +4.7

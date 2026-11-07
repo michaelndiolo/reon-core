@@ -1,0 +1,54 @@
+
+######## balancer costs 0 per kWh nameplate. Break-even electronics cost for our late switches (negative = cannot win even if free) ########
+application  ageing           cv | vs bal  10%  vs bal  20%  vs bal  50%  vs bal  unl | vs sort only | wins at 8.8 against
+retired EV   A linear         2% |       0.0        0.0        0.0        0.0 |          2.7 | nothing
+retired EV   A linear         5% |       0.1        0.0        0.0        0.0 |          4.4 | nothing
+retired EV   A linear        10% |       5.0        0.1        0.1        0.1 |          7.2 | nothing
+retired EV   A linear        15% |      10.2        3.6        0.1        0.1 |         10.2 | 10%
+retired EV   C wear+knees     2% |       0.1        0.0        0.0        0.0 |          5.3 | nothing
+retired EV   C wear+knees     5% |       0.4        0.0        0.0        0.0 |          6.5 | nothing
+retired EV   C wear+knees    10% |       5.1        0.2        0.1        0.1 |          8.9 | nothing
+retired EV   C wear+knees    15% |      11.7        3.7        0.1        0.1 |         11.7 | 10%
+grid         A linear         2% |       2.0        0.2        0.1        0.1 |         14.0 | nothing
+grid         A linear         5% |       3.1        0.3        0.2        0.2 |         15.5 | nothing
+grid         A linear        10% |      11.0        1.2        0.2        0.2 |         19.4 | 10%
+grid         A linear        15% |      24.3        7.4        0.3        0.3 |         24.3 | 10%
+grid         C wear+knees     2% |       5.6        1.8       -0.2       -0.2 |         14.6 | nothing
+grid         C wear+knees     5% |       6.0        2.0       -0.2       -0.2 |         15.8 | nothing
+grid         C wear+knees    10% |      11.3        2.8       -0.2       -0.2 |         19.0 | 10%
+grid         C wear+knees    15% |      21.5        7.5       -0.1       -0.2 |         23.1 | 10%
+data-center  A linear         2% |       0.0        0.0        0.0        0.0 |          1.4 | nothing
+data-center  A linear         5% |       0.0        0.0        0.0        0.0 |          2.3 | nothing
+data-center  A linear        10% |       2.7        0.1        0.0        0.0 |          3.8 | nothing
+data-center  A linear        15% |       5.5        1.9        0.1        0.1 |          5.5 | nothing
+data-center  C wear+knees     2% |       0.0        0.0        0.0        0.0 |          1.4 | nothing
+data-center  C wear+knees     5% |       0.0        0.0        0.0        0.0 |          2.4 | nothing
+data-center  C wear+knees    10% |       2.8        0.0        0.0        0.0 |          3.9 | nothing
+data-center  C wear+knees    15% |       5.6        1.9        0.1        0.1 |          5.6 | nothing
+
+######## balancer costs 4 per kWh nameplate. Break-even electronics cost for our late switches (negative = cannot win even if free) ########
+application  ageing           cv | vs bal  10%  vs bal  20%  vs bal  50%  vs bal  unl | vs sort only | wins at 8.8 against
+retired EV   A linear         2% |       2.7        2.7        2.7        2.7 |          2.7 | nothing
+retired EV   A linear         5% |       4.1        4.0        4.0        4.0 |          4.4 | nothing
+retired EV   A linear        10% |       7.2        4.1        4.1        4.1 |          7.2 | nothing
+retired EV   A linear        15% |      10.2        7.6        4.1        4.1 |         10.2 | 10%
+retired EV   C wear+knees     2% |       4.1        4.0        4.0        4.0 |          5.3 | nothing
+retired EV   C wear+knees     5% |       4.4        4.0        4.0        4.0 |          6.5 | nothing
+retired EV   C wear+knees    10% |       8.9        4.2        4.1        4.1 |          8.9 | 10%
+retired EV   C wear+knees    15% |      11.7        7.7        4.1        4.1 |         11.7 | 10%
+grid         A linear         2% |       6.0        4.2        4.1        4.1 |         14.0 | nothing
+grid         A linear         5% |       7.1        4.3        4.2        4.2 |         15.5 | nothing
+grid         A linear        10% |      15.0        5.2        4.2        4.2 |         19.4 | 10%
+grid         A linear        15% |      24.3       11.4        4.3        4.3 |         24.3 | 10%, 20%
+grid         C wear+knees     2% |       9.6        5.8        3.8        3.8 |         14.6 | 10%
+grid         C wear+knees     5% |      10.0        6.0        3.8        3.8 |         15.8 | 10%
+grid         C wear+knees    10% |      15.3        6.8        3.8        3.8 |         19.0 | 10%
+grid         C wear+knees    15% |      23.1       11.5        3.9        3.8 |         23.1 | 10%, 20%
+data-center  A linear         2% |       1.4        1.4        1.4        1.4 |          1.4 | nothing
+data-center  A linear         5% |       2.3        2.3        2.3        2.3 |          2.3 | nothing
+data-center  A linear        10% |       3.8        3.8        3.8        3.8 |          3.8 | nothing
+data-center  A linear        15% |       5.5        5.5        4.1        4.1 |          5.5 | nothing
+data-center  C wear+knees     2% |       1.4        1.4        1.4        1.4 |          1.4 | nothing
+data-center  C wear+knees     5% |       2.4        2.4        2.4        2.4 |          2.4 | nothing
+data-center  C wear+knees    10% |       3.9        3.9        3.9        3.9 |          3.9 | nothing
+data-center  C wear+knees    15% |       5.6        5.6        4.1        4.1 |          5.6 | nothing
