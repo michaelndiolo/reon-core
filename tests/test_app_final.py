@@ -1,6 +1,16 @@
 import pytest
 from streamlit.testing.v1 import AppTest
 
+@pytest.fixture(autouse=True)
+def _restore_widgets():
+    """app_final replaces st.slider / st.select_slider with chip versions at import time. AppTest runs it in this process, so put the originals back afterwards (otherwise later tests of other apps see the chips)."""
+    import streamlit as st
+    from streamlit.delta_generator import DeltaGenerator as DG
+    saved = (st.slider, st.select_slider, DG.slider, DG.select_slider)
+    yield
+    st.slider, st.select_slider, DG.slider, DG.select_slider = saved
+
+
 PAGES = ["1 · Ask us", "2 · See it in 3D", "3 · Your state and site", "4 · The evidence"]
 
 
