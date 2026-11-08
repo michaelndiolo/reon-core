@@ -15,6 +15,7 @@ from hackkit import reon_storm as S
 from hackkit import reon_enviro as EN
 
 N_SERIES = 250
+CLOSED_LOSS = 0.02   # ASSUMED: conduction loss of the always-closed series switches, charged on ALL energy of a switched string (REON: overhead 'very minimum, but not none'); the plain string has no switches. Same 2% the backup-hours calculation uses.
 WINDOW = 0.9   # share of the 250 cells that must stay in the string (REON CTO: about 90%, unclear); every build respects it. None would mean no voltage limit.
 ELEC = 15.5
 CASES_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "examples", "data", "storefront_cases.json")
@@ -55,13 +56,51 @@ def gain_vs_fade(value, cases=None, fades=GAIN_FADES, parallels=GAIN_PARALLEL):
     return rows
 
 
+BAL_PATH = os.path.join(os.path.dirname(CASES_PATH), "balancer_sweep.json")
+BAL_LIMITS = (0.01, 0.02, 0.03, 0.05, 0.075, 0.10, 0.15)
+BAL_SERIES = (("balancer", "Balancer alone"), ("reon", "REON switches alone"), ("both", "Switches plus balancer"))
+
+
+def balancer_rows(p, fade, path=BAL_PATH):
+    """Rows for the balancer-strength chart: 12-year gain per kWh (value 40) against how much of a cell's capacity a balancer can move per cycle, for three builds.
+    Precomputed by examples/reon_balancer_sweep.py; empty list if the case is missing. Each row: limit, series, gain, p10."""
+    try:
+        with open(path) as f:
+            cs = json.load(f).get("cases", {})
+    except (OSError, ValueError):
+        return []
+    rows = []
+    for r in BAL_LIMITS:
+        c = cs.get(f"{int(p)}|{float(fade):.4f}|{r:.3f}")
+        if not c:
+            continue
+        for key, label in BAL_SERIES:
+            rows.append(dict(limit=float(r), series=label, gain=float(c[key]["gain"]), p10=float(c[key]["p10"]), build=c[key]["build"]))
+    return rows
+
+
+def balancer_crossover(rows):
+    """Balancer strength (share of a cell's capacity per cycle) above which a balancer alone beats REON switches alone, linearly interpolated; None if switches win at every limit tried, 0.0 if the balancer wins at all of them."""
+    bal = sorted((r["limit"], r["gain"]) for r in rows if r["series"] == "Balancer alone")
+    sw = {r["limit"]: r["gain"] for r in rows if r["series"] == "REON switches alone"}
+    if not bal:
+        return None
+    d = [(x, g - sw[x]) for x, g in bal]
+    if d[0][1] >= 0:
+        return 0.0
+    for (x0, d0), (x1, d1) in zip(d, d[1:]):
+        if d1 >= 0:
+            return x0 + (x1 - x0) * (-d0) / (d1 - d0)
+    return None
+
+
 KS = (1, 2, 4, 8, 16, 25)
 OURS = ("selective", "late", "level", "hybrid")
 
 
 def _kw(p, fade, value, elec, years, n):
     return dict(value_per_kwh_year=float(value), electronics_per_kwh=float(elec), fade_cv=0.45 / np.sqrt(p), fade_mean=float(fade), loss=0.04, years=float(years),
-                eol_frac=0.7, trials=8, steps=60, ks=tuple(k for k in KS if k < n) or (1,), window=WINDOW)
+                eol_frac=0.7, trials=8, steps=60, ks=tuple(k for k in KS if k < n) or (1,), window=WINDOW, closed_loss=CLOSED_LOSS)
 
 
 def _start(p, n):
@@ -71,15 +110,15 @@ def _start(p, n):
 def backup_hours(packs, nameplate_kwh, load_kw, cold=0.8):
     """Median hours over real packs, plain vs managed, at a steady critical load (cold-weather capacity factor)."""
     plain = [S.hours(v, nameplate_kwh, load_kw, False, cold) for v in packs.values()]
-    managed = [S.hours(v, nameplate_kwh, load_kw, True, cold) for v in packs.values()]
+    managed = [S.hours(v, nameplate_kwh, load_kw, True, cold, window=WINDOW) for v in packs.values()]
     return float(np.median(plain)), float(np.median(managed))
 
 
 def backup_policies(packs, nameplate_kwh, load_kw, cold=0.8, keep=0.5):
     """Median hours at the same load for: plain string, cell-level control, cell-level control that also sheds the load to `keep` of its size (the site decides which loads are life-safety)."""
     plain = [S.hours(v, nameplate_kwh, load_kw, False, cold) for v in packs.values()]
-    managed = [S.hours(v, nameplate_kwh, load_kw, True, cold) for v in packs.values()]
-    shed = [S.hours(v, nameplate_kwh, load_kw, True, cold, None, power_fraction=keep) for v in packs.values()]
+    managed = [S.hours(v, nameplate_kwh, load_kw, True, cold, window=WINDOW) for v in packs.values()]
+    shed = [S.hours(v, nameplate_kwh, load_kw, True, cold, None, power_fraction=keep, window=WINDOW) for v in packs.values()]
     return float(np.median(plain)), float(np.median(managed)), float(np.median(shed))
 
 

@@ -25,10 +25,11 @@ import numpy as np
 from hackkit import reon_design as D
 
 
-def _step(s, m, qd, kind, par, loss, closed_loss, eta, mask=None, n_min=None):
+def _step(s, m, qd, kind, par, loss, closed_loss, eta, mask=None, n_min=None, share_wear=False):
     """Capability per string (Ah-equivalent, the m x q convention) and the DoD of every cell, for one design at one time. s: (S, m) capacities."""
     cmin = s.min(axis=1)
     tot = s.sum(axis=1)
+    tot_raw = tot
     if n_min is not None:   # inverter voltage window: at least n_min cells stay in the string, so at most m - n_min can be bypassed; reon_window.window_usable, row by row
         q_stop = np.sort(s, axis=1)[:, ::-1][:, n_min - 1]
         tot = np.minimum(s, q_stop[:, None]).sum(axis=1)
@@ -57,8 +58,14 @@ def _step(s, m, qd, kind, par, loss, closed_loss, eta, mask=None, n_min=None):
         return cap, dod_plain
     if kind == "hybsel":
         cl = closed_loss * mask.mean(axis=1)
-        cap = hybrid_select_total(s, mask, loss, par[1], eta) * (1.0 - cl)
-        return np.maximum(cap, cap_plain * (1.0 - cl)), dod_plain
+        cap = np.maximum(hybrid_select_total(s, mask, loss, par[1], eta) * (1.0 - cl), cap_plain * (1.0 - cl))
+        if not share_wear:
+            return cap, dod_plain
+        # share_wear: the balancer half of the hybrid moves charge to weak cells exactly as the balancer-only design does, so weak cells also cycle shallower (same blend as the 'bal' branch below)
+        gap = tot_raw - cap_plain
+        rho = np.where(gap > 1e-12, np.clip((cap - cap_plain) / np.maximum(gap, 1e-12), 0.0, 1.0), 0.0)
+        share = np.minimum(m * qd / np.maximum(tot_raw, 1e-12), 1.0)[:, None] * np.ones_like(s)
+        return cap, (1.0 - rho)[:, None] * dod_plain + rho[:, None] * share
     q = D.balancer_q(s, par, eta)
     cap_bal = m * q
     gap = tot - cap_plain
@@ -93,7 +100,7 @@ def wear_scan(caps: Sequence[float], m: int, *, fade_mean: float, fade_cv: float
               sort_cost_per_kwh: float, value_per_kwh_year: float, rate: float, years: float, eol_frac: float, duty: float = 0.7, dod_exp: float = 0.0,
               knee_share: float = 0.0, knee_soh: Sequence[float] = (0.82, 0.90), knee_kappa: float = 2.4, start_soh: float = 1.0, balancer_rs: Sequence[float] = (0.1, 1e9),
               balancer_eta: float = 0.9, select_counts: Sequence[int] = (), global_counts: Sequence[int] = (), hybrid_counts: Sequence[int] = (), hybrid_per_kwh: float = None, closed_loss: float = 0.0, weak_corr: float = 0.0, test_sigma: float = 0.02, trials: int = 60, seed: int = 0,
-              steps: int = 120, window: float = None) -> dict:
+              steps: int = 120, window: float = None, hybrid_shares_wear: bool = False) -> dict:
     """Net value per kWh nameplate vs the plain pack (mean, p10, p90, gross, cost, years in service) for: sort only, late switches, level switches (each as found and sorted),
     balancers at each transfer limit. Common random numbers across designs. dod_exp = 0 and knee_share = 0 reproduce reon_design."""
     c0 = np.asarray(caps, dtype=float)
@@ -157,7 +164,7 @@ def wear_scan(caps: Sequence[float], m: int, *, fade_mean: float, fade_cv: float
                 if kk > 0:
                     mask[np.arange(n // m)[:, None], np.argsort(meas[idx].reshape(-1, m), axis=1)[:, :kk]] = True
             for j in range(steps):
-                cap, dod = _step(c[idx].reshape(-1, m), m, qd, kind, par, loss, closed_loss, balancer_eta, mask, n_min)
+                cap, dod = _step(c[idx].reshape(-1, m), m, qd, kind, par, loss, closed_loss, balancer_eta, mask, n_min, hybrid_shares_wear)
                 u[j] = cap.sum()
                 if j == steps - 1:
                     break

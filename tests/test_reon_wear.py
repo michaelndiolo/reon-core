@@ -119,3 +119,17 @@ def test_window_none_is_unchanged_and_window_one_means_no_bypass_gain():
     assert mid["late switches"]["gross"] <= free["late switches"]["gross"] + 1e-9   # a window can only remove value
     assert mid["late switches"]["gross"] >= tight["late switches"]["gross"] - 1e-9
     assert all(not k.startswith("selective 8/") for k in W.wear_scan(caps, 40, window=0.9, select_counts=(2, 8), **kw))   # 8 > floor(40 x 0.1) = 4 switches are not allowed
+
+
+def test_hybrid_wear_sharing_is_off_by_default_and_never_hurts():
+    import numpy as np
+    caps = 100.0 * (1.0 + 0.05 * np.random.default_rng(4).standard_normal(40))
+    kw = dict(fade_mean=0.012, fade_cv=0.45, loss=0.04, electronics_per_kwh=15.5, balancer_per_kwh=4.0, sort_cost_per_kwh=0.0, value_per_kwh_year=40.0, rate=0.07, years=12.0, eol_frac=0.7, trials=3, steps=20, seed=2,
+              hybrid_counts=(1,), balancer_rs=(0.05,), dod_exp=0.87)
+    base = W.wear_scan(caps, 40, **kw)
+    off = W.wear_scan(caps, 40, hybrid_shares_wear=False, **kw)
+    on = W.wear_scan(caps, 40, hybrid_shares_wear=True, **kw)
+    h = [k for k in base if k.startswith("hybrid")][0]
+    assert base[h]["mean"] == off[h]["mean"]
+    assert on[h]["mean"] >= off[h]["mean"] - 1e-9
+    assert on["balancer 5%"]["mean"] == off["balancer 5%"]["mean"]

@@ -2,10 +2,10 @@
  "cases": {
   "16|0.0040|12": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.06051728734963863,
+   "dollars_per_kwh": -0.06802451545381699,
    "life_ours": 30.0,
    "life_plain": 30.0,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.06951490784380593,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -14,10 +14,10 @@
   },
   "16|0.0040|22": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.05928169347433748,
+   "dollars_per_kwh": -0.07304494499866448,
    "life_ours": 30.0,
    "life_plain": 30.0,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.07577733104697754,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -26,10 +26,10 @@
   },
   "16|0.0040|40": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 1.0744947352897158,
+   "dollars_per_kwh": 1.0490597220303064,
    "life_ours": 30.0,
    "life_plain": 30.0,
-   "p10_per_kwh": 0.7753595238868103,
+   "p10_per_kwh": 0.7499206673813328,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -37,10 +37,10 @@
   },
   "16|0.0040|80": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 6.210989470579432,
+   "dollars_per_kwh": 6.160119444060613,
    "life_ours": 30.0,
    "life_plain": 30.0,
-   "p10_per_kwh": 5.612719047773621,
+   "p10_per_kwh": 5.561841334762666,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -48,10 +48,10 @@
   },
   "16|0.0060|12": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.06098469716155769,
+   "dollars_per_kwh": -0.0683931479934638,
    "life_ours": 24.375,
    "life_plain": 22.8125,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.06941771173783157,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -60,10 +60,10 @@
   },
   "16|0.0060|22": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.06013861146285576,
+   "dollars_per_kwh": -0.0737207713213503,
    "life_ours": 24.375,
    "life_plain": 22.8125,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.07559913818602454,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -72,10 +72,10 @@
   },
   "16|0.0060|40": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 1.7486114848469279,
+   "dollars_per_kwh": 1.7234517998217678,
    "life_ours": 24.375,
    "life_plain": 22.8125,
-   "p10_per_kwh": 1.4127447077791908,
+   "p10_per_kwh": 1.3875810224097416,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -83,10 +83,10 @@
   },
   "16|0.0060|80": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 7.559222969693855,
-   "life_ours": 27.0625,
+   "dollars_per_kwh": 7.508903599643535,
+   "life_ours": 24.375,
    "life_plain": 22.8125,
-   "p10_per_kwh": 6.887489415558382,
+   "p10_per_kwh": 6.837162044819483,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -94,10 +94,10 @@
   },
   "16|0.0080|12": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.06122985863849978,
+   "dollars_per_kwh": -0.06853075651981827,
    "life_ours": 18.375,
    "life_plain": 17.1875,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.06931484115765468,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -106,10 +106,10 @@
   },
   "16|0.0080|22": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": -0.36801968011838315,
+   "dollars_per_kwh": -0.3817001779930619,
    "life_ours": 18.375,
    "life_plain": 17.1875,
-   "p10_per_kwh": -0.6194073144395364,
+   "p10_per_kwh": -0.6330916834060121,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -118,10 +118,10 @@
   },
   "16|0.0080|40": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 2.6543278543302127,
-   "life_ours": 20.375,
+   "dollars_per_kwh": 2.629454221830797,
+   "life_ours": 18.375,
    "life_plain": 17.1875,
-   "p10_per_kwh": 2.197259428291752,
+   "p10_per_kwh": 2.1723787574436146,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -129,10 +129,10 @@
   },
   "16|0.0080|80": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 9.370655708660426,
-   "life_ours": 20.375,
+   "dollars_per_kwh": 9.320908443661594,
+   "life_ours": 18.375,
    "life_plain": 17.1875,
-   "p10_per_kwh": 8.456518856583504,
+   "p10_per_kwh": 8.406757514887229,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -140,10 +140,10 @@
   },
   "16|0.0120|12": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 0.02246653003355048,
+   "dollars_per_kwh": 0.01531796440800548,
    "life_ours": 12.375,
    "life_plain": 11.5625,
-   "p10_per_kwh": -1.384732066455423,
+   "p10_per_kwh": -1.3919446845536365,
    "reasons": [
     "its pessimistic case (p10) is clearly worse than plain's"
    ],
@@ -151,10 +151,10 @@
   },
   "16|0.0120|22": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 3.4261886383948426,
+   "dollars_per_kwh": 3.4130829347480103,
    "life_ours": 12.375,
    "life_plain": 11.5625,
-   "p10_per_kwh": 0.8463245448317247,
+   "p10_per_kwh": 0.8331014116516666,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -162,10 +162,10 @@
   },
   "16|0.0120|40": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 9.552888433445169,
-   "life_ours": 13.6875,
+   "dollars_per_kwh": 9.529059881360018,
+   "life_ours": 12.375,
    "life_plain": 11.5625,
-   "p10_per_kwh": 4.862226445148591,
+   "p10_per_kwh": 4.838184384821212,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -173,10 +173,10 @@
   },
   "16|0.0120|80": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 23.167776866890335,
-   "life_ours": 13.6875,
+   "dollars_per_kwh": 23.120119762720037,
+   "life_ours": 13.4375,
    "life_plain": 11.5625,
-   "p10_per_kwh": 13.78645289029718,
+   "p10_per_kwh": 13.738368769642424,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -184,10 +184,10 @@
   },
   "16|0.0200|12": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 0.31912849918843333,
+   "dollars_per_kwh": 0.31406964961753614,
    "life_ours": 7.6875,
    "life_plain": 7.1875,
-   "p10_per_kwh": -0.173791666712229,
+   "p10_per_kwh": -0.17885772887944906,
    "reasons": [
     "its pessimistic case (p10) is clearly worse than plain's"
    ],
@@ -195,32 +195,32 @@
   },
   "16|0.0200|22": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 3.9700689151787945,
+   "dollars_per_kwh": 3.9607943576321496,
    "life_ours": 7.6875,
    "life_plain": 7.1875,
-   "p10_per_kwh": 3.0663819443609137,
+   "p10_per_kwh": 3.0570941637210103,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
    "verdict": "BUY"
   },
   "16|0.0200|40": {
-   "build": "late switches",
-   "dollars_per_kwh": 12.434324846833336,
-   "life_ours": 8.5,
+   "build": "hybrid 1/250 + balancer 5%",
+   "dollars_per_kwh": 10.524898832058454,
+   "life_ours": 7.6875,
    "life_plain": 7.1875,
-   "p10_per_kwh": 6.886629744192934,
+   "p10_per_kwh": 8.881807570401836,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
    "verdict": "BUY"
   },
   "16|0.0200|80": {
-   "build": "late switches",
-   "dollars_per_kwh": 40.368649693666676,
-   "life_ours": 8.5,
+   "build": "late switches, sorted",
+   "dollars_per_kwh": 28.140211517019008,
+   "life_ours": 8.3125,
    "life_plain": 7.1875,
-   "p10_per_kwh": 29.273259488385868,
+   "p10_per_kwh": 14.48267008359619,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -228,10 +228,10 @@
   },
   "1|0.0040|12": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 0.7112149611736309,
+   "dollars_per_kwh": 0.7036923414362692,
    "life_ours": 22.9375,
    "life_plain": 21.4375,
-   "p10_per_kwh": 0.7074301941741963,
+   "p10_per_kwh": 0.6999457250701004,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -239,10 +239,10 @@
   },
   "1|0.0040|22": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 4.688894095484991,
-   "life_ours": 30.0,
+   "dollars_per_kwh": 4.675102625966494,
+   "life_ours": 29.9375,
    "life_plain": 21.4375,
-   "p10_per_kwh": 4.681955355986027,
+   "p10_per_kwh": 4.668233829295184,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -250,10 +250,10 @@
   },
   "1|0.0040|40": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 11.848716537245437,
-   "life_ours": 30.0,
+   "dollars_per_kwh": 11.823641138120896,
+   "life_ours": 29.9375,
    "life_plain": 21.4375,
-   "p10_per_kwh": 11.83610064724732,
+   "p10_per_kwh": 11.811152416900335,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -261,10 +261,10 @@
   },
   "1|0.0040|80": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 27.75943307449087,
-   "life_ours": 30.0,
+   "dollars_per_kwh": 27.709282276241797,
+   "life_ours": 29.9375,
    "life_plain": 21.4375,
-   "p10_per_kwh": 27.734201294494643,
+   "p10_per_kwh": 27.68430483380067,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -272,10 +272,10 @@
   },
   "1|0.0060|12": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 0.6609173634990584,
-   "life_ours": 21.1875,
+   "dollars_per_kwh": 0.6535602496572899,
+   "life_ours": 20.875,
    "life_plain": 14.4375,
-   "p10_per_kwh": 0.6548107662423428,
+   "p10_per_kwh": 0.6475518299614906,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -283,10 +283,10 @@
   },
   "1|0.0060|22": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 4.596681833081607,
-   "life_ours": 21.1875,
+   "dollars_per_kwh": 4.583193791038365,
+   "life_ours": 20.875,
    "life_plain": 14.4375,
-   "p10_per_kwh": 4.585486404777629,
+   "p10_per_kwh": 4.5721783549294,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -294,10 +294,10 @@
   },
   "1|0.0060|40": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 11.681057878330193,
-   "life_ours": 21.1875,
+   "dollars_per_kwh": 11.656534165524299,
+   "life_ours": 20.875,
    "life_plain": 14.4375,
-   "p10_per_kwh": 11.660702554141142,
+   "p10_per_kwh": 11.636506099871635,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -305,10 +305,10 @@
   },
   "1|0.0060|80": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 27.42411575666039,
-   "life_ours": 21.1875,
+   "dollars_per_kwh": 27.3750683310486,
+   "life_ours": 20.875,
    "life_plain": 14.4375,
-   "p10_per_kwh": 27.383405108282286,
+   "p10_per_kwh": 27.33501219974327,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -316,10 +316,10 @@
   },
   "1|0.0080|12": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 2.4829352160805165,
-   "life_ours": 16.0,
+   "dollars_per_kwh": 2.4759953101528764,
+   "life_ours": 15.75,
    "life_plain": 10.9375,
-   "p10_per_kwh": 0.8005990326621246,
+   "p10_per_kwh": 0.7934006921538641,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -327,10 +327,10 @@
   },
   "1|0.0080|120": {
    "build": "late switches",
-   "dollars_per_kwh": 76.95983027037344,
-   "life_ours": 16.0,
+   "dollars_per_kwh": 60.153895812355984,
+   "life_ours": 15.75,
    "life_plain": 10.9375,
-   "p10_per_kwh": 32.24760523261769,
+   "p10_per_kwh": 15.18761331051741,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -338,21 +338,21 @@
   },
   "1|0.0080|15": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 4.119169020100646,
-   "life_ours": 16.0,
+   "dollars_per_kwh": 4.110494137691096,
+   "life_ours": 15.75,
    "life_plain": 10.9375,
-   "p10_per_kwh": 2.016248790827656,
+   "p10_per_kwh": 2.00725086519233,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
    "verdict": "BUY"
   },
   "1|0.0080|150": {
-   "build": "late switches",
-   "dollars_per_kwh": 100.0747878379668,
-   "life_ours": 16.0,
+   "build": "late switches, sorted",
+   "dollars_per_kwh": 79.06736976544497,
+   "life_ours": 15.75,
    "life_plain": 10.9375,
-   "p10_per_kwh": 44.184506540772105,
+   "p10_per_kwh": 22.859516638146765,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -360,10 +360,10 @@
   },
   "1|0.0080|22": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 7.9370478961476145,
-   "life_ours": 16.0,
+   "dollars_per_kwh": 7.924324735280274,
+   "life_ours": 15.75,
    "life_plain": 10.9375,
-   "p10_per_kwh": 4.852764893213895,
+   "p10_per_kwh": 4.839567935615418,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -371,76 +371,76 @@
   },
   "1|0.0080|30": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 12.300338040201291,
-   "life_ours": 16.0,
+   "dollars_per_kwh": 12.282988275382191,
+   "life_ours": 15.75,
    "life_plain": 10.9375,
-   "p10_per_kwh": 8.094497581655313,
+   "p10_per_kwh": 8.076501730384662,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
    "verdict": "BUY"
   },
   "1|0.0080|40": {
-   "build": "late switches",
-   "dollars_per_kwh": 15.319943423457815,
-   "life_ours": 16.0,
+   "build": "hybrid 1/250 + balancer 5%",
+   "dollars_per_kwh": 17.73131770050959,
+   "life_ours": 15.75,
    "life_plain": 10.9375,
-   "p10_per_kwh": 0.4158684108725623,
+   "p10_per_kwh": 12.122668973846213,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
    "verdict": "BUY"
   },
   "1|0.0080|45": {
-   "build": "late switches",
-   "dollars_per_kwh": 19.17243635139004,
-   "life_ours": 16.0,
+   "build": "hybrid 1/250 + balancer 5%",
+   "dollars_per_kwh": 20.455482413073284,
+   "life_ours": 15.75,
    "life_plain": 10.9375,
-   "p10_per_kwh": 2.4053519622316326,
+   "p10_per_kwh": 14.14575259557699,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
    "verdict": "BUY"
   },
   "1|0.0080|60": {
-   "build": "late switches",
-   "dollars_per_kwh": 30.729915135186722,
-   "life_ours": 16.0,
+   "build": "late switches, sorted",
+   "dollars_per_kwh": 22.326947906177985,
+   "life_ours": 15.75,
    "life_plain": 10.9375,
-   "p10_per_kwh": 8.373802616308843,
+   "p10_per_kwh": -0.1561933447412951,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
    "verdict": "BUY"
   },
   "1|0.0080|75": {
-   "build": "late switches",
-   "dollars_per_kwh": 42.2873939189834,
-   "life_ours": 16.0,
+   "build": "late switches, sorted",
+   "dollars_per_kwh": 31.783684882722483,
+   "life_ours": 15.75,
    "life_plain": 10.9375,
-   "p10_per_kwh": 14.342253270386054,
+   "p10_per_kwh": 3.6797583190733825,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
    "verdict": "BUY"
   },
   "1|0.0080|80": {
-   "build": "late switches",
-   "dollars_per_kwh": 46.13988684691563,
-   "life_ours": 16.0,
+   "build": "late switches, sorted",
+   "dollars_per_kwh": 34.93593054157064,
+   "life_ours": 15.75,
    "life_plain": 10.9375,
-   "p10_per_kwh": 16.331736821745125,
+   "p10_per_kwh": 4.958408873678273,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
    "verdict": "BUY"
   },
   "1|0.0080|90": {
-   "build": "late switches",
-   "dollars_per_kwh": 53.84487270278008,
-   "life_ours": 16.0,
+   "build": "late switches, sorted",
+   "dollars_per_kwh": 41.240421859266974,
+   "life_ours": 15.75,
    "life_plain": 10.9375,
-   "p10_per_kwh": 20.310703924463265,
+   "p10_per_kwh": 7.5157099828880565,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -448,21 +448,21 @@
   },
   "1|0.0120|12": {
    "build": "late switches",
-   "dollars_per_kwh": 4.658113971008925,
-   "life_ours": 10.8125,
+   "dollars_per_kwh": 2.40555390503279,
+   "life_ours": 10.6875,
    "life_plain": 7.375,
-   "p10_per_kwh": 0.20572189024536058,
+   "p10_per_kwh": -2.083997812997401,
    "reasons": [
-    "beats plain on an independent seed, pessimistic case too"
+    "its pessimistic case (p10) is clearly worse than plain's"
    ],
-   "verdict": "BUY"
+   "verdict": "HOLD"
   },
   "1|0.0120|22": {
    "build": "late switches",
-   "dollars_per_kwh": 21.45654228018303,
-   "life_ours": 10.8125,
+   "dollars_per_kwh": 17.32684882589345,
+   "life_ours": 10.6875,
    "life_plain": 7.375,
-   "p10_per_kwh": 13.293823465449828,
+   "p10_per_kwh": 9.096004009504764,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -470,10 +470,10 @@
   },
   "1|0.0120|40": {
    "build": "late switches",
-   "dollars_per_kwh": 51.69371323669642,
-   "life_ours": 10.8125,
+   "dollars_per_kwh": 44.185179683442634,
+   "life_ours": 10.6875,
    "life_plain": 7.375,
-   "p10_per_kwh": 36.85240630081787,
+   "p10_per_kwh": 29.220007290008663,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -481,10 +481,10 @@
   },
   "1|0.0120|80": {
    "build": "late switches",
-   "dollars_per_kwh": 118.88742647339284,
-   "life_ours": 10.8125,
+   "dollars_per_kwh": 103.87035936688527,
+   "life_ours": 10.6875,
    "life_plain": 7.375,
-   "p10_per_kwh": 89.20481260163574,
+   "p10_per_kwh": 73.94001458001733,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -492,10 +492,10 @@
   },
   "1|0.0200|12": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 0.20697715201903966,
+   "dollars_per_kwh": 0.20345447463004807,
    "life_ours": 4.6875,
    "life_plain": 4.6875,
-   "p10_per_kwh": -0.6060648910976392,
+   "p10_per_kwh": -0.6094621696454885,
    "reasons": [
     "its pessimistic case (p10) is clearly worse than plain's"
    ],
@@ -503,10 +503,10 @@
   },
   "1|0.0200|22": {
    "build": "late switches",
-   "dollars_per_kwh": 11.860907039302715,
-   "life_ours": 6.625,
+   "dollars_per_kwh": 9.189074874043698,
+   "life_ours": 6.5625,
    "life_plain": 4.6875,
-   "p10_per_kwh": 6.196564084924573,
+   "p10_per_kwh": 2.3533911905605436,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -514,10 +514,10 @@
   },
   "1|0.0200|40": {
    "build": "late switches",
-   "dollars_per_kwh": 34.247103707823115,
-   "life_ours": 6.625,
+   "dollars_per_kwh": 29.389227043715817,
+   "life_ours": 6.5625,
    "life_plain": 4.6875,
-   "p10_per_kwh": 23.948298336226497,
+   "p10_per_kwh": 16.96071125556463,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -525,10 +525,10 @@
   },
   "1|0.0200|80": {
    "build": "late switches",
-   "dollars_per_kwh": 83.99420741564623,
-   "life_ours": 6.625,
+   "dollars_per_kwh": 74.27845408743164,
+   "life_ours": 6.5625,
    "life_plain": 4.6875,
-   "p10_per_kwh": 63.39659667245299,
+   "p10_per_kwh": 49.42142251112926,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -536,10 +536,10 @@
   },
   "40|0.0040|12": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.06106640089319332,
+   "dollars_per_kwh": -0.06861889560184314,
    "life_ours": 30.0,
    "life_plain": 30.0,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.06955736001429419,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -548,10 +548,10 @@
   },
   "40|0.0040|22": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.06028840163752108,
+   "dollars_per_kwh": -0.07413464193671243,
    "life_ours": 30.0,
    "life_plain": 30.0,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.07585516002620601,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -560,10 +560,10 @@
   },
   "40|0.0040|40": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.05888800297731106,
+   "dollars_per_kwh": -0.08406298533947715,
    "life_ours": 30.0,
    "life_plain": 30.0,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.0871912000476473,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -572,10 +572,10 @@
   },
   "40|0.0040|80": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 2.4413385756597625,
+   "dollars_per_kwh": 2.390468343849369,
    "life_ours": 30.0,
    "life_plain": 30.0,
-   "p10_per_kwh": 2.062892430912041,
+   "p10_per_kwh": 2.0120173151454965,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -583,10 +583,10 @@
   },
   "40|0.0060|12": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.06136080982654096,
+   "dollars_per_kwh": -0.06882020148098927,
    "life_ours": 26.25,
    "life_plain": 24.625,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.06946526322289043,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -595,10 +595,10 @@
   },
   "40|0.0060|22": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.06082815134865843,
+   "dollars_per_kwh": -0.074503702715147,
    "life_ours": 26.25,
    "life_plain": 24.625,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.07568631590863245,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -607,10 +607,10 @@
   },
   "40|0.0060|40": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": -0.3825214754549746,
+   "dollars_per_kwh": -0.4076804725850893,
    "life_ours": 26.25,
    "life_plain": 24.625,
-   "p10_per_kwh": -0.5953947795259209,
+   "p10_per_kwh": -0.6205563186865239,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -619,10 +619,10 @@
   },
   "40|0.0060|80": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 3.296957049090051,
+   "dollars_per_kwh": 3.2466390548298216,
    "life_ours": 26.25,
    "life_plain": 24.625,
-   "p10_per_kwh": 2.8712104409481585,
+   "p10_per_kwh": 2.8208873626269524,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -630,10 +630,10 @@
   },
   "40|0.0080|12": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.06151513998912178,
+   "dollars_per_kwh": -0.06887687268646298,
    "life_ours": 19.8125,
    "life_plain": 18.5625,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.06936936320297055,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -642,10 +642,10 @@
   },
   "40|0.0080|22": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.0611110899800566,
+   "dollars_per_kwh": -0.07460759992518212,
    "life_ours": 19.8125,
    "life_plain": 18.5625,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.075510499205446,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -654,10 +654,10 @@
   },
   "40|0.0080|40": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 0.1845775198867603,
+   "dollars_per_kwh": 0.15969868469401494,
    "life_ours": 19.8125,
    "life_plain": 18.5625,
-   "p10_per_kwh": -0.11458884518249857,
+   "p10_per_kwh": -0.1394680243189219,
    "reasons": [
     "its pessimistic case (p10) is clearly worse than plain's"
    ],
@@ -665,10 +665,10 @@
   },
   "40|0.0080|80": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 4.431155039773521,
-   "life_ours": 20.875,
+   "dollars_per_kwh": 4.38139736938803,
+   "life_ours": 19.8125,
    "life_plain": 18.5625,
-   "p10_per_kwh": 3.832822309635003,
+   "p10_per_kwh": 3.7830639513621565,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -676,10 +676,10 @@
   },
   "40|0.0120|12": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.06167013653882075,
+   "dollars_per_kwh": -0.0687275188372029,
    "life_ours": 13.4375,
    "life_plain": 12.5,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.0690999042331934,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -688,10 +688,10 @@
   },
   "40|0.0120|22": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": -0.10547681106040308,
+   "dollars_per_kwh": -0.11873186712921358,
    "life_ours": 13.4375,
    "life_plain": 12.5,
-   "p10_per_kwh": -0.648533926357743,
+   "p10_per_kwh": -0.6618105192766279,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -700,10 +700,10 @@
   },
   "40|0.0120|40": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 3.131678525344722,
+   "dollars_per_kwh": 3.10757842340143,
    "life_ours": 13.4375,
    "life_plain": 12.5,
-   "p10_per_kwh": 2.144301952076831,
+   "p10_per_kwh": 2.120162692224313,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -711,10 +711,10 @@
   },
   "40|0.0120|80": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 10.325357050689444,
-   "life_ours": 14.125,
+   "dollars_per_kwh": 10.27715684680286,
+   "life_ours": 13.4375,
    "life_plain": 12.5,
-   "p10_per_kwh": 8.350603904153662,
+   "p10_per_kwh": 8.302325384448626,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -722,10 +722,10 @@
   },
   "40|0.0200|12": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 0.01028248260277409,
+   "dollars_per_kwh": 0.004955610563168511,
    "life_ours": 8.1875,
    "life_plain": 7.6875,
-   "p10_per_kwh": -0.5342628662307503,
+   "p10_per_kwh": -0.5396306057089477,
    "reasons": [
     "its pessimistic case (p10) is clearly worse than plain's"
    ],
@@ -733,10 +733,10 @@
   },
   "40|0.0200|22": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 3.403851218105086,
+   "dollars_per_kwh": 3.3940852860324755,
    "life_ours": 8.1875,
    "life_plain": 7.6875,
-   "p10_per_kwh": 2.405518078576958,
+   "p10_per_kwh": 2.3956772228669294,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -744,21 +744,21 @@
   },
   "40|0.0200|40": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 9.512274942009247,
+   "dollars_per_kwh": 9.494518701877228,
    "life_ours": 8.1875,
    "life_plain": 7.6875,
-   "p10_per_kwh": 7.697123779230833,
+   "p10_per_kwh": 7.679231314303508,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
    "verdict": "BUY"
   },
   "40|0.0200|80": {
-   "build": "late switches, sorted",
-   "dollars_per_kwh": 27.890946182110515,
-   "life_ours": 8.625,
+   "build": "hybrid 1/250 + balancer 5%",
+   "dollars_per_kwh": 23.051037403754457,
+   "life_ours": 8.1875,
    "life_plain": 7.6875,
-   "p10_per_kwh": 18.738621051326206,
+   "p10_per_kwh": 19.420462628607016,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -766,10 +766,10 @@
   },
   "4|0.0040|12": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.03804421553637888,
+   "dollars_per_kwh": -0.0454286938809591,
    "life_ours": 29.3125,
    "life_plain": 28.0625,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.069399764675041,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -778,10 +778,10 @@
   },
   "4|0.0040|22": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 1.573415766393992,
+   "dollars_per_kwh": 1.5594267228342877,
    "life_ours": 29.3125,
    "life_plain": 28.0625,
-   "p10_per_kwh": 1.243366867330682,
+   "p10_per_kwh": 1.229373752004605,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -789,10 +789,10 @@
   },
   "4|0.0040|40": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 6.184210484352713,
+   "dollars_per_kwh": 6.1587758596987054,
    "life_ours": 29.3125,
    "life_plain": 28.0625,
-   "p10_per_kwh": 5.584121576964876,
+   "p10_per_kwh": 5.558679549099282,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -800,10 +800,10 @@
   },
   "4|0.0040|80": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 16.430420968705427,
+   "dollars_per_kwh": 16.37955171939741,
    "life_ours": 29.3125,
    "life_plain": 28.0625,
-   "p10_per_kwh": 15.230243153929752,
+   "p10_per_kwh": 15.179359098198564,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -811,10 +811,10 @@
   },
   "4|0.0060|12": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.030664516370879136,
+   "dollars_per_kwh": -0.03793399127604585,
    "life_ours": 20.3125,
    "life_plain": 18.875,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.06928883235044009,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -823,10 +823,10 @@
   },
   "4|0.0060|22": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 2.1975976834075253,
-   "life_ours": 24.875,
+   "dollars_per_kwh": 2.1837695449333783,
+   "life_ours": 20.3125,
    "life_plain": 18.875,
-   "p10_per_kwh": 1.89945110746822,
+   "p10_per_kwh": 1.8856113320704573,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -834,10 +834,10 @@
   },
   "4|0.0060|40": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 7.319086697104591,
-   "life_ours": 24.875,
+   "dollars_per_kwh": 7.293944627151597,
+   "life_ours": 24.4375,
    "life_plain": 18.875,
-   "p10_per_kwh": 6.777002013578582,
+   "p10_per_kwh": 6.75183878558265,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -845,10 +845,10 @@
   },
   "4|0.0060|80": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 18.700173394209184,
-   "life_ours": 24.875,
+   "dollars_per_kwh": 18.649889254303194,
+   "life_ours": 24.4375,
    "life_plain": 18.875,
-   "p10_per_kwh": 17.616004027157164,
+   "p10_per_kwh": 17.5656775711653,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -856,10 +856,10 @@
   },
   "4|0.0080|12": {
    "build": "selective 1/250 cells",
-   "dollars_per_kwh": -0.03548873241066802,
+   "dollars_per_kwh": -0.042611589525089755,
    "life_ours": 15.375,
    "life_plain": 14.1875,
-   "p10_per_kwh": -0.062,
+   "p10_per_kwh": -0.06916205735394482,
    "reasons": [
     "the pick does not beat plain on a fresh seed",
     "its pessimistic case (p10) is clearly worse than plain's"
@@ -868,10 +868,10 @@
   },
   "4|0.0080|22": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 2.5933102971417292,
-   "life_ours": 18.75,
+   "dollars_per_kwh": 2.579719300941518,
+   "life_ours": 18.4375,
    "life_plain": 14.1875,
-   "p10_per_kwh": 2.3451669855940898,
+   "p10_per_kwh": 2.3315268246626486,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -879,10 +879,10 @@
   },
   "4|0.0080|40": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 8.038564176621326,
-   "life_ours": 18.75,
+   "dollars_per_kwh": 8.013853274439121,
+   "life_ours": 18.4375,
    "life_plain": 14.1875,
-   "p10_per_kwh": 7.587394519261982,
+   "p10_per_kwh": 7.562594226659361,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -890,10 +890,10 @@
   },
   "4|0.0080|80": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 20.13912835324265,
-   "life_ours": 18.75,
+   "dollars_per_kwh": 20.089706548878247,
+   "life_ours": 18.4375,
    "life_plain": 14.1875,
-   "p10_per_kwh": 19.236789038523963,
+   "p10_per_kwh": 19.187188453318722,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -901,10 +901,10 @@
   },
   "4|0.0120|12": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 2.3483819647344486,
+   "dollars_per_kwh": 2.341892541110192,
    "life_ours": 10.375,
    "life_plain": 9.625,
-   "p10_per_kwh": 1.7592591702725011,
+   "p10_per_kwh": 1.7528644987661215,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -912,21 +912,21 @@
   },
   "4|0.0120|22": {
    "build": "late switches, sorted",
-   "dollars_per_kwh": 8.920973708943645,
-   "life_ours": 12.625,
+   "dollars_per_kwh": 5.784414741250295,
+   "life_ours": 12.4375,
    "life_plain": 9.625,
-   "p10_per_kwh": 2.2758210032925277,
+   "p10_per_kwh": -0.8239479766012918,
    "reasons": [
-    "beats plain on an independent seed, pessimistic case too"
+    "its pessimistic case (p10) is clearly worse than plain's"
    ],
-   "verdict": "BUY"
+   "verdict": "HOLD"
   },
   "4|0.0120|40": {
    "build": "late switches, sorted",
-   "dollars_per_kwh": 28.90177037989754,
-   "life_ours": 12.625,
+   "dollars_per_kwh": 23.19893589318235,
+   "life_ours": 12.4375,
    "life_plain": 9.625,
-   "p10_per_kwh": 16.819674551440958,
+   "p10_per_kwh": 11.183730951634015,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -934,10 +934,10 @@
   },
   "4|0.0120|80": {
    "build": "late switches, sorted",
-   "dollars_per_kwh": 73.30354075979508,
-   "life_ours": 12.625,
+   "dollars_per_kwh": 61.8978717863647,
+   "life_ours": 12.4375,
    "life_plain": 9.625,
-   "p10_per_kwh": 49.139349102881916,
+   "p10_per_kwh": 37.86746190326803,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -945,32 +945,32 @@
   },
   "4|0.0200|12": {
    "build": "hybrid 1/250 + balancer 5%",
-   "dollars_per_kwh": 0.7050187151390684,
+   "dollars_per_kwh": 0.700593914935321,
    "life_ours": 6.3125,
    "life_plain": 6.0,
-   "p10_per_kwh": 0.4418763755060242,
+   "p10_per_kwh": 0.43751301683722854,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
    "verdict": "BUY"
   },
   "4|0.0200|22": {
-   "build": "late switches, sorted",
-   "dollars_per_kwh": 7.0724270832383915,
-   "life_ours": 7.75,
+   "build": "late switches",
+   "dollars_per_kwh": 3.763702639429133,
+   "life_ours": 7.625,
    "life_plain": 6.0,
-   "p10_per_kwh": 2.5572991714418585,
+   "p10_per_kwh": -1.4206315229355564,
    "reasons": [
-    "beats plain on an independent seed, pessimistic case too"
+    "its pessimistic case (p10) is clearly worse than plain's"
    ],
-   "verdict": "BUY"
+   "verdict": "HOLD"
   },
   "4|0.0200|40": {
-   "build": "late switches, sorted",
-   "dollars_per_kwh": 25.540776514978894,
-   "life_ours": 7.75,
+   "build": "late switches",
+   "dollars_per_kwh": 19.52491388987115,
+   "life_ours": 7.625,
    "life_plain": 6.0,
-   "p10_per_kwh": 17.3314530389852,
+   "p10_per_kwh": 10.098851776480807,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],
@@ -978,10 +978,10 @@
   },
   "4|0.0200|80": {
    "build": "late switches",
-   "dollars_per_kwh": 66.58155302995777,
-   "life_ours": 7.75,
+   "dollars_per_kwh": 54.5498277797423,
+   "life_ours": 7.625,
    "life_plain": 6.0,
-   "p10_per_kwh": 50.16290607797036,
+   "p10_per_kwh": 35.69770355296161,
    "reasons": [
     "beats plain on an independent seed, pessimistic case too"
    ],

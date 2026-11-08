@@ -152,8 +152,10 @@ with front:
                         "Two inputs are assumed and shown as a range: how many avoided cells would really have been replaced (50 to 100%) and the carbon of REON's electronics (1 to 10 kg per kWh, counted in full). "
                         + ("The sign of the result does not flip inside these ranges." if not e0["sign_can_flip"] else "At the low end this is close to zero: the sign can flip, so treat the carbon claim as small here."))
         st.markdown("**Where the numbers are counted.** Energy and hours are measured at the battery string's DC terminals: usable kWh (cell capacities, 80% in the cold, a small switch loss) divided by the load you set. No inverter loss and no solar. Power capability in kW is not modelled; the only kW is your load.")
-        st.markdown("**Voltage limit.** Every build in the dollar and life figures keeps at least 90% of the 250 cells in the string at all times (about 90% is the CTO's unclear remark; REON's real inverter minimum is not known). "
-                    "That caps bypassing at 25 cells. Without the cap the typical case read \\$1,635; with it, \\$919. The pessimistic case is thin (about \\$25), so treat the gain as real but small at typical wear and larger as cells wear harder.")
+        st.markdown("**Voltage limit.** Every build in the dollar and life figures keeps at least 90% of the 250 cells in the string at all times (about 90% is the CTO's unclear remark; REON's real inverter minimum is not known), which caps bypassing at 25 cells. "
+                    "An earlier version had no cap and read \\$1,635 for the typical case; with the cap and the switch loss below it reads about \\$1,060. "
+                    "Counting cells is only a first-order stand-in for volts: it ignores that cell voltage sags toward the end of a discharge. In our voltage check on 12 real packs, the median energy gain at a 90% floor fell from 4.3% (cell count) to 0.0% (with sag). Treat the dollar figures as an upper bound until REON gives the inverter's minimum voltage.")
+        st.markdown("**Switch loss.** A plain string has no switches; a switched string pays a small loss on every kWh that passes through its closed switches. We charge 2% (assumed) on all energy of the switched string, not only on the extra energy it recovers, and both strings are measured at the same point, the string's DC terminals. Otherwise the switched string would look better for free.")
         st.markdown("**Where it comes from.** Every input is tagged in docs/SOURCES.md. Sodium-ion cell behaviour is assumed; there is no live REON data in this yet.")
     with st.expander("What would have to be true: gain against how fast the cells wear"):
         vsel = st.select_slider("Value of a kWh of backup per year ($)", [12, 22, 40, 80], 40, key="f_gv")
@@ -165,6 +167,25 @@ with front:
                        "The maker's claim is the far left. Steps in the lines come from replacement dates. Simulated at 250 cells, switch cost 15.5 per kWh, at least 90% of cells kept in the string; not REON data.")
         else:
             st.info("No precomputed cases found for this value.")
+    with st.expander("Against a simple balancer: how strong would it have to be?"):
+        bc = st.columns(2)
+        bp = bc[0].select_slider("Cells in parallel per position", [1, 4, 16], 1, key="f_bp")
+        bf = bc[1].select_slider("Cell fade per year", [0.004, 0.008, 0.02], 0.008, key="f_bf", format_func=lambda v: f"{v:.3f}")
+        brows = SF.balancer_rows(bp, bf)
+        if brows:
+            st.altair_chart(VZ.balancer_chart(brows), use_container_width=True)
+            bx = SF.balancer_crossover(brows)
+            if bx is None:
+                bt = "REON switches alone beat a balancer of every strength we tried (up to 15% of a cell's capacity per cycle)."
+            elif bx == 0.0:
+                bt = "A balancer beats REON switches alone at every strength we tried, even 1%."
+            else:
+                bt = f"A balancer that can move about {bx * 100:.1f}% of a cell's capacity per cycle already matches REON switches alone. We assumed 5%, which is not sourced."
+            st.markdown(bt.replace("$", "\\$"))
+            st.caption("An active balancer moves charge between cells instead of switching a cell out. Switches pay at fast wear or when a cell fails outright; at slow wear a balancer does most of the work, and adding switches on top gains only a little. "
+                       "Simulated at 250 cells, value 40 per kWh-year, switch cost 15.5 and balancer cost 4 per kWh, 90% voltage window, 2% switch loss on all energy; builds picked on one seed and scored on another. REON's actual balancing strength is not known.")
+        else:
+            st.info("No precomputed balancer cases for this choice.")
     with st.expander("What we are not doing"):
         st.markdown("- We are not changing REON's hardware. We add the decision layer: which cell to switch out, when to bypass, when to call a crew. REON's hardware keeps safety authority.\n"
                     "- We are not claiming this for homes, EVs or scooters; the numbers are for a commercial backup battery.\n"
@@ -234,7 +255,7 @@ with t1:
     def eng1(n, p, value, elec, fcv, loss, fade):
         rng = np.random.default_rng(3)
         start = 100.0 * (1.0 + 0.02 / np.sqrt(p) * rng.standard_normal(n))
-        kw = dict(value_per_kwh_year=float(value), electronics_per_kwh=float(elec), fade_cv=fcv / np.sqrt(p), loss=loss, fade_mean=fade, ks=tuple(k for k in (1, 2, 4, 8, 16, 25) if k < n) or (1,), window=SF.WINDOW)
+        kw = dict(value_per_kwh_year=float(value), electronics_per_kwh=float(elec), fade_cv=fcv / np.sqrt(p), loss=loss, fade_mean=fade, ks=tuple(k for k in (1, 2, 4, 8, 16, 25) if k < n) or (1,), window=SF.WINDOW, closed_loss=SF.CLOSED_LOSS)
         if n >= 100:
             kw.update(trials=8, steps=60)
         return G.robust_recommend(start, n, **kw), G.safe_recommend(start, n, **kw)[0]
@@ -382,7 +403,7 @@ with t9:
         rng9 = np.random.default_rng(3)
         start = 100.0 * (1.0 + 0.02 / np.sqrt(p) * rng9.standard_normal(n))
         ks = tuple(k for k in (1, 2, 4, 8, 16, 25) if k < n) or (1,)
-        out, _ = G.safe_recommend(start, n, value_per_kwh_year=float(v), electronics_per_kwh=float(e), fade_cv=0.45 / np.sqrt(p), fade_mean=float(f), loss=0.04, years=30.0, eol_frac=0.7, trials=8, steps=60, ks=ks, window=SF.WINDOW)
+        out, _ = G.safe_recommend(start, n, value_per_kwh_year=float(v), electronics_per_kwh=float(e), fade_cv=0.45 / np.sqrt(p), fade_mean=float(f), loss=0.04, years=30.0, eol_frac=0.7, trials=8, steps=60, ks=ks, window=SF.WINDOW, closed_loss=SF.CLOSED_LOSS)
         return out
 
     sig9 = (n9, p9, f9, v9, e9)

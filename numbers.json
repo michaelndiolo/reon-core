@@ -19,9 +19,9 @@
    {
     "fade_per_year": 0.008,
     "verdict": "BUY",
-    "build": "late switches",
-    "gain_vs_plain": 15.3,
-    "p10_gain_vs_plain": 0.4,
+    "build": "hybrid 1/250 + balancer 5%",
+    "gain_vs_plain": 17.7,
+    "p10_gain_vs_plain": 12.1,
     "reasons": [
      "beats plain on an independent seed, pessimistic case too"
     ],
@@ -31,8 +31,8 @@
     "fade_per_year": 0.02,
     "verdict": "BUY",
     "build": "late switches",
-    "gain_vs_plain": 34.2,
-    "p10_gain_vs_plain": 23.9,
+    "gain_vs_plain": 29.4,
+    "p10_gain_vs_plain": 17.0,
     "reasons": [
      "beats plain on an independent seed, pessimistic case too"
     ],
@@ -174,8 +174,8 @@
  "backup_hours": {
   "tags": "cell data REAL (Nature Energy 2026, 12 cars); 60 kWh, 5 kW, cold-weather capacity 80% (same as the dashboard); boundary: string DC terminals, no inverter loss, no solar; grid restoration times REAL (EIA-861 Table 11.3)",
   "plain": 7.9,
-  "managed": 8.4,
-  "managed_shed50": 16.7,
+  "managed": 8.1,
+  "managed_shed50": 16.2,
   "grid_restoration_hours": {
    "us_typical": 1.9,
    "us_major_events_2025": 3.3,

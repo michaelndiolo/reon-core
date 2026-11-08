@@ -1,8 +1,8 @@
 input,key,low,high,gain_low,gain_high,verdict_low,verdict_high,swing,tag,who_can_answer,base_gain
-Value of a kWh per year ($),value,12.0,80.0,2.5,46.1,BUY,BUY,43.7,CITED range,the customer's tariff (demand charge),15.3
-Spread of fade between cells,fcv,0.2,0.6,11.5,40.4,BUY,BUY,28.8,ASSUMED (real cars 0.20 to 0.60),REON: teardown or cycling data on their cells,15.3
-Cell fade per year,fade,0.004,0.02,11.8,34.2,BUY,BUY,22.4,"CITED claim (20,000 cycles), unverified",REON: measured fade on the sodium cells,15.3
-Cells in parallel per position,p,1,16,15.3,2.7,BUY,BUY,12.7,UNKNOWN,REON: is a position one cell or a parallel group,15.3
-Switch electronics cost per kWh ($),elec,7.0,24.0,23.8,17.7,BUY,BUY,6.1,CITED (REON CTO),"REON: quote, and whether it is total or extra over a BMS",15.3
-Starting capacity spread,spread,0.01,0.05,16.9,20.5,BUY,BUY,3.6,ASSUMED,REON: incoming cell data,15.3
-Usable-energy loss to switches,loss,0.0,0.1,16.1,14.2,BUY,BUY,1.9,ASSUMED,REON: switch resistance and voltage floor,15.3
+Value of a kWh per year ($),value,12.0,80.0,2.5,34.9,BUY,BUY,32.5,CITED range,the customer's tariff (demand charge),17.7
+Spread of fade between cells,fcv,0.2,0.6,11.5,35.0,BUY,BUY,23.5,ASSUMED (real cars 0.20 to 0.60),REON: teardown or cycling data on their cells,17.7
+Cell fade per year,fade,0.004,0.02,11.8,29.4,BUY,BUY,17.6,"CITED claim (20,000 cycles), unverified",REON: measured fade on the sodium cells,17.7
+Cells in parallel per position,p,1,16,17.7,2.6,BUY,BUY,15.1,UNKNOWN,REON: is a position one cell or a parallel group,17.7
+Usable-energy loss to switches,loss,0.0,0.1,16.0,17.7,BUY,BUY,1.8,ASSUMED,REON: switch resistance and voltage floor,17.7
+Starting capacity spread,spread,0.01,0.05,17.0,15.2,BUY,BUY,1.8,ASSUMED,REON: incoming cell data,17.7
+Switch electronics cost per kWh ($),elec,7.0,24.0,18.2,17.7,BUY,BUY,0.5,CITED (REON CTO),"REON: quote, and whether it is total or extra over a BMS",17.7

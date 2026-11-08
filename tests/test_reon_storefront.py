@@ -46,4 +46,22 @@ def test_gain_vs_fade_rows_come_from_cache_and_are_complete():
         assert len(rows) == len(SF.GAIN_FADES) * len(SF.GAIN_PARALLEL)
         assert all(r["verdict"] in ("BUY", "HOLD") for r in rows)
     one = [r for r in SF.gain_vs_fade(40) if r["parallel"] == 1 and r["fade"] == 0.008][0]
-    assert abs(one["gain"] - 15.32) < 0.1 and one["verdict"] == "BUY"
+    assert abs(one["gain"] - 17.73) < 0.1 and one["verdict"] == "BUY"
+
+
+def test_balancer_rows_complete_and_crossover_sensible():
+    rows = SF.balancer_rows(1, 0.008)
+    assert len(rows) == len(SF.BAL_LIMITS) * len(SF.BAL_SERIES)
+    assert {r["series"] for r in rows} == {lab for _, lab in SF.BAL_SERIES}
+    x = SF.balancer_crossover(rows)
+    assert x is not None and 0.01 < x < 0.05
+    assert SF.balancer_rows(1, 0.123) == []
+    # at fast wear switches alone beat the balancer up to a much stronger one
+    fast = SF.balancer_crossover(SF.balancer_rows(1, 0.02))
+    assert fast is None or fast > x
+
+
+def test_balancer_chart_builds():
+    from hackkit import reon_visuals as VZ
+    ch = VZ.balancer_chart(SF.balancer_rows(1, 0.008))
+    assert ch.to_dict()

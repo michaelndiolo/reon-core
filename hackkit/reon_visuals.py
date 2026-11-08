@@ -118,6 +118,28 @@ def gain_fade_chart(rows, claim_fade: float = 0.004):
     return (zero + claim + lab + line + pts).properties(height=420)
 
 
+BAL_COLORS = {"Balancer alone": "#d9922b", "REON switches alone": "#2a7f8e", "Switches plus balancer": "#5b4b8a"}
+
+
+def balancer_chart(rows, assumed: float = 0.05):
+    """12-year gain per kWh against balancer strength (share of a cell's capacity it can move per cycle), three lines. The vertical rule marks the strength we assumed (not sourced)."""
+    df = pd.DataFrame(rows)
+    df["pct"] = df.limit * 100
+    order = list(BAL_COLORS)
+    base = alt.Chart(df).encode(
+        x=alt.X("pct:Q", title="Balancer strength: % of a cell's capacity it can move per cycle", axis=alt.Axis(values=sorted(df.pct.unique().tolist()), format=".3~g", grid=False)),
+        y=alt.Y("gain:Q", title="12-year gain, $ per kWh", axis=alt.Axis(grid=True, gridOpacity=0.25)),
+        color=alt.Color("series:N", scale=alt.Scale(domain=order, range=[BAL_COLORS[k] for k in order]), legend=alt.Legend(title=None, orient="bottom")))
+    tip = [alt.Tooltip("series:N", title="Build"), alt.Tooltip("pct:Q", title="Balancer strength, %", format=".3~g"), alt.Tooltip("gain:Q", title="Gain, $/kWh", format=".1f"), alt.Tooltip("p10:Q", title="Pessimistic, $/kWh", format=".1f")]
+    line = base.mark_line(strokeWidth=2.5)
+    pts = base.mark_point(filled=True, size=70, opacity=1).encode(tooltip=tip)
+    zero = alt.Chart(pd.DataFrame({"y": [0.0]})).mark_rule(color="#555", strokeDash=[4, 3]).encode(y="y:Q")
+    rule = alt.Chart(pd.DataFrame({"x": [assumed * 100]})).mark_rule(color="#999", strokeDash=[2, 3]).encode(x="x:Q")
+    top = float(df.gain.max())
+    lab = alt.Chart(pd.DataFrame({"x": [assumed * 100], "y": [top], "t": ["assumed"]})).mark_text(align="left", dx=5, color="#555", fontSize=11).encode(x="x:Q", y="y:Q", text="t:N")
+    return (zero + rule + lab + line + pts).properties(height=340)
+
+
 def tile_map_chart(frame: pd.DataFrame, selected: str | None = None, title: str = "", fmt: str = ",.0f"):
     """US tile map: one square per state, one-hue ramp (light = little, dark = a lot), abbreviation in each tile, the selected state outlined. Click a tile to pick it (selection 'pick', field 'state').
     `frame` comes from hackkit.reon_map.tile_frame."""

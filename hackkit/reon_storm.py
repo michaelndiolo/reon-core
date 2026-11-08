@@ -5,20 +5,26 @@ Reduce power: shedding load to a fraction f stretches the same energy over 1/f t
 Wear price of bypass: with fewer cells in the string, constant power means MORE CURRENT (x n/(n-k)) and a deeper discharge per remaining cell (x n/(n-k)); wear goes as (DoD)^g (g = DoD exponent, Iowa State fit 0.87 in this repo), heat as current squared."""
 import numpy as np
 from hackkit.reon_guard import caps_array, need
+from hackkit.reon_window import window_usable
 
 
-def usable_kwh(caps, nameplate_kwh: float, managed: bool, cold: float = 1.0, switch_loss: float = 0.02) -> float:
+def usable_kwh(caps, nameplate_kwh: float, managed: bool, cold: float = 1.0, switch_loss: float = 0.02, window: float = None) -> float:
     c = caps_array(caps)
     need(nameplate_kwh > 0 and 0 < cold <= 1.5 and 0 <= switch_loss < 1, "storm: nameplate > 0, 0 < cold factor <= 1.5, 0 <= switch loss < 1")
-    base = c.mean() * (1.0 - switch_loss) if managed else c.min()
+    if managed and window is not None:   # inverter voltage window: at least window x n cells stay in the string, so at most floor(n (1 - window)) can be bypassed (cells treated as equal in voltage)
+        need(0.0 < window <= 1.0, "storm: window must be above 0 and at most 1")
+        n_min = len(c) - int(np.floor(len(c) * (1.0 - window) + 1e-9))
+        base = window_usable(np.maximum(c, 1e-9), n_min) / len(c) * (1.0 - switch_loss)   # switch loss charged on ALL managed energy; the plain string has no switches
+    else:
+        base = c.mean() * (1.0 - switch_loss) if managed else c.min()
     return nameplate_kwh * base * cold
 
 
-def hours(caps, nameplate_kwh: float, load_kw: float, managed: bool, cold: float = 1.0, fail_at_h=None, power_fraction: float = 1.0, switch_loss: float = 0.02) -> float:
+def hours(caps, nameplate_kwh: float, load_kw: float, managed: bool, cold: float = 1.0, fail_at_h=None, power_fraction: float = 1.0, switch_loss: float = 0.02, window: float = None) -> float:
     """Hours of supply at load_kw x power_fraction. fail_at_h: one cell fails open at that hour (None = no failure)."""
     caps = caps_array(caps)
     n = len(caps)
-    e = usable_kwh(caps, nameplate_kwh, managed, cold, switch_loss)
+    e = usable_kwh(caps, nameplate_kwh, managed, cold, switch_loss, window)
     need(load_kw > 0 and 0 < power_fraction <= 1, "storm: load must be above zero and the power fraction between 0 and 1")
     need(fail_at_h is None or fail_at_h >= 0, "storm: failure hour must be zero or more")
     p = load_kw * power_fraction
