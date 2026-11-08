@@ -66,8 +66,22 @@ h1, h2, h3 { font-weight: 700 !important; letter-spacing: -0.03em; line-height: 
 .rn-sec { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; margin: 30px 0 4px; color: #12161c; }
 .rn-note { font-size: 15px; color: #5b6472; line-height: 1.5; }
 [data-testid="stElementToolbar"], .vega-actions, details.vega-actions { display: none !important; }
-.st-key-nav button { font-size: 18px !important; font-weight: 700 !important; padding: 14px 22px !important; min-height: 56px; }
-.st-key-nav [data-testid="stSegmentedControl"], .st-key-nav > div { width: 100%; }
+.st-key-nav_w [data-testid="stButtonGroup"], .st-key-nav_w [role="radiogroup"] { border: none !important; background: transparent !important; box-shadow: none !important; gap: 36px !important; }
+.st-key-nav_w [data-testid="stButtonGroup"] { border-bottom: 1px solid #e3e7ee !important; padding-bottom: 0 !important; }
+.st-key-nav_w button, .st-key-nav_w button > div { overflow: visible !important; }
+.st-key-nav_w button { font-size: 19px !important; font-weight: 600 !important; padding: 14px 2px 16px !important; min-height: 0 !important; background: transparent !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; color: #5b6472 !important; position: relative; transition: color .2s; }
+.st-key-nav_w button p { font-size: 19px !important; font-weight: 600 !important; color: inherit !important; }
+.st-key-nav_w button:hover { color: #12161c !important; }
+.st-key-nav_w button[aria-checked="true"] { color: #17324f !important; }
+.st-key-nav_w button[aria-checked="true"] p { font-weight: 800 !important; }
+.st-key-nav_w button[aria-checked="true"]::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 4px; border-radius: 2px; background: #2f5fa3; transform-origin: left center; animation: rn-ul .45s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes rn-ul { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes rn-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+[data-testid="stMainBlockContainer"] [data-testid="stElementContainer"] { animation: rn-in .4s cubic-bezier(.2,.7,.2,1) backwards; }
+[data-testid="stMainBlockContainer"] [data-testid="stElementContainer"]:nth-child(n+3) { animation-delay: .05s; }
+[data-testid="stMainBlockContainer"] [data-testid="stElementContainer"]:nth-child(n+6) { animation-delay: .1s; }
+@media (prefers-reduced-motion: reduce) { [data-testid="stMainBlockContainer"] [data-testid="stElementContainer"], .st-key-nav_w button::after { animation: none !important; } }
+.st-key-nav_w [data-testid="stSegmentedControl"], .st-key-nav_w > div { width: 100%; }
 .rn-hint { font-size: 17px; color: #5b6472; margin: 6px 0 18px; line-height: 1.45; }
 .rn-hint b { color: #12161c; }
 .rn-step { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; margin: 22px 0 4px; color: #12161c; }
@@ -115,10 +129,17 @@ h1, h2, h3 { font-weight: 700 !important; letter-spacing: -0.03em; line-height: 
 @media (max-width: 820px) { .rn-brow, .rn-baxis { grid-template-columns: 120px 1fr 56px; } .rn-key { margin-left: 0; } .rn-grid { grid-template-columns: 90px repeat(4, 1fr); } .rn-h1 { font-size: 32px; } }
 .rn-ct { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; color: #12161c; margin: 0 0 6px; }
 .rn-cb { font-size: 15px; line-height: 1.45; color: #5b6472; margin: 0 0 4px; min-height: 66px; }
-[class*="st-key-evcard"] { border-radius: 20px !important; background: #f4f6fa; border: 1px solid #e3e7ee !important; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; padding: 6px 8px; }
-[class*="st-key-evcard"]:hover { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(23,50,79,.12); border-color: #2f5fa3 !important; }
-[class*="st-key-evcard"] button { background: #17324f; color: #fff; border: none; border-radius: 12px; font-weight: 700; }
-[class*="st-key-evcard"] button:hover { background: #2f5fa3; color: #fff; }
+[class*="st-key-evcard"] { position: relative; border-radius: 20px !important; background: #fff; border: 1px solid #e3e7ee !important; padding: 22px 26px 18px !important; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+[class*="st-key-evcard"]:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(23,50,79,.13); border-color: #2f5fa3 !important; }
+[class*="st-key-evcard"] button { background: transparent !important; color: #2f5fa3 !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; font-weight: 800; padding: 0 !important; min-height: 0 !important; }
+[class*="st-key-evcard"] button p { font-size: 16px !important; font-weight: 800 !important; color: #2f5fa3 !important; transition: transform .18s ease; }
+[class*="st-key-evcard"]:hover button p { transform: translateX(5px); }
+[class*="st-key-evcard"] [data-testid="stButton"], [class*="st-key-evcard"] [data-testid="stElementContainer"], [class*="st-key-evcard"] button { position: static !important; }
+[class*="st-key-evcard"] [data-testid="stElementContainer"] { animation: none !important; }
+[class*="st-key-evcard"] button::after { content: ""; position: absolute; inset: 0; border-radius: 20px; }
+[class*="st-key-evcard"] .rn-ct { font-size: 19px; white-space: nowrap; }
+[class*="st-key-evcard"] { min-height: 196px; }
+[class*="st-key-evcard"] .rn-cb { min-height: 68px; margin-bottom: 10px; }
 .rn-h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; margin: 10px 0 4px; color: #12161c; }
 .rn-bigq { font-size: 30px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.15; margin: 4px 0 6px; color: #12161c; }
 .rn-prog { height: 8px; background: #e3e7ee; border-radius: 4px; overflow: hidden; margin: 10px 0 8px; }
@@ -132,6 +153,9 @@ h1, h2, h3 { font-weight: 700 !important; letter-spacing: -0.03em; line-height: 
 [data-testid="stSegmentedControl"] button { font-size: 16px !important; padding: 10px 16px !important; font-weight: 600 !important; }
 [data-testid="stColumn"] [data-testid="stSegmentedControl"] button { padding: 8px 10px !important; font-size: 15px !important; }
 [data-testid="stButtonGroup"] [role="radiogroup"] { flex-wrap: wrap !important; overflow: visible !important; row-gap: 6px; }
+[data-testid="stMetricLabel"], [data-testid="stMetricLabel"] *, [data-testid="stMetricDelta"], [data-testid="stMetricDelta"] * { white-space: normal !important; overflow: visible !important; text-overflow: clip !important; }
+[data-testid="stMetricDelta"] { align-items: flex-start !important; height: auto !important; }
+[data-testid="stMetricLabel"] p { line-height: 1.25 !important; }
 [data-testid="stSegmentedControl"] label p { font-size: 15px !important; font-weight: 700 !important; color: #12161c; }
 </style>""", unsafe_allow_html=True)
 import base64
@@ -222,6 +246,19 @@ def _fmt_val(v, fmt):
     return f"{v:g}" if isinstance(v, float) else str(v)
 
 
+def _keep(key):
+    """on_change for single-choice chips and tabs: tapping the chosen one again would clear it, so put the last choice back. A choice that cannot be empty is never empty."""
+    def cb():
+        if st.session_state.get(key) is None:
+            st.session_state[key] = st.session_state.get("_last_" + key)
+    return cb
+
+
+def _remember(key, v):
+    if v is not None:
+        st.session_state["_last_" + key] = v
+
+
 def _chip_slider(host, label, min_value=None, max_value=None, value=None, step=None, format=None, key=None, help=None, **kw):
     """Stand-in for st.slider: a row of four preset buttons (low, between, default, between, high). No dragging; the default is always one of them."""
     lo, hi = min_value, max_value
@@ -234,14 +271,18 @@ def _chip_slider(host, label, min_value=None, max_value=None, value=None, step=N
     else:
         dec = 3 if (step and step < 0.01) or hi <= 1 else 2 if hi <= 20 else 1
         opts = sorted({round(float(o), dec) for o in opts} | {float(d)})
-    v = host.pills(label, opts, selection_mode="single", default=d if d in opts else opts[0], format_func=lambda o: _fmt_val(o, format), key=key, help=help, disabled=kw.get("disabled", False))
+    v = host.pills(label, opts, selection_mode="single", default=d if d in opts else opts[0], format_func=lambda o: _fmt_val(o, format), key=key, help=help, disabled=kw.get("disabled", False), on_change=_keep(key) if key else None)
+    if key:
+        _remember(key, v)
     return d if v is None else v
 
 
 def _chip_select(host, label, options=(), value=None, format_func=str, key=None, help=None, **kw):
     opts = list(options)
     d = value if value in opts else opts[0]
-    v = host.pills(label, opts, selection_mode="single", default=d, format_func=format_func, key=key, help=help, disabled=kw.get("disabled", False))
+    v = host.pills(label, opts, selection_mode="single", default=d, format_func=format_func, key=key, help=help, disabled=kw.get("disabled", False), on_change=_keep(key) if key else None)
+    if key:
+        _remember(key, v)
     return d if v is None else v
 
 
@@ -257,10 +298,20 @@ HINTS = ["Start here. Answer three questions and we tell you whether the switche
          "Pick your state on the map, describe the site, and read what it means in dollars, battery life and carbon.",
          "Every claim above, checked. Pick a question below; each answer shows its method, inputs and limits."]
 st.session_state.setdefault("nav", PAGES[0])
-st.segmented_control("Go to", PAGES, key="nav", label_visibility="collapsed")
 if st.session_state.get("nav") not in PAGES:
-    st.session_state["nav"] = st.session_state.get("_nav_last", PAGES[0])
-st.session_state["_nav_last"] = st.session_state["nav"]
+    st.session_state["nav"] = PAGES[0]
+st.session_state["nav_w"] = st.session_state["nav"]
+
+
+def _nav_cb():
+    v = st.session_state.get("nav_w")
+    if v is None:  # tapping the current tab again: stay on it
+        st.session_state["nav_w"] = st.session_state["nav"]
+    else:
+        st.session_state["nav"] = v
+
+
+st.segmented_control("Go to", PAGES, key="nav_w", on_change=_nav_cb, label_visibility="collapsed")
 pidx = PAGES.index(st.session_state["nav"])
 st.html(f'<p class="rn-hint"><b>{PAGES[pidx]}.</b> {HINTS[pidx]}</p>')
 EV = {1: "Try your own numbers", 2: "Where does it flip?", 3: "How the string ages", 4: "Storm night in detail", 5: "The voltage limit", 6: "Sources and stress tests", 7: "Which cell is hurting?", 8: "Where the money comes from",
@@ -305,10 +356,43 @@ if pidx == 3:
         tb[0].button("← All evidence", key="ev_back", on_click=_open_ev, args=(None,))
         st.html(f'<p class="rn-h2">{EV[ev]}</p><p class="rn-note" style="margin-bottom:14px">{EVB[ev]}</p>')
 
+def _twin_pick():
+    c = TWU.last_pick("twin3d")
+    if c is not None:
+        st.session_state["tfail"] = TWN.toggle(st.session_state.get("tfail", []), c)
+
+
+if pidx == 1:
+    st.markdown("**A twin of one store's battery, and the decision layer behind it.** 250 cells in series, drawn from the real spread of late-life cells. Click a cell to fail it, turn the view, and compare a plain string with cell-level control. "
+                "A twin shows the pack; step 1, Ask us, says whether to build the switches. Every number here comes from the same decision engine. Simulation on assumed sodium-ion behaviour, not REON data.")
+    ts = st.session_state
+    ts.setdefault("tfail", [])
+    tc = st.columns([1.5, 1.2, 0.8, 0.8])
+    t_win = tc[0].select_slider("Share of cells that must stay in the string (REON: about 90%)", [0.5, 0.7, 0.9], 0.9, key="t_win")
+    t_load = tc[1].slider("Load (kW)", 1.0, 10.0, 5.0, key="t_load")
+    h_t = GR.make_string(GR.pooled_relative(real_packs()))
+    if tc[2].button("Fail a random cell", key="t_rand"):
+        live_t = [i for i in range(len(h_t)) if i not in ts.tfail]
+        ts.tfail = TWN.toggle(ts.tfail, int(np.random.default_rng(len(ts.tfail) + 7).choice(live_t)))
+    if tc[3].button("Reset", key="t_reset"):
+        ts.tfail = []
+    an_t = GR.analyse(h_t, ts.tfail, t_win, 60.0, 0.04, t_load)
+    TWU.mount(TWN.payload(h_t, an_t, t_load), key="twin3d", on_pick=_twin_pick)
+    tm = st.columns(4)
+    tm[0].metric("Plain string", f"{an_t['plain_kwh']:.0f} kWh", f"{an_t['plain_h']:.1f} h at {t_load:.0f} kW", delta_color="off")
+    tm[1].metric("With cell-level control", f"{an_t['ours_kwh']:.0f} kWh", f"{an_t['ours_h']:.1f} h at {t_load:.0f} kW", delta_color="off")
+    tm[2].metric("Cells that can still leave", f"{max(an_t['room'], 0)} of {an_t['K']}")
+    tm[3].metric("Cells failed", f"{an_t['failed']}")
+    st.caption("Red plane: what a plain string can use (its weakest cell; nothing with any open cell). Amber plane: with control, the weakest cells may leave early, so the usable level is higher. "
+               "Switch loss 4% and the inverter minimum voltage are assumed (REON: about 90% of cells connected). REON's hardware keeps safety authority.")
+
+
+
 if pidx == 0:
     def _pick(label, n, fmt, default, key, num):
         st.html(f'<p class="rn-q"><span>{"ABC"[num - 1]}</span>{label}</p>')
-        v = st.segmented_control(label, list(range(n)), default=default, format_func=fmt, key=key, label_visibility="collapsed")
+        v = st.segmented_control(label, list(range(n)), default=default, format_func=fmt, key=key, on_change=_keep(key), label_visibility="collapsed")
+        _remember(key, v)
         return default if v is None else v
 
     wear_i = _pick("How fast do this store's cells wear?", len(DM.WEAR), lambda i: f"{DM.WEAR[i][0]} · {DM.WEAR[i][1] * 100:.1f}% a year", 1, "d_wear", 1)
@@ -342,7 +426,8 @@ if pidx == 0:
         st.html(_verdict_grid(wire_i, wear_i, val_i))
 
         st.html('<p class="rn-sec">Now a storm night</p><p class="rn-note">60 kWh store, 5 kW load, power out for 24 hours. What happens if one cell opens?</p>')
-        fail_v = st.segmented_control("Cell failure", [0, 3, 6, 9], default=0, format_func=lambda h: "No failure" if h == 0 else f"A cell opens at hour {h}", key="d_failh", label_visibility="collapsed") or 0
+        fail_v = st.segmented_control("Cell failure", [0, 3, 6, 9], default=0, format_func=lambda h: "No failure" if h == 0 else f"A cell opens at hour {h}", key="d_failh", on_change=_keep("d_failh"), label_visibility="collapsed") or 0
+        _remember("d_failh", fail_v)
         failed = fail_v > 0
         fail_h = fail_v if failed else 6
         sm = storm_demo(fail_h)
@@ -491,7 +576,7 @@ if pidx == 2:
         m = st.columns(3)
         m[0].metric("Backup on a storm night", f"{r0['backup_managed_h']:.1f} h", f"{r0['backup_managed_h'] - r0['backup_plain_h']:+.1f} h vs a plain string")
         m[1].metric("Battery life", f"{r0['life_ours']:.0f} years" if r0["verdict"] == "BUY" else f"{r0['life_plain']:.0f} years", f"{r0['life_ours'] - r0['life_plain']:+.0f} years vs plain" if r0["verdict"] == "BUY" else None)
-        m[2].metric("Worth over the first 12 years", f"${r0['dollars_total']:,.0f}" if r0["verdict"] == "BUY" else "$0", f"pessimistic ${r0['p10_total']:,.0f}; ${r0['vs_balancer_total']:,.0f} over a balancer alone" if r0["verdict"] == "BUY" else None)
+        m[2].metric("Worth over the first 12 years", f"${r0['dollars_total']:,.0f}" if r0["verdict"] == "BUY" else "$0", f"pessimistic \\${r0['p10_total']:,.0f}; \\${r0['vs_balancer_total']:,.0f} over a balancer alone" if r0["verdict"] == "BUY" else None)
         st.markdown("**Same battery, three ways to run it**")
         st.altair_chart(VZ.policies_chart(pp, pm, ps), use_container_width=True)
         if r0["verdict"] == "BUY" and r0["life_ours"] > r0["life_plain"]:
@@ -580,7 +665,8 @@ if pidx == 3 and ev == 1:
     if step < len(WZ):
         key, q, opts, dflt, fmt, why = WZ[step]
         st.html(f'<div class="rn-prog"><div style="width:{100 * (step + 1) / (len(WZ) + 1):.0f}%"></div></div><p class="rn-note">Question {step + 1} of {len(WZ)}</p><p class="rn-bigq">{q}</p><p class="rn-note">{why}</p>')
-        st.segmented_control(q, opts, default=ss1["wz_ans"].get(key, dflt), format_func=fmt, key=f"wzw_{key}", label_visibility="collapsed")
+        st.segmented_control(q, opts, default=ss1["wz_ans"].get(key, dflt), format_func=fmt, key=f"wzw_{key}", on_change=_keep(f"wzw_{key}"), label_visibility="collapsed")
+        _remember(f"wzw_{key}", st.session_state.get(f"wzw_{key}"))
         nb = st.columns([1, 1, 3])
         if step > 0:
             nb[0].button("← Back", key="wz_back", on_click=_wz_go, args=(-1, key, dflt))

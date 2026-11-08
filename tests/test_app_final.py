@@ -26,6 +26,15 @@ def _run(page, ev=None):
 def test_pages_run_without_error(page):
     at = _run(page)
     assert not at.exception, [str(e) for e in at.exception]
+    body = " ".join(m.value for m in at.markdown)
+    # each page must actually draw its content, not just run without error (page 1 once came up blank)
+    assert ["Ask us", "twin of one store", "Your state"][page] in body or page == 0 or len(at.metric) > 0
+
+
+def test_twin_page_has_its_metrics_and_component():
+    at = _run(1)
+    assert not at.exception
+    assert len(at.metric) == 4 and any("twin of one store" in m.value for m in at.markdown)
 
 
 @pytest.mark.parametrize("ev", list(range(1, 14)))
@@ -43,3 +52,13 @@ def test_try_your_own_numbers_survey_runs_to_the_answer():
     at.run()
     assert not at.exception, [str(e) for e in at.exception]
     assert any("rn-verdict" in h.value for h in at.get("html"))
+
+
+def test_tapping_the_current_tab_or_choice_again_does_not_clear_or_crash():
+    at = _run(0)
+    at.segmented_control(key="nav_w").set_value(None).run()
+    assert not at.exception, [str(e) for e in at.exception]
+    assert at.session_state["nav"] == PAGES[0] and at.segmented_control(key="nav_w").value == PAGES[0]
+    at.segmented_control(key="d_wear").set_value(None).run()
+    assert not at.exception
+    assert at.segmented_control(key="d_wear").value is not None
