@@ -311,7 +311,7 @@ if pidx == 0:
         m[2].metric("Control, shedding half the load", f"{shed_h:.1f} h of lights", f"{shed_h - plain_h:+.1f} h", delta_color="normal")
 
     st.html('<p class="rn-sec">Ask us</p><p class="rn-note">Tap a question. Every answer is computed from the model, not written by a chatbot.</p>')
-    QS = ["What happens if a cell dies mid-storm?", "When is a simple balancer enough?", "How do we know the policy is safe?", "What have we not tested?", "What do we need from REON?", "Can I see it in 3D?"]
+    QS = ["What happens if a cell dies mid-storm?", "When is a simple balancer enough?", "How do we know the policy is safe?", "How hostile a case did we test?", "What do we need from REON?", "Can I see it in 3D?"]
     q = st.pills("Ask us", QS, selection_mode="single", key="d_q", label_visibility="collapsed")
     ans = None
     if q == QS[0]:
@@ -333,8 +333,11 @@ if pidx == 0:
         ans = (f"We ran {pr['runs']} stress runs on fresh random draws: random wear, balancer strength, costs and hostile packs. The policy was never behind the better of a plain string or a balancer by more than ${pr['worst_regret']:.2f} a kWh. "
                "REON's hardware keeps safety authority; our layer only recommends.")
     elif q == QS[3]:
-        ans = ("Cold nights, slow recovery, faster wear and failures that hit neighbouring cells together are not run yet, so we do not claim them. There is no REON data in the model: sodium-ion behaviour is assumed, and backup hours use 12 real car packs. "
-               "Every input is tagged in the sources file.")
+        av = DM.adversary_summary()
+        ran = (f"We also ran {av['runs']} hostile packs: clustered weak cells, outliers, dead cells, a cold night, slow and fast wear, and correlated fade, at 1, 4 and 16 cells in parallel. The policy was never behind a balancer or a plain string (worst shortfall ${av['worst_regret']:.2f} a kWh) "
+               f"and said \"a balancer is enough\" where that was true. ") if av else ""
+        ans = (ran + "Not covered: only 2 random seeds per case, a failure that happens mid-run (dead cells are frozen from day 1 in the dollar run), cold as a stand-in rather than temperature physics, and rest-voltage recovery. "
+               "There is no REON data in the model: sodium-ion behaviour is assumed, and backup hours use 12 real car packs.").replace("$", "&#36;")
     elif q == QS[4]:
         tor = pd.read_csv("examples/data/tornado_250.csv").sort_values("swing", ascending=False).head(3)
         ans = ("Three numbers move the answer most: " + "; ".join(f"{r.input.lower()} ({r.who_can_answer})" for r in tor.itertuples()) + ". Give us those and the assumptions become measurements.")

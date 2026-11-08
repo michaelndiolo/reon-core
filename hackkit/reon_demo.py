@@ -76,3 +76,23 @@ def proof():
                 runs += 1
                 worst = max(worst, float(x.get("regret", 0.0)))
     return dict(runs=runs, worst_regret=max(worst, 0.0))
+
+
+def adversary_summary():
+    """What the hostile-case run says, read from examples/data/adversary_vs_guard.json (written by examples/reon_adversary_vs_guard.py). None if the file is missing.
+    Keys: runs, cases (case name -> (runs where we build, runs)), worst_regret ($/kWh behind the better of plain or the customer's balancer; 0 = never behind),
+    hindsight_gap_5 (most the guarded pick left on the table against the best build in hindsight, with a 5% balancer as the customer's rival)."""
+    try:
+        with open(os.path.join(HERE, "examples", "data", "adversary_vs_guard.json")) as f:
+            d = json.load(f)
+    except (OSError, ValueError):
+        return None
+    by = {}
+    worst, gap = 0.0, 0.0
+    for k, v in d.items():
+        name = k.split("|")[0].rsplit("_p", 1)[0]
+        a, b = v.get("balancer 5%", {}), v.get("balancer 2.5%", {})
+        by.setdefault(name, []).append(a.get("verdict") == "BUY")
+        worst = max(worst, a.get("regret", 99.0), b.get("regret", 99.0))
+        gap = max(gap, a.get("regret_hindsight", 99.0))
+    return dict(runs=len(d), cases={n: (sum(x), len(x)) for n, x in by.items()}, worst_regret=max(worst, 0.0), hindsight_gap_5=gap)
