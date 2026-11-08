@@ -27,6 +27,21 @@ from hackkit import reon_map as MP
 from hackkit import reon_demo as DM
 
 st.set_page_config(page_title="REON decision layer", layout="wide")
+st.markdown("""<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+html, body, [class*="css"], .stApp, button, input, textarea, select { font-family: 'Manrope', -apple-system, sans-serif !important; }
+h1, h2, h3 { font-weight: 800 !important; letter-spacing: -0.02em; color: #12161c; }
+h1 { font-size: 2.6rem !important; line-height: 1.05 !important; }
+[data-testid="stMetricValue"] { font-weight: 800; letter-spacing: -0.02em; color: #17324f; }
+[data-testid="stMetricLabel"] p { font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: #5b6472; font-weight: 700; }
+[data-testid="stCaptionContainer"] { color: #5b6472; }
+.stTabs [data-baseweb="tab-list"] { gap: 8px; border-bottom: 1px solid #e3e7ee; }
+.stTabs [data-baseweb="tab"] { font-weight: 700; color: #5b6472; }
+.stTabs [aria-selected="true"] { color: #12161c; }
+[data-testid="stAlert"] { border-radius: 16px; border: 1px solid #e3e7ee; background: #e8eff8 !important; color: #17324f !important; }
+[data-testid="stAlert"] * { color: #17324f !important; }
+.block-container { padding-top: 2.5rem; max-width: 1200px; }
+</style>""", unsafe_allow_html=True)
 st.title("Beyond the weakest cell: what cell-level control is worth")
 st.caption("Draft for the MIT Energy & Climate Hack. Every input below is tagged in docs/SOURCES.md; sodium-ion data are still assumed. Simulations and replays only.")
 
@@ -79,7 +94,7 @@ with demo:
         plain_h, ours_h = (sm["plain_fail"], sm["ours_fail"]) if failed else (sm["plain"], sm["ours"])
         m[0].metric("Lights on, 5 kW load", f"{ours_h:.1f} h", f"{ours_h - plain_h:+.1f} h vs a plain string")
         m[1].metric("Battery life", f"{card['life_ours']:.0f} years" if card["kind"] == "BUY" else f"{card['life_plain']:.0f} years", f"{card['life_ours'] - card['life_plain']:+.0f} years vs plain" if card["kind"] == "BUY" else "no change from us", delta_color="normal" if card["kind"] == "BUY" else "off")
-        m[2].metric("12-year value from cell-level control", f"${card['dollars']:,.0f}" if card["kind"] == "BUY" else "$0", f"${card['vs_balancer']:,.0f} beyond a balancer" if card["kind"] == "BUY" else "a balancer is enough" if card["kind"] == "BALANCER" else None, delta_color="normal" if card["kind"] == "BUY" else "off")
+        m[2].metric("12-year value", f"${card['dollars']:,.0f}" if card["kind"] == "BUY" else "$0", f"${card['vs_balancer']:,.0f} beyond a balancer" if card["kind"] == "BUY" else "a balancer is enough" if card["kind"] == "BALANCER" else None, delta_color="normal" if card["kind"] == "BUY" else "off")
         m[3].metric("Manufacturing carbon avoided", f"{card['carbon_t']:.1f} t CO2e" if card["carbon_t"] else "none claimed", help="net of the electronics, over 20 years; a range, not a point (see Customer view)")
         pr = DM.proof()
         st.caption(f"Checked against {pr['runs']} stress runs on fresh random draws (random wear, balancer strength, costs, hostile packs): never behind a balancer or a plain string by more than ${pr['worst_regret']:.2f} a kWh. "

@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 STATES = ["Active", "Can leave early", "Failed, isolated"]
-COLORS = ["#2a7f8e", "#d9922b", "#c0392b"]
+COLORS = ["#2f5fa3", "#d9922b", "#9c4a2f"]
 
 
 def grid_frame(health, failed, early, cols: int = 25) -> pd.DataFrame:
@@ -54,7 +54,7 @@ def policies_chart(plain_h: float, managed_h: float, shed_h: float):
 
 
 TREND_CLASSES = ["Typical", "Fades faster than its neighbours", "Ends weakest"]
-TREND_COLORS = ["#8aa9b0", "#d9922b", "#c0392b"]
+TREND_COLORS = ["#8aa9b0", "#d9922b", "#9c4a2f"]
 
 
 def trend_frame(early, late, flagged, end_weakest: int) -> pd.DataFrame:
@@ -93,7 +93,7 @@ def position_chart(early, late, flagged, end_weakest: int, local_median):
     return (line + pts).properties(height=220)
 
 
-PAR_COLORS = ["#2a7f8e", "#5b8fc9", "#d9922b", "#8a6bbf"]
+PAR_COLORS = ["#2f5fa3", "#5b8fc9", "#d9922b", "#8a6bbf"]
 
 
 def gain_fade_chart(rows, claim_fade: float = 0.004):
@@ -118,7 +118,7 @@ def gain_fade_chart(rows, claim_fade: float = 0.004):
     return (zero + claim + lab + line + pts).properties(height=420)
 
 
-BAL_COLORS = {"Balancer alone": "#d9922b", "REON switches alone": "#2a7f8e", "Switches plus balancer": "#5b4b8a", "Our recommendation": "#1e2a2e"}
+BAL_COLORS = {"Balancer alone": "#d9922b", "REON switches alone": "#2f5fa3", "Switches plus balancer": "#5b4b8a", "Our recommendation": "#1e2a2e"}
 
 
 def balancer_chart(rows, assumed: float = 0.05):
@@ -153,7 +153,7 @@ def tile_map_chart(frame: pd.DataFrame, selected: str | None = None, title: str 
     tip = [alt.Tooltip("state:N", title="State"), alt.Tooltip("text:N", title=title or "Value"), alt.Tooltip("unit:N", title="Measure")]
     tiles = alt.Chart(df).mark_rect(cornerRadius=3).encode(
         x=x, y=y, color=alt.Color("value:Q", scale=alt.Scale(range=["#e3eef0", "#1f5e6b"]), legend=alt.Legend(title=title, orient="bottom", format=fmt, gradientLength=220, direction="horizontal")),
-        stroke=alt.condition(alt.datum.chosen, alt.value("#c0392b"), alt.value("#ffffff")), strokeWidth=alt.condition(alt.datum.chosen, alt.value(3), alt.value(0.5)), tooltip=tip).add_params(pick)
+        stroke=alt.condition(alt.datum.chosen, alt.value("#9c4a2f"), alt.value("#ffffff")), strokeWidth=alt.condition(alt.datum.chosen, alt.value(3), alt.value(0.5)), tooltip=tip).add_params(pick)
     labels = alt.Chart(df).mark_text(fontSize=12, fontWeight="bold").encode(x=x, y=y, text="abbr:N", color=alt.condition(alt.datum.dark, alt.value("#ffffff"), alt.value("#1e2a2e")), tooltip=tip)
     return (tiles + labels).properties(height=440, width=720).configure_view(stroke=None)
 
@@ -170,7 +170,7 @@ def storm_timeline(rows, horizon: float = 24.0, fail_h=None):
     order = [r[0] for r in rows]
     bars = alt.Chart(df).mark_bar(height=30).encode(
         x=alt.X("start:Q", title="Hours into the outage", scale=alt.Scale(domain=[0, horizon]), axis=alt.Axis(values=list(range(0, int(horizon) + 1, 4)), grid=False)), x2="end:Q",
-        y=alt.Y("who:N", sort=order, title=None, axis=alt.Axis(labelLimit=300, labelFontSize=13, ticks=False, domain=False)), color=alt.Color("state:N", scale=alt.Scale(domain=["Lights on", "Dark"], range=["#2a7f8e", "#c0392b"]), legend=alt.Legend(title=None, orient="bottom")),
+        y=alt.Y("who:N", sort=order, title=None, axis=alt.Axis(labelLimit=300, labelFontSize=13, ticks=False, domain=False)), color=alt.Color("state:N", scale=alt.Scale(domain=["Lights on", "Dark"], range=["#2f5fa3", "#9c4a2f"]), legend=alt.Legend(title=None, orient="bottom")),
         tooltip=[alt.Tooltip("who:N", title=""), alt.Tooltip("state:N", title=""), alt.Tooltip("start:Q", title="From hour", format=".1f"), alt.Tooltip("end:Q", title="To hour", format=".1f")])
     layers = [bars]
     if fail_h is not None:
