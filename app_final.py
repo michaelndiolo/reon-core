@@ -28,24 +28,43 @@ from hackkit import reon_demo as DM
 from hackkit import reon_twin as TWN
 from hackkit import reon_twin_ui as TWU
 
-st.set_page_config(page_title="REON decision layer", layout="wide")
+st.set_page_config(page_title="REON decision layer", layout="wide", initial_sidebar_state="collapsed")
 st.markdown("""<style>
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap');
-html, body, [class*="css"], .stApp, button, input, textarea, select { font-family: 'Figtree', -apple-system, sans-serif !important; }
-h1, h2, h3 { font-weight: 600 !important; letter-spacing: -0.025em; line-height: 1.1; color: #12161c; }
-h1 { font-size: 2.6rem !important; line-height: 1.05 !important; }
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap');
+html, body, [class*="css"], .stApp, .stApp p, .stApp div, .stApp label, .stApp li, .stApp a, .stApp button, .stApp input, .stApp textarea, .stApp select, .stApp span:not([data-testid="stIconMaterial"]) { font-family: 'Figtree', -apple-system, sans-serif !important; }
+header[data-testid="stHeader"], [data-testid="stToolbar"], [data-testid="stDecoration"], footer, #MainMenu { display: none !important; }
+.block-container { padding-top: 1.6rem; max-width: 1180px; }
+h1, h2, h3 { font-weight: 700 !important; letter-spacing: -0.03em; line-height: 1.08; color: #12161c; }
 [data-testid="stMetricValue"] { font-weight: 800; letter-spacing: -0.02em; color: #17324f; }
 [data-testid="stMetricLabel"] p { font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: #5b6472; font-weight: 700; }
 [data-testid="stCaptionContainer"] { color: #5b6472; }
-.stTabs [data-baseweb="tab-list"] { gap: 8px; border-bottom: 1px solid #e3e7ee; }
-.stTabs [data-baseweb="tab"] { font-weight: 700; color: #5b6472; }
+.stTabs [data-baseweb="tab-list"] { gap: 6px; border-bottom: 1px solid #e3e7ee; }
+.stTabs [data-baseweb="tab"] { font-weight: 700; color: #5b6472; font-size: 1.02rem; padding: 10px 14px; }
 .stTabs [aria-selected="true"] { color: #12161c; }
 [data-testid="stAlert"] { border-radius: 16px; border: 1px solid #e3e7ee; background: #e8eff8 !important; color: #17324f !important; }
 [data-testid="stAlert"] * { color: #17324f !important; }
-.block-container { padding-top: 2.5rem; max-width: 1200px; }
+.rn-eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #5b6472; margin: 0 0 6px; }
+.rn-h1 { font-size: 46px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.04; color: #12161c; margin: 0 0 8px; }
+.rn-sub { font-size: 19px; color: #5b6472; margin: 0 0 18px; max-width: 760px; line-height: 1.4; }
+.rn-q { font-size: 15px; font-weight: 700; color: #12161c; margin: 8px 0 2px; }
+.rn-q span { display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 12px; background: #17324f; color: #fff; font-size: 13px; margin-right: 8px; }
+.rn-verdict { border-radius: 24px; padding: 28px 34px; margin: 18px 0 8px; }
+.rn-buy { background: #17324f; color: #fff; }
+.rn-bal { background: #e8eff8; color: #17324f; border: 1px solid #d3e0f1; }
+.rn-hold { background: #f4f6fa; color: #12161c; border: 1px solid #e3e7ee; }
+.rn-verdict .rn-eyebrow { color: inherit; opacity: .7; }
+.rn-vt { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; margin: 0 0 6px; }
+.rn-buy .rn-vt { color: #ffc857; }
+.rn-vl { font-size: 19px; line-height: 1.4; max-width: 900px; margin: 0 0 18px; }
+.rn-nums { display: flex; gap: 40px; flex-wrap: wrap; }
+.rn-nums b { display: block; font-size: 34px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.rn-nums i { display: block; font-style: normal; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; opacity: .7; margin-top: 2px; }
+.rn-ans { background: #f4f6fa; border: 1px solid #e3e7ee; border-radius: 18px; padding: 18px 24px; font-size: 18px; line-height: 1.5; color: #12161c; margin-top: 10px; }
+.rn-sec { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; margin: 30px 0 4px; color: #12161c; }
+.rn-note { font-size: 15px; color: #5b6472; line-height: 1.5; }
 </style>""", unsafe_allow_html=True)
-st.title("Beyond the weakest cell: what cell-level control is worth")
-st.caption("Draft for the MIT Energy & Climate Hack. Every input below is tagged in docs/SOURCES.md; sodium-ion data are still assumed. Simulations and replays only.")
+st.html('<p class="rn-eyebrow">REON decision layer · MIT Energy &amp; Climate Hack 2026</p><h1 class="rn-h1">Should this store get cell-level switches?</h1>'
+        '<p class="rn-sub">Answer three questions. We give a recommendation, then test it on a storm night. Everything is a simulation on assumed sodium-ion behaviour, not REON data.</p>')
 
 
 @st.cache_data
@@ -58,7 +77,9 @@ def real_packs():
 
 
 BE = pd.DataFrame({"fade spread 0.20": [16.2, 27.3, 45.7, None], "0.45": [25.4, 42.9, None, None], "0.60": [29.1, 49.4, None, None]}, index=["value 12", "value 22", "value 40", "value 80"])
-demo, twin_tab, front, sv_tab, trend_tab, eng_wrap = st.tabs(["Demo", "Twin: a 3D store you can break", "Customer view: a storm night", "String view: click a cell", "Cell trends: slope and neighbours", "Engineering and evidence"])
+demo, twin_tab, details = st.tabs(["Ask", "3D Twin", "Details and evidence"])
+with details:
+    front, trend_tab, eng_wrap = st.tabs(["Customer view", "Cell trends", "Engineering and evidence"])
 @st.cache_data
 def storm_demo(fail_h):
     return DM.storm(real_packs(), fail_h)
@@ -72,7 +93,7 @@ def _twin_pick():
 
 with twin_tab:
     st.markdown("**A twin of one store's battery, and the decision layer behind it.** 250 cells in series, drawn from the real spread of late-life cells. Click a cell to fail it, turn the view, and compare a plain string with cell-level control. "
-                "A twin shows the pack; the Demo tab says whether to build the switches. Every number here comes from the same engine as the String view. Simulation on assumed sodium-ion behaviour, not REON data.")
+                "A twin shows the pack; the Ask tab says whether to build the switches. Every number here comes from the same decision engine. Simulation on assumed sodium-ion behaviour, not REON data.")
     ts = st.session_state
     ts.setdefault("tfail", [])
     tc = st.columns([1.5, 1.2, 0.8, 0.8])
@@ -96,43 +117,83 @@ with twin_tab:
 
 
 with demo:
-    st.markdown("**A 60 kWh storefront battery, 250 cells in series.** Pick the case. We say what to build, then prove it on a storm night.")
-    dc = st.columns(3)
-    wear_i = dc[0].radio("How fast do the cells wear?", range(len(DM.WEAR)), index=1, key="d_wear", horizontal=False, format_func=lambda i: f"{DM.WEAR[i][0]}: {DM.WEAR[i][2]}")
-    wire_i = dc[1].radio("How are cells wired?", range(len(DM.WIRING)), index=0, key="d_wire", format_func=lambda i: DM.WIRING[i][0])
-    val_i = dc[2].radio("What is a kWh of backup worth a year?", range(len(DM.VALUES)), index=2, key="d_val", format_func=lambda i: DM.VALUES[i][1])
+    def _pick(label, n, fmt, default, key, num):
+        st.html(f'<p class="rn-q"><span>{num}</span>{label}</p>')
+        v = st.segmented_control(label, list(range(n)), default=default, format_func=fmt, key=key, label_visibility="collapsed")
+        return default if v is None else v
+
+    wear_i = _pick("How fast do this store's cells wear?", len(DM.WEAR), lambda i: f"{DM.WEAR[i][0]} · {DM.WEAR[i][1] * 100:.1f}% a year", 1, "d_wear", 1)
+    wire_i = _pick("How are the cells wired?", len(DM.WIRING), lambda i: DM.WIRING[i][0], 0, "d_wire", 2)
+    val_i = _pick("What is backup worth to the owner, per kWh per year?", len(DM.VALUES), lambda i: DM.VALUES[i][1], 2, "d_val", 3)
     case_d = SF.cached_core(DM.WIRING[wire_i][1], DM.WEAR[wear_i][1], DM.VALUES[val_i][0])
     card = DM.verdict_card(case_d)
     if card is None:
         st.info("No precomputed result for this combination.")
     else:
-        (st.success if card["kind"] == "BUY" else st.info if card["kind"] == "BALANCER" else st.warning)(f"**{card['title']}.** {card['line']}".replace("$", "\\$"))
-        lc, rc = st.columns([1, 2.2], gap="large")
-        with lc:
-            st.markdown("**The midnight call**")
-            failed = st.toggle("A cell fails open during the outage", value=False, key="d_fail")
-            fail_h = st.slider("It fails at hour", 1, 12, 6, key="d_fail_h", disabled=not failed)
-            sm = storm_demo(fail_h)
-            if failed:
-                st.caption("A failed cell breaks a plain string: no current flows. A balancer cannot move charge through a dead cell either. Cell-level control bypasses it and keeps going.")
-            else:
-                st.caption("With no failure the three runs look alike. Switch the failure on.")
-        with rc:
-            if failed:
-                rows = [("Plain string", sm["plain_fail"]), ("Plain string + simple balancer", sm["plain_fail"]), ("Cell-level control", sm["ours_fail"]), ("Cell-level control, shedding half the load", sm["shed_fail"])]
-            else:
-                rows = [("Plain string", sm["plain"]), ("Cell-level control", sm["ours"]), ("Cell-level control, shedding half the load", sm["shed"])]
-            st.altair_chart(VZ.storm_timeline(rows, 24.0, fail_h if failed else None), use_container_width=True)
-        m = st.columns(4)
-        plain_h, ours_h = (sm["plain_fail"], sm["ours_fail"]) if failed else (sm["plain"], sm["ours"])
-        m[0].metric("Lights on, 5 kW load", f"{ours_h:.1f} h", f"{ours_h - plain_h:+.1f} h vs a plain string")
-        m[1].metric("Battery life", f"{card['life_ours']:.0f} years" if card["kind"] == "BUY" else f"{card['life_plain']:.0f} years", f"{card['life_ours'] - card['life_plain']:+.0f} years vs plain" if card["kind"] == "BUY" else "no change from us", delta_color="normal" if card["kind"] == "BUY" else "off")
-        m[2].metric("12-year value", f"${card['dollars']:,.0f}" if card["kind"] == "BUY" else "$0", f"${card['vs_balancer']:,.0f} beyond a balancer" if card["kind"] == "BUY" else "a balancer is enough" if card["kind"] == "BALANCER" else None, delta_color="normal" if card["kind"] == "BUY" else "off")
-        m[3].metric("Manufacturing carbon avoided", f"{card['carbon_t']:.1f} t CO2e" if card["carbon_t"] else "none claimed", help="net of the electronics, over 20 years; a range, not a point (see Customer view)")
-        pr = DM.proof()
-        st.caption(f"Checked against {pr['runs']} stress runs on fresh random draws (random wear, balancer strength, costs, hostile packs): never behind a balancer or a plain string by more than ${pr['worst_regret']:.2f} a kWh. "
-                   "Simulation on assumed sodium-ion behaviour, 12 real car packs for the hours; not REON data. Inputs and limits are on the Engineering and evidence tab.".replace("$", "\\$"))
+        kind = card["kind"]
+        cls, head = {"BUY": ("rn-buy", "Build the switches."), "BALANCER": ("rn-bal", "A simple balancer is enough."), "HOLD": ("rn-hold", "Keep the plain string.")}[kind]
+        nums = []
+        if kind == "BUY":
+            nums = [(f"${card['dollars']:,.0f}", "12-year value"), (f"${card['vs_balancer']:,.0f}", "beyond a balancer"),
+                    (f"{card['life_plain']:.0f} → {card['life_ours']:.0f} years", "battery life"), (f"{card['carbon_t']:.1f} t CO2e" if card["carbon_t"] else "none claimed", "carbon avoided")]
+        elif kind == "BALANCER":
+            nums = [(f"${card['balancer']:,.0f}", "a balancer earns over 12 years"), ("under $1 a kWh", "what switches would add")]
+        st.html(f'<div class="rn-verdict {cls}"><p class="rn-eyebrow">Our answer for this store</p><p class="rn-vt">{head}</p><p class="rn-vl">{card["line"]}</p>'
+                + ('<div class="rn-nums">' + "".join(f"<div><b>{a}</b><i>{b}</i></div>" for a, b in nums) + "</div>" if nums else "") + "</div>")
 
+        st.html('<p class="rn-sec">Now a storm night</p><p class="rn-note">60 kWh store, 5 kW load, power out for 24 hours. What happens if one cell opens?</p>')
+        fail_v = st.segmented_control("Cell failure", [0, 3, 6, 9], default=0, format_func=lambda h: "No failure" if h == 0 else f"A cell opens at hour {h}", key="d_failh", label_visibility="collapsed") or 0
+        failed = fail_v > 0
+        fail_h = fail_v if failed else 6
+        sm = storm_demo(fail_h)
+        if failed:
+            rows = [("Plain string", sm["plain_fail"]), ("Plain string + simple balancer", sm["plain_fail"]), ("Cell-level control", sm["ours_fail"]), ("Cell-level control, shedding half the load", sm["shed_fail"])]
+            plain_h, ours_h, shed_h = sm["plain_fail"], sm["ours_fail"], sm["shed_fail"]
+            st.caption("A dead cell breaks a plain string: no current flows. A balancer cannot move charge through a dead cell either. Cell-level control bypasses it and keeps going.")
+        else:
+            rows = [("Plain string", sm["plain"]), ("Cell-level control", sm["ours"]), ("Cell-level control, shedding half the load", sm["shed"])]
+            plain_h, ours_h, shed_h = sm["plain"], sm["ours"], sm["shed"]
+            st.caption("With no failure the runs look alike. Pick a failure hour.")
+        st.altair_chart(VZ.storm_timeline(rows, 24.0, fail_h if failed else None), use_container_width=True)
+        m = st.columns(3)
+        m[0].metric("Plain string", f"{plain_h:.1f} h of lights")
+        m[1].metric("Cell-level control", f"{ours_h:.1f} h of lights", f"{ours_h - plain_h:+.1f} h", delta_color="normal")
+        m[2].metric("Control, shedding half the load", f"{shed_h:.1f} h of lights", f"{shed_h - plain_h:+.1f} h", delta_color="normal")
+
+    st.html('<p class="rn-sec">Ask us</p><p class="rn-note">Tap a question. Every answer is computed from the model, not written by a chatbot.</p>')
+    QS = ["What happens if a cell dies mid-storm?", "When is a simple balancer enough?", "How do we know the policy is safe?", "What have we not tested?", "What do we need from REON?", "Can I see it in 3D?"]
+    q = st.pills("Ask us", QS, selection_mode="single", key="d_q", label_visibility="collapsed")
+    ans = None
+    if q == QS[0]:
+        s6 = storm_demo(6)
+        ans = (f"A plain string goes dark the moment the cell opens: {s6['plain_fail']:.1f} hours of lights. A balancer cannot help, because it cannot move charge through a dead cell. "
+               f"Cell-level control bypasses the cell and keeps {s6['ours_fail']:.1f} hours, or {s6['shed_fail']:.1f} hours if the store sheds half its load. (Failure at hour 6, 5 kW, 12 real car packs.)")
+    elif q == QS[1]:
+        def vc(w, wv, v):
+            return DM.verdict_card(SF.cached_core(w, wv, v))
+        a1, a2, a3, a4 = vc(1, 0.004, 40), vc(1, 0.008, 12), vc(16, 0.008, 40), vc(1, 0.012, 40)
+        parts = []
+        if a1 and a2 and a3:
+            parts.append(f"When cells wear slowly, backup is worth little, or cells sit in parallel groups. At the maker's claim a balancer earns ${a1['balancer']:,.0f} and we add under $1 a kWh; at typical wear and $12 a kWh it earns ${a2['balancer']:,.0f}; with 16 cells in parallel, ${a3['balancer']:,.0f}.")
+        if a4:
+            parts.append(f"The switches start to pay when wear is hard: at 1.2% a year they add about ${a4['vs_balancer']:,.0f} beyond a balancer per store.")
+        ans = " ".join(parts) or "No precomputed cases found."
+    elif q == QS[2]:
+        pr = DM.proof()
+        ans = (f"We ran {pr['runs']} stress runs on fresh random draws: random wear, balancer strength, costs and hostile packs. The policy was never behind the better of a plain string or a balancer by more than ${pr['worst_regret']:.2f} a kWh. "
+               "REON's hardware keeps safety authority; our layer only recommends.")
+    elif q == QS[3]:
+        ans = ("Cold nights, slow recovery, faster wear and failures that hit neighbouring cells together are not run yet, so we do not claim them. There is no REON data in the model: sodium-ion behaviour is assumed, and backup hours use 12 real car packs. "
+               "Every input is tagged in the sources file.")
+    elif q == QS[4]:
+        tor = pd.read_csv("examples/data/tornado_250.csv").sort_values("swing", ascending=False).head(3)
+        ans = ("Three numbers move the answer most: " + "; ".join(f"{r.input.lower()} ({r.who_can_answer})" for r in tor.itertuples()) + ". Give us those and the assumptions become measurements.")
+    elif q == QS[5]:
+        ans = "Open the 3D Twin tab at the top. Click a cell to fail it, click again to repair it, and flip between a plain string and cell-level control."
+    if ans:
+        st.html(f'<div class="rn-ans">{ans}</div>')
+    pr0 = DM.proof()
+    st.caption(f"Checked against {pr0['runs']} stress runs: never behind a balancer or a plain string by more than ${pr0['worst_regret']:.2f} a kWh. Simulation on assumed sodium-ion behaviour; not REON data. Inputs and limits are under Details and evidence.".replace("$", "\\$"))
 
 with trend_tab:
     st.write("A snapshot ranks cells by where they are today. A trend asks how fast each one is falling, and whether it falls faster than the cells next to it. Real data: the Nature Energy 2026 packs (95 cells each, measured at 80,000 and 280,000 km). Not REON data.")
@@ -287,48 +348,6 @@ with front:
                     "- We are not claiming a grid-emissions saving. The carbon figure is manufacturing only.\n"
                     "- Everything here is a simulation or a replay on assumed sodium-ion behaviour; there is no live REON data in it yet. Cell fade, fault rates and switch cost are assumptions or REON statements, tagged in the evidence tab.\n"
                     "- We do not count benefits beyond the 12-year bankable horizon in the dollar figure. Life beyond that is a projection.")
-
-with sv_tab:
-    st.write("A 250-cell string (REON's CTO: 200 to 300 in series), drawn from the real spread of late-life cells. Click a cell to fail it. The voltage bar shows how many cells the inverter lets leave; fail one cell too many and the string is refused. Simulation, not REON data.")
-    ss = st.session_state
-    ss.setdefault("gfail", [])
-    ss.setdefault("gprev", [])
-    ss.setdefault("gver", 0)
-    a1 = st.columns(4)
-    gwin = a1[0].select_slider("Share of cells that must stay in the string (REON: about 90%)", [0.5, 0.7, 0.9], 0.9, key="g_win")
-    gload = a1[1].slider("Load (kW)", 1.0, 10.0, 5.0, key="g_load")
-    h0 = GR.make_string(GR.pooled_relative(real_packs()))
-    if a1[2].button("Fail a random cell", key="g_rand"):
-        live = [i for i in range(len(h0)) if i not in ss.gfail]
-        ss.gfail = ss.gfail + [int(np.random.default_rng(len(ss.gfail) + 100 * ss.gver).choice(live))]
-    if a1[3].button("Reset", key="g_reset"):
-        ss.gfail, ss.gprev, ss.gver = [], [], ss.gver + 1
-    gkey = f"gchart{ss.gver}"
-    try:
-        sel = [int(d["cell"]) for d in ss.get(gkey).selection.get("pick", [])]
-    except Exception:
-        sel = []
-    for c0 in sel:
-        if c0 not in ss.gprev and c0 not in ss.gfail:
-            ss.gfail = ss.gfail + [c0]
-    ss.gprev = sel
-    an = GR.analyse(h0, ss.gfail, gwin, 60.0, 0.04, gload)
-    if an["refused"]:
-        st.error(an["message"])
-    elif an["failed"]:
-        st.info(f"{an['failed']} cell(s) open. A plain string with an open cell delivers nothing; here the switches bypass them and the string carries on. {an['room']} more can leave before the inverter minimum.")
-    mm = st.columns(4)
-    mm[0].metric("Plain string", f"{an['plain_kwh']:.0f} kWh", f"{an['plain_h']:.1f} h at {gload:.0f} kW", delta_color="off")
-    mm[1].metric("With cell-level control", f"{an['ours_kwh']:.0f} kWh", f"{an['ours_h']:.1f} h at {gload:.0f} kW", delta_color="off")
-    mm[2].metric("Cells that can still leave", f"{max(an['room'], 0)} of {an['K']}")
-    mm[3].metric("Cells failed", f"{an['failed']}")
-    st.altair_chart(VZ.grid_chart(h0, ss.gfail, an["early"]), on_select="rerun", key=gkey, use_container_width=True)
-    st.altair_chart(VZ.voltage_chart(an["v_now"], gwin), use_container_width=True)
-    st.caption(f"String voltage {100*an['v_now']:.0f}% of full now. As the weakest cells empty and leave, it falls to {100*an['v_end']:.0f}% by the end of discharge; the inverter minimum is {100*gwin:.0f}%. Amber cells are the ones allowed to leave early. Lighter cells are weaker (health from 60% to 100%).")
-    for ac in an["actions"]:
-        if ac["kind"] != "normal":
-            st.write(f"**{ac['kind'].replace('_', ' ').upper()}** on {len(ac['cells'])} cell(s): {ac['reason']}")
-    st.caption("Responses come from the decision layer (reon_response); REON's hardware keeps safety authority. Planted weak cells at 70% and 78% echo the brief's 16-cell example. Switch loss 4% is assumed.")
 
 with t1:
     c = st.columns(5)

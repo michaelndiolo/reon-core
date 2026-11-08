@@ -1,6 +1,6 @@
 """reon_twin: the data behind the 3D twin tab (no Streamlit here, so it can be tested).
 
-The twin is a drawing of one store's 250-cell string and the store it powers. It decides nothing: every number comes from reon_grid.analyse (the same engine as the String view tab).
+The twin is a drawing of one store's 250-cell string and the store it powers. It decides nothing: every number comes from reon_grid.analyse (the same engine the dashboard uses tab).
 This module only turns that analysis into the small dict the 3D scene draws, and handles click-to-fail / click-to-repair. Simulation on assumed sodium-ion behaviour, not REON data."""
 from __future__ import annotations
 

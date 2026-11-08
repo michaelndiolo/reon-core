@@ -19,7 +19,7 @@ function build(root) {
   try {
     renderer = new THREE.WebGLRenderer({ antialias: true });
   } catch (e) {
-    root.innerHTML = '<div style="padding:32px;color:#c8dcf2;font:18px Figtree,Arial,sans-serif">The 3D view needs WebGL. Use the String view tab instead.</div>';
+    root.innerHTML = '<div style="padding:32px;color:#c8dcf2;font:18px Figtree,Arial,sans-serif">The 3D view needs WebGL. Open this page in a browser with WebGL on.</div>';
     return { alive: () => true, update() {}, pick() {} };
   }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
