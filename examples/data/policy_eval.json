@@ -1,0 +1,1205 @@
+{
+ "cases": {
+  "16|0.0040|0.020|40": {
+   "best_ours_hindsight": 1.0748533453778073,
+   "guarded": {
+    "balancer": 1.1163992157372629,
+    "gain": 1.1163992157372629,
+    "pick": "balancer 2%",
+    "regret": 0.0,
+    "verdict": "BALANCER",
+    "vs_balancer": 0.0
+   },
+   "old": {
+    "balancer": 1.1163992157372629,
+    "gain": 1.1163992157372629,
+    "pick": "balancer 2%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   },
+   "unguarded": {
+    "balancer": 1.1163992157372629,
+    "gain": 1.1163992157372629,
+    "pick": "balancer 2%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   }
+  },
+  "16|0.0040|0.050|40": {
+   "best_ours_hindsight": 1.155848795904547,
+   "guarded": {
+    "balancer": 1.201113400818791,
+    "gain": 1.201113400818791,
+    "pick": "balancer 5%",
+    "regret": 0.0,
+    "verdict": "BALANCER",
+    "vs_balancer": 0.0
+   },
+   "old": {
+    "balancer": 1.201113400818791,
+    "gain": 1.201113400818791,
+    "pick": "balancer 5%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   },
+   "unguarded": {
+    "balancer": 1.201113400818791,
+    "gain": 1.201113400818791,
+    "pick": "balancer 5%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   }
+  },
+  "16|0.0040|0.100|40": {
+   "best_ours_hindsight": 1.155848795904547,
+   "guarded": {
+    "balancer": 1.201113400818791,
+    "gain": 1.201113400818791,
+    "pick": "balancer 10%",
+    "regret": 0.0,
+    "verdict": "BALANCER",
+    "vs_balancer": 0.0
+   },
+   "old": {
+    "balancer": 1.201113400818791,
+    "gain": 1.201113400818791,
+    "pick": "balancer 10%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   },
+   "unguarded": {
+    "balancer": 1.201113400818791,
+    "gain": 1.201113400818791,
+    "pick": "balancer 10%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   }
+  },
+  "16|0.0080|0.020|40": {
+   "best_ours_hindsight": 1.645930353452561,
+   "guarded": {
+    "balancer": 1.6039750622217677,
+    "gain": 1.645930353452561,
+    "pick": "hybrid 1/250 + balancer 2%",
+    "regret": -0.041955291230793224,
+    "verdict": "BUY",
+    "vs_balancer": 0.041955291230793224
+   },
+   "old": {
+    "balancer": 1.6039750622217677,
+    "gain": 1.6381672204142719,
+    "pick": "hybrid 1/250 + balancer 2%",
+    "regret": -0.03419215819250421,
+    "vs_balancer": 0.03419215819250421
+   },
+   "unguarded": {
+    "balancer": 1.6039750622217677,
+    "gain": 1.645930353452561,
+    "pick": "hybrid 1/250 + balancer 2%",
+    "regret": -0.041955291230793224,
+    "vs_balancer": 0.041955291230793224
+   }
+  },
+  "16|0.0080|0.050|40": {
+   "best_ours_hindsight": 2.843610347317334,
+   "guarded": {
+    "balancer": 2.818631862262129,
+    "gain": 2.843610347317334,
+    "pick": "hybrid 1/250 + balancer 5%",
+    "regret": -0.024978485055204835,
+    "verdict": "BUY",
+    "vs_balancer": 0.024978485055204835
+   },
+   "old": {
+    "balancer": 2.818631862262129,
+    "gain": 2.8432586875621104,
+    "pick": "hybrid 1/250 + balancer 5%",
+    "regret": -0.02462682529998128,
+    "vs_balancer": 0.02462682529998128
+   },
+   "unguarded": {
+    "balancer": 2.818631862262129,
+    "gain": 2.843610347317334,
+    "pick": "hybrid 1/250 + balancer 5%",
+    "regret": -0.024978485055204835,
+    "vs_balancer": 0.024978485055204835
+   }
+  },
+  "16|0.0080|0.100|40": {
+   "best_ours_hindsight": 2.87917657758855,
+   "guarded": {
+    "balancer": 2.861466810961688,
+    "gain": 2.87917657758855,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.017709766626861967,
+    "verdict": "BUY",
+    "vs_balancer": 0.017709766626861967
+   },
+   "old": {
+    "balancer": 2.861466810961688,
+    "gain": 2.8787924153087974,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.01732560434710928,
+    "vs_balancer": 0.01732560434710928
+   },
+   "unguarded": {
+    "balancer": 2.861466810961688,
+    "gain": 2.87917657758855,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.017709766626861967,
+    "vs_balancer": 0.017709766626861967
+   }
+  },
+  "16|0.0120|0.020|40": {
+   "best_ours_hindsight": 6.439326449543369,
+   "guarded": {
+    "balancer": 5.8268247650611595,
+    "gain": 6.35162530623847,
+    "pick": "hybrid 2/250 + balancer 2%",
+    "regret": -0.5248005411773109,
+    "verdict": "BUY",
+    "vs_balancer": 0.5248005411773109
+   },
+   "old": {
+    "balancer": 5.8268247650611595,
+    "gain": 6.423077057616223,
+    "pick": "hybrid 1/250 + balancer 2%",
+    "regret": -0.5962522925550635,
+    "vs_balancer": 0.5962522925550635
+   },
+   "unguarded": {
+    "balancer": 5.8268247650611595,
+    "gain": 6.35162530623847,
+    "pick": "hybrid 2/250 + balancer 2%",
+    "regret": -0.5248005411773109,
+    "vs_balancer": 0.5248005411773109
+   }
+  },
+  "16|0.0120|0.050|40": {
+   "best_ours_hindsight": 11.670926782380205,
+   "guarded": {
+    "balancer": 11.274346440427504,
+    "gain": 11.584012319451192,
+    "pick": "hybrid 2/250 + balancer 5%",
+    "regret": -0.30966587902368836,
+    "verdict": "BUY",
+    "vs_balancer": 0.30966587902368836
+   },
+   "old": {
+    "balancer": 11.274346440427504,
+    "gain": 11.670972313465997,
+    "pick": "hybrid 1/250 + balancer 5%",
+    "regret": -0.3966258730384933,
+    "vs_balancer": 0.3966258730384933
+   },
+   "unguarded": {
+    "balancer": 11.274346440427504,
+    "gain": 11.584012319451192,
+    "pick": "hybrid 2/250 + balancer 5%",
+    "regret": -0.30966587902368836,
+    "vs_balancer": 0.30966587902368836
+   }
+  },
+  "16|0.0120|0.100|40": {
+   "best_ours_hindsight": 14.544902955534436,
+   "guarded": {
+    "balancer": 14.259325879425525,
+    "gain": 14.544902955534436,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.28557707610891114,
+    "verdict": "BUY",
+    "vs_balancer": 0.28557707610891114
+   },
+   "old": {
+    "balancer": 14.259325879425525,
+    "gain": 14.545037533896423,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.28571165447089797,
+    "vs_balancer": 0.28571165447089797
+   },
+   "unguarded": {
+    "balancer": 14.259325879425525,
+    "gain": 14.544902955534436,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.28557707610891114,
+    "vs_balancer": 0.28557707610891114
+   }
+  },
+  "16|0.0200|0.020|40": {
+   "best_ours_hindsight": 10.861443149955665,
+   "guarded": {
+    "balancer": 4.431717327860843,
+    "gain": 10.861443149955665,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -6.429725822094822,
+    "verdict": "BUY",
+    "vs_balancer": 6.429725822094822
+   },
+   "old": {
+    "balancer": 4.431717327860843,
+    "gain": 6.138531822754356,
+    "pick": "late switches, sorted",
+    "regret": -1.7068144948935124,
+    "vs_balancer": 1.7068144948935124
+   },
+   "unguarded": {
+    "balancer": 4.431717327860843,
+    "gain": 10.861443149955665,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -6.429725822094822,
+    "vs_balancer": 6.429725822094822
+   }
+  },
+  "16|0.0200|0.050|40": {
+   "best_ours_hindsight": 17.18372792135773,
+   "guarded": {
+    "balancer": 13.42828193924319,
+    "gain": 17.18372792135773,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -3.755445982114539,
+    "verdict": "BUY",
+    "vs_balancer": 3.755445982114539
+   },
+   "old": {
+    "balancer": 13.42828193924319,
+    "gain": 14.547938383545866,
+    "pick": "hybrid 1/250 + balancer 5%",
+    "regret": -1.1196564443026755,
+    "vs_balancer": 1.1196564443026755
+   },
+   "unguarded": {
+    "balancer": 13.42828193924319,
+    "gain": 17.18372792135773,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -3.755445982114539,
+    "vs_balancer": 3.755445982114539
+   }
+  },
+  "16|0.0200|0.100|40": {
+   "best_ours_hindsight": 26.756670674045733,
+   "guarded": {
+    "balancer": 24.651722222949978,
+    "gain": 25.822992500600456,
+    "pick": "hybrid adaptive 25/250 + balancer 10%",
+    "regret": -1.1712702776504784,
+    "verdict": "BUY",
+    "vs_balancer": 1.1712702776504784
+   },
+   "old": {
+    "balancer": 24.651722222949978,
+    "gain": 26.75709434091094,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -2.105372117960961,
+    "vs_balancer": 2.105372117960961
+   },
+   "unguarded": {
+    "balancer": 24.651722222949978,
+    "gain": 25.822992500600456,
+    "pick": "hybrid adaptive 25/250 + balancer 10%",
+    "regret": -1.1712702776504784,
+    "vs_balancer": 1.1712702776504784
+   }
+  },
+  "1|0.0040|0.020|22": {
+   "best_ours_hindsight": 0.09426325923287188,
+   "guarded": {
+    "balancer": -0.4018795125630831,
+    "gain": 0.0,
+    "pick": "plain",
+    "regret": 0.0,
+    "verdict": "HOLD",
+    "vs_balancer": 0.4018795125630831
+   },
+   "old": {
+    "balancer": -0.4018795125630831,
+    "gain": 0.010291185007550885,
+    "pick": "selective 8/250 cells, sorted",
+    "regret": -0.010291185007550885,
+    "vs_balancer": 0.41217069757063396
+   },
+   "unguarded": {
+    "balancer": -0.4018795125630831,
+    "gain": 0.010291185007550885,
+    "pick": "selective 8/250 cells, sorted",
+    "regret": -0.010291185007550885,
+    "vs_balancer": 0.41217069757063396
+   }
+  },
+  "1|0.0040|0.020|40": {
+   "best_ours_hindsight": 3.2143242667360683,
+   "guarded": {
+    "balancer": 2.5420372498853037,
+    "gain": 3.2143242667360683,
+    "pick": "hybrid 25/250 + balancer 2%",
+    "regret": -0.6722870168507646,
+    "verdict": "BUY",
+    "vs_balancer": 0.6722870168507646
+   },
+   "old": {
+    "balancer": 2.5420372498853037,
+    "gain": 2.5420372498853037,
+    "pick": "balancer 2%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   },
+   "unguarded": {
+    "balancer": 2.5420372498853037,
+    "gain": 3.2143242667360683,
+    "pick": "hybrid 25/250 + balancer 2%",
+    "regret": -0.6722870168507646,
+    "vs_balancer": 0.6722870168507646
+   }
+  },
+  "1|0.0040|0.050|22": {
+   "best_ours_hindsight": 5.048488294720017,
+   "guarded": {
+    "balancer": 4.91469729650832,
+    "gain": 4.979949547949019,
+    "pick": "hybrid 1/250 + balancer 5%",
+    "regret": -0.06525225144069857,
+    "verdict": "BUY",
+    "vs_balancer": 0.06525225144069857
+   },
+   "old": {
+    "balancer": 4.91469729650832,
+    "gain": 4.930183070433239,
+    "pick": "hybrid 1/250 + balancer 5%",
+    "regret": -0.015485773924918789,
+    "vs_balancer": 0.015485773924918789
+   },
+   "unguarded": {
+    "balancer": 4.91469729650832,
+    "gain": 4.979949547949019,
+    "pick": "hybrid 1/250 + balancer 5%",
+    "regret": -0.06525225144069857,
+    "vs_balancer": 0.06525225144069857
+   }
+  },
+  "1|0.0040|0.050|40": {
+   "best_ours_hindsight": 12.603978717672758,
+   "guarded": {
+    "balancer": 12.208540539106037,
+    "gain": 12.5136585304687,
+    "pick": "hybrid 8/250 + balancer 5%",
+    "regret": -0.30511799136266227,
+    "verdict": "BUY",
+    "vs_balancer": 0.30511799136266227
+   },
+   "old": {
+    "balancer": 12.208540539106037,
+    "gain": 12.287423764424073,
+    "pick": "hybrid 1/250 + balancer 5%",
+    "regret": -0.0788832253180356,
+    "vs_balancer": 0.0788832253180356
+   },
+   "unguarded": {
+    "balancer": 12.208540539106037,
+    "gain": 12.5136585304687,
+    "pick": "hybrid 8/250 + balancer 5%",
+    "regret": -0.30511799136266227,
+    "vs_balancer": 0.30511799136266227
+   }
+  },
+  "1|0.0040|0.100|22": {
+   "best_ours_hindsight": 7.357980045494546,
+   "guarded": {
+    "balancer": 7.339527088123732,
+    "gain": 7.357980045494546,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.018452957370814538,
+    "verdict": "BUY",
+    "vs_balancer": 0.018452957370814538
+   },
+   "old": {
+    "balancer": 7.339527088123732,
+    "gain": 7.356582509779465,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.017055421655733483,
+    "vs_balancer": 0.017055421655733483
+   },
+   "unguarded": {
+    "balancer": 7.339527088123732,
+    "gain": 7.357980045494546,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.018452957370814538,
+    "vs_balancer": 0.018452957370814538
+   }
+  },
+  "1|0.0040|0.100|40": {
+   "best_ours_hindsight": 16.701600082717356,
+   "guarded": {
+    "balancer": 16.617321978406785,
+    "gain": 16.701600082717356,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.08427810431057026,
+    "verdict": "BUY",
+    "vs_balancer": 0.08427810431057026
+   },
+   "old": {
+    "balancer": 16.617321978406785,
+    "gain": 16.699059108689937,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.08173713028315177,
+    "vs_balancer": 0.08173713028315177
+   },
+   "unguarded": {
+    "balancer": 16.617321978406785,
+    "gain": 16.701600082717356,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.08427810431057026,
+    "vs_balancer": 0.08427810431057026
+   }
+  },
+  "1|0.0080|0.020|22": {
+   "best_ours_hindsight": 3.381611200632996,
+   "guarded": {
+    "balancer": 2.0440609672711023,
+    "gain": 3.3284311610136643,
+    "pick": "hybrid 8/250 + balancer 2%",
+    "regret": -1.284370193742562,
+    "verdict": "BUY",
+    "vs_balancer": 1.284370193742562
+   },
+   "old": {
+    "balancer": 2.0440609672711023,
+    "gain": 0.6141981887375385,
+    "pick": "late switches, sorted",
+    "regret": 1.4298627785335638,
+    "vs_balancer": -1.4298627785335638
+   },
+   "unguarded": {
+    "balancer": 2.0440609672711023,
+    "gain": 0.6141981887375385,
+    "pick": "late switches, sorted",
+    "regret": 1.4298627785335638,
+    "vs_balancer": -1.4298627785335638
+   }
+  },
+  "1|0.0080|0.020|40": {
+   "best_ours_hindsight": 15.999277836549442,
+   "guarded": {
+    "balancer": 6.989201758674732,
+    "gain": 15.999277836549442,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -9.01007607787471,
+    "verdict": "BUY",
+    "vs_balancer": 9.01007607787471
+   },
+   "old": {
+    "balancer": 6.989201758674732,
+    "gain": 13.798542161340979,
+    "pick": "late switches",
+    "regret": -6.809340402666247,
+    "vs_balancer": 6.809340402666247
+   },
+   "unguarded": {
+    "balancer": 6.989201758674732,
+    "gain": 15.999277836549442,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -9.01007607787471,
+    "vs_balancer": 9.01007607787471
+   }
+  },
+  "1|0.0080|0.050|22": {
+   "best_ours_hindsight": 11.372237723311141,
+   "guarded": {
+    "balancer": 10.29047890729268,
+    "gain": 11.355483091103887,
+    "pick": "hybrid 8/250 + balancer 5%",
+    "regret": -1.0650041838112063,
+    "verdict": "BUY",
+    "vs_balancer": 1.0650041838112063
+   },
+   "old": {
+    "balancer": 10.29047890729268,
+    "gain": 10.928149081582038,
+    "pick": "hybrid 1/250 + balancer 5%",
+    "regret": -0.637670174289358,
+    "vs_balancer": 0.637670174289358
+   },
+   "unguarded": {
+    "balancer": 10.29047890729268,
+    "gain": 11.355483091103887,
+    "pick": "hybrid 8/250 + balancer 5%",
+    "regret": -1.0650041838112063,
+    "vs_balancer": 1.0650041838112063
+   }
+  },
+  "1|0.0080|0.050|40": {
+   "best_ours_hindsight": 24.437292403072245,
+   "guarded": {
+    "balancer": 21.982688922350327,
+    "gain": 24.324878347461613,
+    "pick": "hybrid 8/250 + balancer 5%",
+    "regret": -2.342189425111286,
+    "verdict": "BUY",
+    "vs_balancer": 2.342189425111286
+   },
+   "old": {
+    "balancer": 21.982688922350327,
+    "gain": 23.192816511967344,
+    "pick": "hybrid 1/250 + balancer 5%",
+    "regret": -1.2101275896170165,
+    "vs_balancer": 1.2101275896170165
+   },
+   "unguarded": {
+    "balancer": 21.982688922350327,
+    "gain": 24.324878347461613,
+    "pick": "hybrid 8/250 + balancer 5%",
+    "regret": -2.342189425111286,
+    "vs_balancer": 2.342189425111286
+   }
+  },
+  "1|0.0080|0.100|22": {
+   "best_ours_hindsight": 18.514981232896673,
+   "guarded": {
+    "balancer": 17.683168968157887,
+    "gain": 18.38420238450946,
+    "pick": "hybrid 2/250 + balancer 10%",
+    "regret": -0.7010334163515743,
+    "verdict": "BUY",
+    "vs_balancer": 0.7010334163515743
+   },
+   "old": {
+    "balancer": 17.683168968157887,
+    "gain": 18.453957761356335,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.7707887931984487,
+    "vs_balancer": 0.7707887931984487
+   },
+   "unguarded": {
+    "balancer": 17.683168968157887,
+    "gain": 18.38420238450946,
+    "pick": "hybrid 2/250 + balancer 10%",
+    "regret": -0.7010334163515743,
+    "vs_balancer": 0.7010334163515743
+   }
+  },
+  "1|0.0080|0.100|40": {
+   "best_ours_hindsight": 37.06314769617576,
+   "guarded": {
+    "balancer": 35.42394357846889,
+    "gain": 36.80000433547174,
+    "pick": "hybrid 2/250 + balancer 10%",
+    "regret": -1.376060757002854,
+    "verdict": "BUY",
+    "vs_balancer": 1.376060757002854
+   },
+   "old": {
+    "balancer": 35.42394357846889,
+    "gain": 36.87610502064789,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -1.4521614421790048,
+    "vs_balancer": 1.4521614421790048
+   },
+   "unguarded": {
+    "balancer": 35.42394357846889,
+    "gain": 36.80000433547174,
+    "pick": "hybrid 2/250 + balancer 10%",
+    "regret": -1.376060757002854,
+    "vs_balancer": 1.376060757002854
+   }
+  },
+  "1|0.0120|0.020|22": {
+   "best_ours_hindsight": 25.605720083496784,
+   "guarded": {
+    "balancer": 1.2091692913512557,
+    "gain": 25.605720083496784,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -24.39655079214553,
+    "verdict": "BUY",
+    "vs_balancer": 24.39655079214553
+   },
+   "old": {
+    "balancer": 1.2091692913512557,
+    "gain": 19.079807511769463,
+    "pick": "late switches",
+    "regret": -17.870638220418208,
+    "vs_balancer": 17.870638220418208
+   },
+   "unguarded": {
+    "balancer": 1.2091692913512557,
+    "gain": 25.605720083496784,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -24.39655079214553,
+    "vs_balancer": 24.39655079214553
+   }
+  },
+  "1|0.0120|0.020|40": {
+   "best_ours_hindsight": 62.510400151812334,
+   "guarded": {
+    "balancer": 5.47121689336592,
+    "gain": 62.510400151812334,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -57.039183258446414,
+    "verdict": "BUY",
+    "vs_balancer": 57.039183258446414
+   },
+   "old": {
+    "balancer": 5.47121689336592,
+    "gain": 47.372377294126295,
+    "pick": "late switches",
+    "regret": -41.901160400760375,
+    "vs_balancer": 41.901160400760375
+   },
+   "unguarded": {
+    "balancer": 5.47121689336592,
+    "gain": 62.510400151812334,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -57.039183258446414,
+    "vs_balancer": 57.039183258446414
+   }
+  },
+  "1|0.0120|0.050|22": {
+   "best_ours_hindsight": 30.991770404341217,
+   "guarded": {
+    "balancer": 9.218474679496797,
+    "gain": 30.991770404341217,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -21.77329572484442,
+    "verdict": "BUY",
+    "vs_balancer": 21.77329572484442
+   },
+   "old": {
+    "balancer": 9.218474679496797,
+    "gain": 19.079807511769463,
+    "pick": "late switches",
+    "regret": -9.861332832272666,
+    "vs_balancer": 9.861332832272666
+   },
+   "unguarded": {
+    "balancer": 9.218474679496797,
+    "gain": 30.991770404341217,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -21.77329572484442,
+    "vs_balancer": 21.77329572484442
+   }
+  },
+  "1|0.0120|0.050|40": {
+   "best_ours_hindsight": 72.30321891698404,
+   "guarded": {
+    "balancer": 20.033590326357814,
+    "gain": 72.30321891698404,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -52.269628590626226,
+    "verdict": "BUY",
+    "vs_balancer": 52.269628590626226
+   },
+   "old": {
+    "balancer": 20.033590326357814,
+    "gain": 47.372377294126295,
+    "pick": "late switches",
+    "regret": -27.33878696776848,
+    "vs_balancer": 27.33878696776848
+   },
+   "unguarded": {
+    "balancer": 20.033590326357814,
+    "gain": 72.30321891698404,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -52.269628590626226,
+    "vs_balancer": 52.269628590626226
+   }
+  },
+  "1|0.0120|0.100|22": {
+   "best_ours_hindsight": 33.718049513810016,
+   "guarded": {
+    "balancer": 18.966610531385463,
+    "gain": 33.718049513810016,
+    "pick": "hybrid adaptive 25/250 + balancer 10%",
+    "regret": -14.751438982424553,
+    "verdict": "BUY",
+    "vs_balancer": 14.751438982424553
+   },
+   "old": {
+    "balancer": 18.966610531385463,
+    "gain": 20.462657143252926,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -1.4960466118674631,
+    "vs_balancer": 1.4960466118674631
+   },
+   "unguarded": {
+    "balancer": 18.966610531385463,
+    "gain": 33.718049513810016,
+    "pick": "hybrid adaptive 25/250 + balancer 10%",
+    "regret": -14.751438982424553,
+    "vs_balancer": 14.751438982424553
+   }
+  },
+  "1|0.0120|0.100|40": {
+   "best_ours_hindsight": 77.26009002510912,
+   "guarded": {
+    "balancer": 37.75747369342812,
+    "gain": 77.26009002510912,
+    "pick": "hybrid adaptive 25/250 + balancer 10%",
+    "regret": -39.502616331681004,
+    "verdict": "BUY",
+    "vs_balancer": 39.502616331681004
+   },
+   "old": {
+    "balancer": 37.75747369342812,
+    "gain": 47.372377294126295,
+    "pick": "late switches",
+    "regret": -9.614903600698177,
+    "vs_balancer": 9.614903600698177
+   },
+   "unguarded": {
+    "balancer": 37.75747369342812,
+    "gain": 77.26009002510912,
+    "pick": "hybrid adaptive 25/250 + balancer 10%",
+    "regret": -39.502616331681004,
+    "vs_balancer": 39.502616331681004
+   }
+  },
+  "1|0.0200|0.020|22": {
+   "best_ours_hindsight": 14.31977810691182,
+   "guarded": {
+    "balancer": -0.5831374095013648,
+    "gain": 14.31977810691182,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -14.31977810691182,
+    "verdict": "BUY",
+    "vs_balancer": 14.902915516413184
+   },
+   "old": {
+    "balancer": -0.5831374095013648,
+    "gain": 10.33660035097901,
+    "pick": "late switches",
+    "regret": -10.33660035097901,
+    "vs_balancer": 10.919737760480375
+   },
+   "unguarded": {
+    "balancer": -0.5831374095013648,
+    "gain": 14.31977810691182,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -14.31977810691182,
+    "vs_balancer": 14.902915516413184
+   }
+  },
+  "1|0.0200|0.020|40": {
+   "best_ours_hindsight": 41.99050564893058,
+   "guarded": {
+    "balancer": 2.2124774372702456,
+    "gain": 41.99050564893058,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -39.778028211660335,
+    "verdict": "BUY",
+    "vs_balancer": 39.778028211660335
+   },
+   "old": {
+    "balancer": 2.2124774372702456,
+    "gain": 31.47563700178002,
+    "pick": "late switches",
+    "regret": -29.263159564509774,
+    "vs_balancer": 29.263159564509774
+   },
+   "unguarded": {
+    "balancer": 2.2124774372702456,
+    "gain": 41.99050564893058,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -39.778028211660335,
+    "vs_balancer": 39.778028211660335
+   }
+  },
+  "1|0.0200|0.050|22": {
+   "best_ours_hindsight": 19.224896075775938,
+   "guarded": {
+    "balancer": 4.950617352649924,
+    "gain": 19.224896075775938,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -14.274278723126013,
+    "verdict": "BUY",
+    "vs_balancer": 14.274278723126013
+   },
+   "old": {
+    "balancer": 4.950617352649924,
+    "gain": 10.33660035097901,
+    "pick": "late switches",
+    "regret": -5.385982998329086,
+    "vs_balancer": 5.385982998329086
+   },
+   "unguarded": {
+    "balancer": 4.950617352649924,
+    "gain": 19.224896075775938,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -14.274278723126013,
+    "vs_balancer": 14.274278723126013
+   }
+  },
+  "1|0.0200|0.050|40": {
+   "best_ours_hindsight": 50.90890195595625,
+   "guarded": {
+    "balancer": 12.27384973209077,
+    "gain": 50.90890195595625,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -38.635052223865486,
+    "verdict": "BUY",
+    "vs_balancer": 38.635052223865486
+   },
+   "old": {
+    "balancer": 12.27384973209077,
+    "gain": 31.47563700178002,
+    "pick": "late switches",
+    "regret": -19.201787269689248,
+    "vs_balancer": 19.201787269689248
+   },
+   "unguarded": {
+    "balancer": 12.27384973209077,
+    "gain": 50.90890195595625,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -38.635052223865486,
+    "vs_balancer": 38.635052223865486
+   }
+  },
+  "1|0.0200|0.100|22": {
+   "best_ours_hindsight": 25.272898373260176,
+   "guarded": {
+    "balancer": 12.150806264404608,
+    "gain": 25.272898373260176,
+    "pick": "hybrid adaptive 25/250 + balancer 10%",
+    "regret": -13.122092108855568,
+    "verdict": "BUY",
+    "vs_balancer": 13.122092108855568
+   },
+   "old": {
+    "balancer": 12.150806264404608,
+    "gain": 13.786588929280747,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -1.6357826648761389,
+    "vs_balancer": 1.6357826648761389
+   },
+   "unguarded": {
+    "balancer": 12.150806264404608,
+    "gain": 25.272898373260176,
+    "pick": "hybrid adaptive 25/250 + balancer 10%",
+    "regret": -13.122092108855568,
+    "vs_balancer": 13.122092108855568
+   }
+  },
+  "1|0.0200|0.100|40": {
+   "best_ours_hindsight": 61.90526976956396,
+   "guarded": {
+    "balancer": 25.36510229891747,
+    "gain": 61.90526976956396,
+    "pick": "hybrid adaptive 25/250 + balancer 10%",
+    "regret": -36.54016747064649,
+    "verdict": "BUY",
+    "vs_balancer": 36.54016747064649
+   },
+   "old": {
+    "balancer": 25.36510229891747,
+    "gain": 31.47563700178002,
+    "pick": "late switches",
+    "regret": -6.110534702862548,
+    "vs_balancer": 6.110534702862548
+   },
+   "unguarded": {
+    "balancer": 25.36510229891747,
+    "gain": 61.90526976956396,
+    "pick": "hybrid adaptive 25/250 + balancer 10%",
+    "regret": -36.54016747064649,
+    "vs_balancer": 36.54016747064649
+   }
+  },
+  "4|0.0040|0.020|40": {
+   "best_ours_hindsight": 2.45430615066166,
+   "guarded": {
+    "balancer": 2.479752503372187,
+    "gain": 2.479752503372187,
+    "pick": "balancer 2%",
+    "regret": 0.0,
+    "verdict": "BALANCER",
+    "vs_balancer": 0.0
+   },
+   "old": {
+    "balancer": 2.479752503372187,
+    "gain": 2.479752503372187,
+    "pick": "balancer 2%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   },
+   "unguarded": {
+    "balancer": 2.479752503372187,
+    "gain": 2.479752503372187,
+    "pick": "balancer 2%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   }
+  },
+  "4|0.0040|0.050|40": {
+   "best_ours_hindsight": 6.357331312751437,
+   "guarded": {
+    "balancer": 6.35924207130147,
+    "gain": 6.35924207130147,
+    "pick": "balancer 5%",
+    "regret": 0.0,
+    "verdict": "BALANCER",
+    "vs_balancer": 0.0
+   },
+   "old": {
+    "balancer": 6.35924207130147,
+    "gain": 6.35924207130147,
+    "pick": "balancer 5%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   },
+   "unguarded": {
+    "balancer": 6.35924207130147,
+    "gain": 6.35924207130147,
+    "pick": "balancer 5%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   }
+  },
+  "4|0.0040|0.100|40": {
+   "best_ours_hindsight": 6.3742688835594645,
+   "guarded": {
+    "balancer": 6.377405831546088,
+    "gain": 6.377405831546088,
+    "pick": "balancer 10%",
+    "regret": 0.0,
+    "verdict": "BALANCER",
+    "vs_balancer": 0.0
+   },
+   "old": {
+    "balancer": 6.377405831546088,
+    "gain": 6.377405831546088,
+    "pick": "balancer 10%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   },
+   "unguarded": {
+    "balancer": 6.377405831546088,
+    "gain": 6.377405831546088,
+    "pick": "balancer 10%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   }
+  },
+  "4|0.0080|0.020|40": {
+   "best_ours_hindsight": 2.616684844867173,
+   "guarded": {
+    "balancer": 2.5351932363838148,
+    "gain": 2.5351932363838148,
+    "pick": "balancer 2%",
+    "regret": 0.0,
+    "verdict": "BALANCER",
+    "vs_balancer": 0.0
+   },
+   "old": {
+    "balancer": 2.5351932363838148,
+    "gain": 2.5351932363838148,
+    "pick": "balancer 2%",
+    "regret": 0.0,
+    "vs_balancer": 0.0
+   },
+   "unguarded": {
+    "balancer": 2.5351932363838148,
+    "gain": 2.530938209317922,
+    "pick": "hybrid 2/250 + balancer 2%",
+    "regret": 0.004255027065892758,
+    "vs_balancer": -0.004255027065892758
+   }
+  },
+  "4|0.0080|0.050|40": {
+   "best_ours_hindsight": 8.693756045695446,
+   "guarded": {
+    "balancer": 8.395443024208904,
+    "gain": 8.60132156910705,
+    "pick": "hybrid 2/250 + balancer 5%",
+    "regret": -0.2058785448981464,
+    "verdict": "BUY",
+    "vs_balancer": 0.2058785448981464
+   },
+   "old": {
+    "balancer": 8.395443024208904,
+    "gain": 8.681962972838958,
+    "pick": "hybrid 1/250 + balancer 5%",
+    "regret": -0.2865199486300547,
+    "vs_balancer": 0.2865199486300547
+   },
+   "unguarded": {
+    "balancer": 8.395443024208904,
+    "gain": 8.60132156910705,
+    "pick": "hybrid 2/250 + balancer 5%",
+    "regret": -0.2058785448981464,
+    "vs_balancer": 0.2058785448981464
+   }
+  },
+  "4|0.0080|0.100|40": {
+   "best_ours_hindsight": 10.368538323921108,
+   "guarded": {
+    "balancer": 10.181340502384105,
+    "gain": 10.368538323921108,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.18719782153700315,
+    "verdict": "BUY",
+    "vs_balancer": 0.18719782153700315
+   },
+   "old": {
+    "balancer": 10.181340502384105,
+    "gain": 10.367891830891672,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.1865513285075675,
+    "vs_balancer": 0.1865513285075675
+   },
+   "unguarded": {
+    "balancer": 10.181340502384105,
+    "gain": 10.368538323921108,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -0.18719782153700315,
+    "vs_balancer": 0.18719782153700315
+   }
+  },
+  "4|0.0120|0.020|40": {
+   "best_ours_hindsight": 25.594117881134814,
+   "guarded": {
+    "balancer": 7.120224491021166,
+    "gain": 25.594117881134814,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -18.47389339011365,
+    "verdict": "BUY",
+    "vs_balancer": 18.47389339011365
+   },
+   "old": {
+    "balancer": 7.120224491021166,
+    "gain": 23.994801420222185,
+    "pick": "late switches",
+    "regret": -16.87457692920102,
+    "vs_balancer": 16.87457692920102
+   },
+   "unguarded": {
+    "balancer": 7.120224491021166,
+    "gain": 25.594117881134814,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -18.47389339011365,
+    "vs_balancer": 18.47389339011365
+   }
+  },
+  "4|0.0120|0.050|40": {
+   "best_ours_hindsight": 27.78074950486078,
+   "guarded": {
+    "balancer": 20.536270794300552,
+    "gain": 27.78074950486078,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -7.244478710560227,
+    "verdict": "BUY",
+    "vs_balancer": 7.244478710560227
+   },
+   "old": {
+    "balancer": 20.536270794300552,
+    "gain": 23.994801420222185,
+    "pick": "late switches",
+    "regret": -3.4585306259216324,
+    "vs_balancer": 3.4585306259216324
+   },
+   "unguarded": {
+    "balancer": 20.536270794300552,
+    "gain": 27.78074950486078,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -7.244478710560227,
+    "vs_balancer": 7.244478710560227
+   }
+  },
+  "4|0.0120|0.100|40": {
+   "best_ours_hindsight": 37.480725945881254,
+   "guarded": {
+    "balancer": 35.25086803442872,
+    "gain": 37.322321003621965,
+    "pick": "hybrid 2/250 + balancer 10%",
+    "regret": -2.0714529691932455,
+    "verdict": "BUY",
+    "vs_balancer": 2.0714529691932455
+   },
+   "old": {
+    "balancer": 35.25086803442872,
+    "gain": 37.47275747774179,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -2.221889443313067,
+    "vs_balancer": 2.221889443313067
+   },
+   "unguarded": {
+    "balancer": 35.25086803442872,
+    "gain": 37.322321003621965,
+    "pick": "hybrid 2/250 + balancer 10%",
+    "regret": -2.0714529691932455,
+    "vs_balancer": 2.0714529691932455
+   }
+  },
+  "4|0.0200|0.020|40": {
+   "best_ours_hindsight": 27.469633128204567,
+   "guarded": {
+    "balancer": 4.7304570408815305,
+    "gain": 27.469633128204567,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -22.739176087323038,
+    "verdict": "BUY",
+    "vs_balancer": 22.739176087323038
+   },
+   "old": {
+    "balancer": 4.7304570408815305,
+    "gain": 20.074630179775987,
+    "pick": "late switches, sorted",
+    "regret": -15.344173138894456,
+    "vs_balancer": 15.344173138894456
+   },
+   "unguarded": {
+    "balancer": 4.7304570408815305,
+    "gain": 27.469633128204567,
+    "pick": "hybrid adaptive 25/250 + balancer 2%",
+    "regret": -22.739176087323038,
+    "vs_balancer": 22.739176087323038
+   }
+  },
+  "4|0.0200|0.050|40": {
+   "best_ours_hindsight": 34.95245732993635,
+   "guarded": {
+    "balancer": 15.115273809784693,
+    "gain": 34.95245732993635,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -19.837183520151658,
+    "verdict": "BUY",
+    "vs_balancer": 19.837183520151658
+   },
+   "old": {
+    "balancer": 15.115273809784693,
+    "gain": 20.074630179775987,
+    "pick": "late switches, sorted",
+    "regret": -4.959356369991294,
+    "vs_balancer": 4.959356369991294
+   },
+   "unguarded": {
+    "balancer": 15.115273809784693,
+    "gain": 34.95245732993635,
+    "pick": "hybrid adaptive 25/250 + balancer 5%",
+    "regret": -19.837183520151658,
+    "vs_balancer": 19.837183520151658
+   }
+  },
+  "4|0.0200|0.100|40": {
+   "best_ours_hindsight": 43.86098426904459,
+   "guarded": {
+    "balancer": 26.693954702398862,
+    "gain": 43.86098426904459,
+    "pick": "hybrid adaptive 25/250 + balancer 10%",
+    "regret": -17.16702956664573,
+    "verdict": "BUY",
+    "vs_balancer": 17.16702956664573
+   },
+   "old": {
+    "balancer": 26.693954702398862,
+    "gain": 29.249638934875435,
+    "pick": "hybrid 1/250 + balancer 10%",
+    "regret": -2.5556842324765725,
+    "vs_balancer": 2.5556842324765725
+   },
+   "unguarded": {
+    "balancer": 26.693954702398862,
+    "gain": 43.86098426904459,
+    "pick": "hybrid adaptive 25/250 + balancer 10%",
+    "regret": -17.16702956664573,
+    "vs_balancer": 17.16702956664573
+   }
+  }
+ },
+ "generated": "2026-11-08"
+}

@@ -39,6 +39,6 @@ if __name__ == "__main__":
         data = {"cases": {}}
     data["cases"].update(dict(res))
     data["generated"] = datetime.date.today().isoformat()
-    data["note"] = "250 series elements, switch cost 15.5 per kWh, loss 4%, fade spread 0.45/sqrt(p), horizon 12 y for the verdict and gain, 30 y for lives, inverter voltage window 0.9 (at most 10% of cells bypassed at once, every build). Regenerate with examples/reon_precompute_cases.py."
+    data["note"] = "250 series elements, switch cost 15.5 per kWh, loss 4%, fade spread 0.45/sqrt(p), horizon 12 y for the verdict and gain, 30 y for lives, inverter voltage window 0.9 (at most 10% of cells bypassed at once, every build), guarded policy (reon_policy.robust_guarded): BUY only if it beats the better of balancer-alone and plain on two seeds. Regenerate with examples/reon_precompute_cases.py."
     json.dump(data, open(SF.CASES_PATH, "w"), indent=1, sort_keys=True)
     print(len(data["cases"]), "cases saved;", len(res), "just computed")

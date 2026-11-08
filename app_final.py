@@ -17,6 +17,7 @@ from hackkit import reon_balance as BAL
 from hackkit import reon_ladder as LAD
 from hackkit import reon_system as SYS
 from hackkit import reon_storefront as SF
+from hackkit import reon_policy as POL
 from hackkit import reon_enviro as EN
 from hackkit import reon_secondlife as SL
 from hackkit import reon_grid as GR
@@ -125,12 +126,12 @@ with front:
     ci = float(sd0.loc[state0, "caidi_major_2025"]) / 60.0
     pp, pm, ps = SF.backup_policies(real_packs(), 60.0, load0)
     with res:
-        st.subheader(f"{'Worth it' if r0['verdict'] == 'BUY' else 'Not worth it here'}")
+        st.subheader({"BUY": "Worth it", "BALANCER": "A simple balancer is enough here"}.get(r0["verdict"], "Not worth it here"))
         (st.success if r0["verdict"] == "BUY" else st.warning)(SF.headline(r0, state0, ci).replace("$", "\\$"))
         m = st.columns(3)
         m[0].metric("Backup on a storm night", f"{r0['backup_managed_h']:.1f} h", f"{r0['backup_managed_h'] - r0['backup_plain_h']:+.1f} h vs a plain string")
         m[1].metric("Battery life", f"{r0['life_ours']:.0f} years" if r0["verdict"] == "BUY" else f"{r0['life_plain']:.0f} years", f"{r0['life_ours'] - r0['life_plain']:+.0f} years vs plain" if r0["verdict"] == "BUY" else None)
-        m[2].metric("Worth over the first 12 years", f"${r0['dollars_total']:,.0f}" if r0["verdict"] == "BUY" else "$0", f"pessimistic case ${r0['p10_total']:,.0f}" if r0["verdict"] == "BUY" else None)
+        m[2].metric("Worth over the first 12 years", f"${r0['dollars_total']:,.0f}" if r0["verdict"] == "BUY" else "$0", f"pessimistic ${r0['p10_total']:,.0f}; ${r0['vs_balancer_total']:,.0f} over a balancer alone" if r0["verdict"] == "BUY" else None)
         st.markdown("**Same battery, three ways to run it**")
         st.altair_chart(VZ.policies_chart(pp, pm, ps), use_container_width=True)
         if r0["verdict"] == "BUY" and r0["life_ours"] > r0["life_plain"]:
@@ -153,7 +154,7 @@ with front:
                         + ("The sign of the result does not flip inside these ranges." if not e0["sign_can_flip"] else "At the low end this is close to zero: the sign can flip, so treat the carbon claim as small here."))
         st.markdown("**Where the numbers are counted.** Energy and hours are measured at the battery string's DC terminals: usable kWh (cell capacities, 80% in the cold, a small switch loss) divided by the load you set. No inverter loss and no solar. Power capability in kW is not modelled; the only kW is your load.")
         st.markdown("**Voltage limit.** Every build in the dollar and life figures keeps at least 90% of the 250 cells in the string at all times (about 90% is the CTO's unclear remark; REON's real inverter minimum is not known), which caps bypassing at 25 cells. "
-                    "An earlier version had no cap and read \\$1,635 for the typical case; with the cap and the switch loss below it reads about \\$1,060. "
+                    "An earlier version had no cap and read \\$1,635 for the typical case; with the cap, the switch loss below and the balancer comparison it reads about \\$1,500 over a plain string (60 kWh), of which about \\$190 is above what a simple balancer alone would earn. "
                     "Counting cells is only a first-order stand-in for volts: it ignores that cell voltage sags toward the end of a discharge. In our voltage check on 12 real packs, the median energy gain at a 90% floor fell from 4.3% (cell count) to 0.0% (with sag). Treat the dollar figures as an upper bound until REON gives the inverter's minimum voltage.")
         st.markdown("**Switch loss.** A plain string has no switches; a switched string pays a small loss on every kWh that passes through its closed switches. We charge 2% (assumed) on all energy of the switched string, not only on the extra energy it recovers, and both strings are measured at the same point, the string's DC terminals. Otherwise the switched string would look better for free.")
         st.markdown("**Where it comes from.** Every input is tagged in docs/SOURCES.md. Sodium-ion cell behaviour is assumed; there is no live REON data in this yet.")
@@ -162,9 +163,9 @@ with front:
         grows = SF.gain_vs_fade(vsel)
         if grows:
             st.altair_chart(VZ.gain_fade_chart(grows), use_container_width=True)
-            st.caption("Each line is one way of wiring cells in parallel. Above the dashed zero line the cell-level control pays for itself over 12 years; a cross means the engine says hold. "
-                       "Read it from the right: the faster the cells wear, the more control is worth, and the more cells share a position, the more wear it takes before it pays. "
-                       "The maker's claim is the far left. Steps in the lines come from replacement dates. Simulated at 250 cells, switch cost 15.5 per kWh, at least 90% of cells kept in the string; not REON data.")
+            st.caption("The height is the EXTRA 12-year gain our recommended build earns over the better of a simple 5% balancer or doing nothing. Each line is one way of wiring cells in parallel. A cross on the zero line means a balancer is enough (or nothing pays) and we would not sell the switches. "
+                       "Read it from the right: the faster the cells wear, the more cell-level control is worth beyond a balancer, and the more cells share a position, the more wear it takes before it pays. "
+                       "The maker's claim is the far left, where a balancer is enough. Steps in the lines come from replacement dates. Simulated at 250 cells, switch cost 15.5 per kWh (the extra over a conventional BMS), at least 90% of cells kept in the string, 2% switch loss on all energy; not REON data.")
         else:
             st.info("No precomputed cases found for this value.")
     with st.expander("Against a simple balancer: how strong would it have to be?"):
@@ -182,8 +183,9 @@ with front:
             else:
                 bt = f"A balancer that can move about {bx * 100:.1f}% of a cell's capacity per cycle already matches REON switches alone. We assumed 5%, which is not sourced."
             st.markdown(bt.replace("$", "\\$"))
-            st.caption("An active balancer moves charge between cells instead of switching a cell out. Switches pay at fast wear or when a cell fails outright; at slow wear a balancer does most of the work, and adding switches on top gains only a little. "
-                       "Simulated at 250 cells, value 40 per kWh-year, switch cost 15.5 and balancer cost 4 per kWh, 90% voltage window, 2% switch loss on all energy; builds picked on one seed and scored on another. REON's actual balancing strength is not known.")
+            st.caption("An active balancer moves charge between cells instead of switching a cell out. The black line is what we would recommend: our build only when it beats the better of the balancer and doing nothing by at least 1 per kWh on two independent random draws, otherwise the balancer itself, so it never sits below the balancer line. "
+                       "Switches alone pay at fast wear or when a cell fails outright; at slow wear a balancer does most of the work. Our hybrid (a few switches on the weakest cells, or a switch on every cell, plus the balancer) keeps the balancer's gain and adds the tail the balancer cannot reach. "
+                       "Simulated at 250 cells, value 40 per kWh-year, switch cost 15.5 and balancer cost 4 per kWh, 90% voltage window, 2% switch loss on all energy. REON's actual balancing strength is not known (top question for REON).")
         else:
             st.info("No precomputed balancer cases for this choice.")
     with st.expander("What we are not doing"):
@@ -244,9 +246,7 @@ with t1:
     fcv = c[1].slider("Spread of fade rates between cells (real cars 0.20-0.60)", 0.05, 0.8, 0.45)
     elec = c[2].slider("Switch cost per kWh nameplate (Tim Ren: 7-24)", 2.0, 40.0, 15.5)
     loss = c[3].slider("Usable-energy loss: switches + voltage floor", 0.0, 0.10, 0.04)
-    extra = st.checkbox("Count only the extra cost over a conventional BMS (Tim Ren: REON electronics are 3 to 4 times a BMS, so the extra is 67 to 75% of the total)", False)
-    if extra:
-        elec = SYS.incremental_cost(elec, 3.5)
+    st.caption("Tim Ren, 8 Nov: the 7 to 24 per kWh is already the cost over a conventional BMS (it depends on how many PCBs are made), so it is used as the extra cost, not reduced again.")
     g = st.columns(2)
     n1 = g[0].select_slider("Cells in series (Tim Ren: 200 to 300; 16 is the quick demo size)", [16, 250], 250, key="n1")
     p1 = g[1].select_slider("Cells in parallel per position (unknown: ask REON)", [1, 4, 16, 40], 1, key="p1")
@@ -258,7 +258,8 @@ with t1:
         kw = dict(value_per_kwh_year=float(value), electronics_per_kwh=float(elec), fade_cv=fcv / np.sqrt(p), loss=loss, fade_mean=fade, ks=tuple(k for k in (1, 2, 4, 8, 16, 25) if k < n) or (1,), window=SF.WINDOW, closed_loss=SF.CLOSED_LOSS)
         if n >= 100:
             kw.update(trials=8, steps=60)
-        return G.robust_recommend(start, n, **kw), G.safe_recommend(start, n, **kw)[0]
+        rb = POL.robust_guarded(start, n, **kw)
+        return rb, dict(table=rb["table"], build=rb["build"], ours_best=rb["build"], rival_best=rb["rival"], margin=rb["margin_vs_rival"])
 
     sig1 = (n1, p1, value, elec, fcv, loss, fade)
     if n1 <= 16 or st.button("Run the engine with these settings (about 15 seconds at 250 cells)", key="run1"):
@@ -276,11 +277,11 @@ with t1:
         m[0].metric("Recommended build", out["build"])
         m[1].metric("Net value vs plain string", f"{rob['mean_gain']:+.1f} per kWh", help=f"scored on an independent seed, the number the customer view uses. The table below is the seed the build was picked on and reads higher ({t[out['ours_best']]['mean']:+.1f}): picking the best of several always flatters it.")
         m[2].metric("Margin over best rival", f"{out['margin']:+.1f}", help=f"best rival: {out['rival_best']}")
-        m[3].metric("Service life", f"{t[out['ours_best']]['years']:.1f} y vs {t['plain']['years']:.1f} y plain")
+        m[3].metric("Service life (30-year run)", f"{rob['life_ours']:.1f} y vs {rob['life_plain']:.1f} y plain")
         if out["margin"] <= 0:
-            st.warning(f"No-go: at these inputs {out['rival_best']} is at least as good as switches. Do not buy switches here.")
+            st.warning(f"No-go: at these inputs {out['rival_best']} is at least as good as switches, or the edge is under 1 per kWh. Do not buy switches here: use the {out['rival_best']}.")
         else:
-            st.success("Go: switches beat the best alternative at these inputs.")
+            st.success(f"Go: our build beats the best alternative ({out['rival_best']}) by {out['margin']:.1f} per kWh at these inputs.")
         st.dataframe(pd.DataFrame({k: {"net value per kWh": v["mean"], "10th percentile": v["p10"], "service years": v["years"], "cost": v["cost"]} for k, v in t.items()}).T.round(1))
     st.caption("Plain string = the brief's baseline. Balancer rival: 5 % transfer, cost 4. Start spread 2 % (divided by the square root of cells in parallel), 12 years, retire at 70 %. The customer view uses the same engine. Stress tests: examples/reon_hero_stress_output.txt.")
 

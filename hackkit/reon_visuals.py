@@ -102,15 +102,15 @@ def gain_fade_chart(rows, claim_fade: float = 0.004):
     df = pd.DataFrame(rows)
     df["parallel_label"] = df.parallel.map(lambda p: "1 cell" if p == 1 else f"{p} in parallel")
     order = [("1 cell" if p == 1 else f"{p} in parallel") for p in sorted(df.parallel.unique())]
-    df["Verdict"] = df.verdict.map({"BUY": "Build it", "HOLD": "Hold"})
+    df["Verdict"] = df.verdict.map({"BUY": "Build it", "BALANCER": "A balancer is enough", "HOLD": "Hold"})
     base = alt.Chart(df).encode(
         x=alt.X("fade:Q", title="Cell fade per year (share of capacity)", axis=alt.Axis(format=".3f", grid=False, values=sorted(df.fade.unique().tolist())), scale=alt.Scale(domain=[0.003, 0.021])),
-        y=alt.Y("gain:Q", title="12-year gain, $ per kWh", scale=alt.Scale(type="symlog", constant=2, domain=[-0.8, 260]), axis=alt.Axis(values=[0, 2, 5, 10, 25, 50, 100, 200], grid=True, gridOpacity=0.25)),
+        y=alt.Y("gain:Q", title="Extra 12-year gain over a balancer, $ per kWh", scale=alt.Scale(type="symlog", constant=2, domain=[-0.8, 260]), axis=alt.Axis(values=[0, 2, 5, 10, 25, 50, 100, 200], grid=True, gridOpacity=0.25)),
         color=alt.Color("parallel_label:N", scale=alt.Scale(domain=order, range=PAR_COLORS[:len(order)]), legend=alt.Legend(title=None, orient="bottom")))
     line = base.mark_line(strokeWidth=2)
-    tip = [alt.Tooltip("parallel_label:N", title="Arrangement"), alt.Tooltip("fade:Q", title="Fade per year", format=".3f"), alt.Tooltip("gain:Q", title="Gain, $/kWh", format=".1f"), alt.Tooltip("p10:Q", title="Pessimistic, $/kWh", format=".1f"), alt.Tooltip("Verdict:N")]
+    tip = [alt.Tooltip("parallel_label:N", title="Arrangement"), alt.Tooltip("fade:Q", title="Fade per year", format=".3f"), alt.Tooltip("gain:Q", title="Extra over a balancer, $/kWh", format=".1f"), alt.Tooltip("total:Q", title="Total over plain, $/kWh", format=".1f"), alt.Tooltip("p10:Q", title="Pessimistic total, $/kWh", format=".1f"), alt.Tooltip("Verdict:N")]
     built = base.transform_filter(alt.datum.Verdict == "Build it").mark_point(shape="circle", size=80, filled=True, opacity=1).encode(tooltip=tip)
-    held = base.transform_filter(alt.datum.Verdict == "Hold").mark_point(shape="cross", size=150, filled=False, strokeWidth=3, opacity=1).encode(tooltip=tip)
+    held = base.transform_filter(alt.datum.Verdict != "Build it").mark_point(shape="cross", size=150, filled=False, strokeWidth=3, opacity=1).encode(tooltip=tip)
     pts = built + held
     zero = alt.Chart(pd.DataFrame({"y": [0.0]})).mark_rule(color="#555", strokeDash=[4, 3]).encode(y="y:Q")
     claim = alt.Chart(pd.DataFrame({"x": [claim_fade], "t": ["maker's claim"]})).mark_rule(color="#999", strokeDash=[2, 3]).encode(x="x:Q")
@@ -118,7 +118,7 @@ def gain_fade_chart(rows, claim_fade: float = 0.004):
     return (zero + claim + lab + line + pts).properties(height=420)
 
 
-BAL_COLORS = {"Balancer alone": "#d9922b", "REON switches alone": "#2a7f8e", "Switches plus balancer": "#5b4b8a"}
+BAL_COLORS = {"Balancer alone": "#d9922b", "REON switches alone": "#2a7f8e", "Switches plus balancer": "#5b4b8a", "Our recommendation": "#1e2a2e"}
 
 
 def balancer_chart(rows, assumed: float = 0.05):

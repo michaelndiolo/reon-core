@@ -12,8 +12,8 @@ from hackkit import reon_storefront as SF
 hero = []
 for fade in (0.004, 0.008, 0.02):
     c = SF.cached_core(1, fade, 40)
-    hero.append(dict(fade_per_year=fade, verdict=c["verdict"], build=c["build"], gain_vs_plain=round(c["dollars_per_kwh"], 1), p10_gain_vs_plain=round(c["p10_per_kwh"], 1), reasons=c["reasons"], warnings=[]))
-out["hero_capacity"] = dict(tags="250 cells in series, one large cell per position; fade ASSUMED (Tim Ren 20,000-cycle claim implies 0.004 to 0.012); value CITED/DERIVED; switch cost 15.5 (CITED range 7 to 24). Does NOT enforce the inverter voltage window for the late-switch build: see docs/SOURCES.md", rows=hero)
+    hero.append(dict(fade_per_year=fade, verdict=c["verdict"], build=c["build"], gain_vs_plain=round(c["dollars_per_kwh"], 1), p10_gain_vs_plain=round(c["p10_per_kwh"], 1), balancer_alone_vs_plain=round(c["balancer_per_kwh"], 1), extra_over_balancer=round(c["vs_balancer_per_kwh"], 1), reasons=c["reasons"], warnings=[]))
+out["hero_capacity"] = dict(tags="250 cells in series, one large cell per position; fade ASSUMED (Tim Ren 20,000-cycle claim implies 0.004 to 0.012); value CITED/DERIVED; switch cost 15.5 (CITED range 7 to 24). Every build respects a 90% voltage window (at most 25 of 250 cells bypassed) and pays 2% switch loss on all energy; verdicts come from the guarded policy (a build of ours only if it beats the better of a 5% balancer and plain by at least 1 per kWh on two seeds). Balancer strength 5% is ASSUMED. Switch cost 7 to 24 is the extra over a conventional BMS (Tim Ren, 8 Nov). See docs/SOURCES.md", rows=hero)
 
 sites = {}
 for name, base in PR.PRESETS.items():

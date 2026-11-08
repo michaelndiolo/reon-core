@@ -11,6 +11,7 @@ import os
 import numpy as np
 
 from hackkit import reon_guard as G
+from hackkit import reon_policy as POL
 from hackkit import reon_storm as S
 from hackkit import reon_enviro as EN
 
@@ -44,21 +45,23 @@ GAIN_PARALLEL = (1, 4, 16, 40)
 
 
 def gain_vs_fade(value, cases=None, fades=GAIN_FADES, parallels=GAIN_PARALLEL):
-    """Rows for the 'what would have to be true' chart: 12-year gain per kWh against cell fade, one line per cells-in-parallel, at one value of a kWh-year.
-    Only precomputed cases are used (nothing runs live); missing combinations are skipped. Each row: parallel, fade, gain, verdict."""
+    """Rows for the 'what would have to be true' chart: the EXTRA 12-year gain per kWh our recommended build earns over the better of a simple balancer or a plain string, against cell fade, one line per cells-in-parallel,
+    at one value of a kWh-year. It is 0 when the verdict is BALANCER (a balancer is enough) or HOLD. Only precomputed cases are used (nothing runs live); missing combinations are skipped.
+    Each row: parallel, fade, gain (extra over the better rival), total (gain over a plain string), verdict, p10 (pessimistic total)."""
     cs = load_cases() if cases is None else cases
     rows = []
     for p in parallels:
         for f in fades:
             c = cs.get(case_key(p, f, value))
             if c:
-                rows.append(dict(parallel=int(p), fade=float(f), gain=float(c["dollars_per_kwh"]), verdict=c["verdict"], p10=float(c["p10_per_kwh"])))
+                extra = float(c.get("vs_balancer_per_kwh", 0.0)) if c["verdict"] == "BUY" else 0.0
+                rows.append(dict(parallel=int(p), fade=float(f), gain=extra, total=float(c["dollars_per_kwh"]), verdict=c["verdict"], p10=float(c["p10_per_kwh"])))
     return rows
 
 
 BAL_PATH = os.path.join(os.path.dirname(CASES_PATH), "balancer_sweep.json")
 BAL_LIMITS = (0.01, 0.02, 0.03, 0.05, 0.075, 0.10, 0.15)
-BAL_SERIES = (("balancer", "Balancer alone"), ("reon", "REON switches alone"), ("both", "Switches plus balancer"))
+BAL_SERIES = (("balancer", "Balancer alone"), ("reon", "REON switches alone"), ("both", "Switches plus balancer"), ("recommended", "Our recommendation"))
 
 
 def balancer_rows(p, fade, path=BAL_PATH):
@@ -123,14 +126,12 @@ def backup_policies(packs, nameplate_kwh, load_kw, cold=0.8, keep=0.5):
 
 
 def core(p, fade, value, elec=ELEC, n=N_SERIES):
-    """Run the engine (about 12 s at 250 cells): verdict on an independent seed, 12-year gain per kWh, and simulated lives over 30 years."""
+    """Run the engine (about 30 s at 250 cells): the guarded policy (reon_policy.robust_guarded) picks on one seed and re-checks on an independent one; it only says BUY when one of our builds beats the better of
+    'balancer alone' and 'plain' on both, otherwise BALANCER (a simple balancer is enough: we tie it) or HOLD (tie with plain). Gains are per kWh nameplate vs a plain string; lives are simulated over 30 years."""
     start = _start(p, n)
-    rob = G.robust_recommend(start, n, **_kw(p, fade, value, elec, 12.0, n))
-    out, _ = G.safe_recommend(start, n, seed=9, **_kw(p, fade, value, elec, 30.0, n))
-    t = out["table"]
-    nm = out["ours_best"]
+    rob = POL.robust_guarded(start, n, **_kw(p, fade, value, elec, 12.0, n))
     return dict(verdict=rob["verdict"], build=rob["build"], reasons=list(rob["reasons"]), dollars_per_kwh=float(rob["mean_gain"]), p10_per_kwh=float(rob["p10_gain"]),
-                life_plain=float(t["plain"]["years"]), life_ours=float(t[nm]["years"]))
+                balancer_per_kwh=float(rob["balancer_gain"]), vs_balancer_per_kwh=float(rob["margin_vs_rival"]), life_plain=float(rob["life_plain"]), life_ours=float(rob["life_ours"]))
 
 
 def storefront(p, fade, value, elec, packs, load_kw=5.0, nameplate_kwh=60.0, n=N_SERIES, horizon_env=20.0, use_cache=True):
@@ -139,19 +140,24 @@ def storefront(p, fade, value, elec, packs, load_kw=5.0, nameplate_kwh=60.0, n=N
     bp, bm = backup_hours(packs, nameplate_kwh, load_kw)
     buy = c["verdict"] == "BUY"
     res = dict(verdict=c["verdict"], build=c["build"], reasons=c["reasons"], dollars_per_kwh=c["dollars_per_kwh"], dollars_total=c["dollars_per_kwh"] * nameplate_kwh,
-               p10_total=c["p10_per_kwh"] * nameplate_kwh, life_plain=c["life_plain"], life_ours=c["life_ours"], backup_plain_h=bp, backup_managed_h=bm, nameplate_kwh=nameplate_kwh, load_kw=load_kw)
+               p10_total=c["p10_per_kwh"] * nameplate_kwh, balancer_total=c.get("balancer_per_kwh", 0.0) * nameplate_kwh, vs_balancer_total=c.get("vs_balancer_per_kwh", 0.0) * nameplate_kwh, life_plain=c["life_plain"], life_ours=c["life_ours"], backup_plain_h=bp, backup_managed_h=bm, nameplate_kwh=nameplate_kwh, load_kw=load_kw)
     res["env"] = EN.environmental(nameplate_kwh, c["life_plain"], c["life_ours"], horizon_env) if buy and c["life_ours"] > c["life_plain"] else None
     return res
 
 
 def headline(r, state=None, state_hours=None):
     """One plain-language paragraph."""
+    if r["verdict"] == "BALANCER":
+        return (f"At these inputs a simple balancer already does what our switches would, so we would not sell you cell-level switches here ({'; '.join(r['reasons'])}). "
+                f"A balancer is worth about ${r.get('balancer_total', 0):,.0f} over 12 years on a {r['nameplate_kwh']:.0f} kWh battery; we tie that fix, we do not beat it. That is a result, not a failure of the tool.")
     if r["verdict"] != "BUY":
         return (f"At these inputs we would not sell you the cell-level switches: a plain string, or a simpler fix, is as good ({'; '.join(r['reasons'])}). "
                 f"That is a result, not a failure of the tool.")
     s = (f"On a storm night, a {r['nameplate_kwh']:.0f} kWh battery carrying {r['load_kw']:.0f} kW keeps the lights on about {r['backup_managed_h']:.1f} hours instead of {r['backup_plain_h']:.1f}. "
          f"The battery lasts about {r['life_ours']:.0f} years instead of {r['life_plain']:.0f} before it has to be replaced, and over the first 12 years it is worth about "
          f"${r['dollars_total']:,.0f} more (10th percentile ${r['p10_total']:,.0f}).")
+    if r.get("vs_balancer_total", 0) > 0:
+        s += f" That is about ${r['vs_balancer_total']:,.0f} more than a simple balancer alone would give."
     if state and state_hours:
         s += f" In {state} a typical outage lasts about {state_hours:.1f} hours."
     return s

@@ -12,3 +12,4 @@ venv/
 data/private/
 *.sample.csv
 *_bms_*.csv
+examples/data/tornado_250_partial.json

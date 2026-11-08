@@ -44,9 +44,11 @@ def test_gain_vs_fade_rows_come_from_cache_and_are_complete():
     for value in (12, 22, 40, 80):
         rows = SF.gain_vs_fade(value)
         assert len(rows) == len(SF.GAIN_FADES) * len(SF.GAIN_PARALLEL)
-        assert all(r["verdict"] in ("BUY", "HOLD") for r in rows)
+        assert all(r["verdict"] in ("BUY", "BALANCER", "HOLD") for r in rows) and all(r["gain"] >= 0.0 for r in rows)
     one = [r for r in SF.gain_vs_fade(40) if r["parallel"] == 1 and r["fade"] == 0.008][0]
-    assert abs(one["gain"] - 17.73) < 0.1 and one["verdict"] == "BUY"
+    assert one["verdict"] == "BUY" and one["gain"] > 1.0 and one["total"] > one["gain"]
+    slow = [r for r in SF.gain_vs_fade(40) if r["parallel"] == 1 and r["fade"] == 0.004][0]
+    assert slow["verdict"] == "BALANCER" and slow["gain"] == 0.0
 
 
 def test_balancer_rows_complete_and_crossover_sensible():

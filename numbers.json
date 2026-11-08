@@ -3,38 +3,44 @@
  "units": "net value per kWh nameplate, present value, unless stated",
  "note": "Simulations and replays only. Hardware keeps safety authority.",
  "hero_capacity": {
-  "tags": "250 cells in series, one large cell per position; fade ASSUMED (Tim Ren 20,000-cycle claim implies 0.004 to 0.012); value CITED/DERIVED; switch cost 15.5 (CITED range 7 to 24). Does NOT enforce the inverter voltage window for the late-switch build: see docs/SOURCES.md",
+  "tags": "250 cells in series, one large cell per position; fade ASSUMED (Tim Ren 20,000-cycle claim implies 0.004 to 0.012); value CITED/DERIVED; switch cost 15.5 (CITED range 7 to 24). Every build respects a 90% voltage window (at most 25 of 250 cells bypassed) and pays 2% switch loss on all energy; verdicts come from the guarded policy (a build of ours only if it beats the better of a 5% balancer and plain by at least 1 per kWh on two seeds). Balancer strength 5% is ASSUMED. Switch cost 7 to 24 is the extra over a conventional BMS (Tim Ren, 8 Nov). See docs/SOURCES.md",
   "rows": [
    {
     "fade_per_year": 0.004,
-    "verdict": "BUY",
-    "build": "hybrid 1/250 + balancer 5%",
-    "gain_vs_plain": 11.8,
-    "p10_gain_vs_plain": 11.8,
+    "verdict": "BALANCER",
+    "build": "balancer 5%",
+    "gain_vs_plain": 12.2,
+    "p10_gain_vs_plain": 12.1,
+    "balancer_alone_vs_plain": 12.2,
+    "extra_over_balancer": 0.0,
     "reasons": [
-     "beats plain on an independent seed, pessimistic case too"
+     "no build of ours clearly beats the balancer 5%; a balancer is enough here"
     ],
     "warnings": []
    },
    {
     "fade_per_year": 0.008,
     "verdict": "BUY",
-    "build": "hybrid 1/250 + balancer 5%",
-    "gain_vs_plain": 17.7,
-    "p10_gain_vs_plain": 12.1,
+    "build": "hybrid 8/250 + balancer 5%",
+    "gain_vs_plain": 25.3,
+    "p10_gain_vs_plain": 14.2,
+    "balancer_alone_vs_plain": 22.0,
+    "extra_over_balancer": 3.4,
     "reasons": [
-     "beats plain on an independent seed, pessimistic case too"
+     "hybrid 8/250 + balancer 5% beats balancer 5% by 3.4 per kWh on a fresh seed too"
     ],
     "warnings": []
    },
    {
     "fade_per_year": 0.02,
     "verdict": "BUY",
-    "build": "late switches",
-    "gain_vs_plain": 29.4,
-    "p10_gain_vs_plain": 17.0,
+    "build": "hybrid adaptive 25/250 + balancer 5%",
+    "gain_vs_plain": 50.6,
+    "p10_gain_vs_plain": 36.8,
+    "balancer_alone_vs_plain": 12.6,
+    "extra_over_balancer": 38.0,
     "reasons": [
-     "beats plain on an independent seed, pessimistic case too"
+     "hybrid adaptive 25/250 + balancer 5% beats balancer 5% by 38.0 per kWh on a fresh seed too"
     ],
     "warnings": []
    }

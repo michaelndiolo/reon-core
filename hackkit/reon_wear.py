@@ -25,7 +25,7 @@ import numpy as np
 from hackkit import reon_design as D
 
 
-def _step(s, m, qd, kind, par, loss, closed_loss, eta, mask=None, n_min=None, share_wear=False):
+def _step(s, m, qd, kind, par, loss, closed_loss, eta, mask=None, n_min=None, share_wear=False, exempt=False):
     """Capability per string (Ah-equivalent, the m x q convention) and the DoD of every cell, for one design at one time. s: (S, m) capacities."""
     cmin = s.min(axis=1)
     tot = s.sum(axis=1)
@@ -56,9 +56,21 @@ def _step(s, m, qd, kind, par, loss, closed_loss, eta, mask=None, n_min=None, sh
         cl = closed_loss * mask.mean(axis=1)   # a series switch exists only on the switched cells, so the closed-path loss scales with their share
         cap = cap_plain * (1.0 - cl) + (1.0 - loss) * np.maximum(ideal - cap_plain, 0.0)
         return cap, dod_plain
+    if kind == "hybdyn":   # ADAPTIVE hybrid: a switch on every cell, so the K weakest cells RIGHT NOW (by their sensed capacity) are the ones exempt from the balancer's bottleneck; K is capped by the voltage window
+        order = np.argsort(s, axis=1)
+        mask = np.zeros(s.shape, dtype=bool)
+        np.put_along_axis(mask, order[:, :par[0]], True, axis=1)
+        cl = closed_loss
+        cap = np.maximum(hybrid_exempt_total(s, mask, loss, par[1], eta) * (1.0 - cl), cap_plain * (1.0 - cl))
+        if not share_wear:
+            return cap, dod_plain
+        gap = tot_raw - cap_plain
+        rho = np.where(gap > 1e-12, np.clip((cap - cap_plain) / np.maximum(gap, 1e-12), 0.0, 1.0), 0.0)
+        share = np.minimum(m * qd / np.maximum(tot_raw, 1e-12), 1.0)[:, None] * np.ones_like(s)
+        return cap, (1.0 - rho)[:, None] * dod_plain + rho[:, None] * share
     if kind == "hybsel":
         cl = closed_loss * mask.mean(axis=1)
-        cap = np.maximum(hybrid_select_total(s, mask, loss, par[1], eta) * (1.0 - cl), cap_plain * (1.0 - cl))
+        cap = np.maximum((hybrid_exempt_total if exempt else hybrid_select_total)(s, mask, loss, par[1], eta) * (1.0 - cl), cap_plain * (1.0 - cl))
         if not share_wear:
             return cap, dod_plain
         # share_wear: the balancer half of the hybrid moves charge to weak cells exactly as the balancer-only design does, so weak cells also cycle shallower (same blend as the 'bal' branch below)
@@ -96,11 +108,49 @@ def hybrid_select_total(s, mask, loss, r, eta, grid=12):
     return best
 
 
+def hybrid_exempt_total(s, mask, loss, r, eta, grid=16, iters=40):
+    """Tail bypass PLUS a balancer (the improved hybrid). The plain hybrid (hybrid_select_total) lets the balancer see every cell, so its run length q is capped by the WEAKEST cell: q <= min(c) + beta, beta = r x mean capacity.
+    Here a cell that carries a bypass switch is exempt: it simply delivers its own capacity and is switched out, so the balancer only has to carry the UNswitched cells. q is then limited by the weakest unswitched cell, which on a
+    spread-out string is far higher. Same bookkeeping as the plain hybrid otherwise: total = (sum over switched cells of min(c, q)) + q x (unswitched cells) + (1 - loss) x max(tail - D, 0), with D = the balancer's shortfall / eta.
+    q is searched on a grid from the weakest unswitched cell to the largest q the balancer can carry, so the result is never below the plain hybrid, the balancer alone, or pure selective bypass (tested in tests/test_reon_policy.py)."""
+    S_, m = s.shape
+    beta = r * s.mean(axis=1, keepdims=True)
+    uns = ~mask
+    lo = np.where(uns, s, np.inf).min(axis=1, keepdims=True)
+    hi = s.mean(axis=1, keepdims=True)
+    hi = np.maximum(hi, lo)
+    for _ in range(iters):
+        mid = 0.5 * (lo + hi)
+        short = np.where(uns, np.maximum(mid - s, 0.0), 0.0)
+        spare = np.minimum(beta, np.maximum(s - mid, 0.0))
+        ok = (short.max(axis=1, keepdims=True) <= beta + 1e-12) & (short.sum(axis=1, keepdims=True) <= eta * spare.sum(axis=1, keepdims=True) + 1e-12)
+        lo = np.where(ok, mid, lo)
+        hi = np.where(ok, hi, mid)
+    qb = lo[:, 0]
+    q0 = np.where(uns, s, np.inf).min(axis=1)
+    dead = q0 <= 0.0
+    best = None
+    for j in range(grid + 1):
+        q = (q0 + (qb - q0) * (j / grid))[:, None]
+        strong = np.maximum(s - q, 0.0)
+        d = np.where(uns, np.maximum(q - s, 0.0), 0.0).sum(axis=1) / max(eta, 1e-9)
+        empty = s <= q + 1e-9
+        bad = (empty & uns).any(axis=1)
+        x = np.where(mask | empty, np.inf, strong).min(axis=1)
+        x = np.where(bad | ~np.isfinite(x), 0.0, x)
+        extra = np.minimum(strong, x[:, None]).sum(axis=1)
+        head = np.where(mask, np.minimum(s, q), q).sum(axis=1)
+        tot = head + (1.0 - loss) * np.maximum(extra - d, 0.0)
+        best = tot if best is None else np.maximum(best, tot)
+    # a switched cell may also be held up by the balancer instead of being bypassed (when the tail is empty that is worth more), so take the better of the two ways to run a switched cell: never below the plain hybrid
+    return np.maximum(np.where(dead, 0.0, best), hybrid_select_total(s, mask, loss, r, eta))
+
+
 def wear_scan(caps: Sequence[float], m: int, *, fade_mean: float, fade_cv: float, loss: float, electronics_per_kwh: float, balancer_per_kwh: float,
               sort_cost_per_kwh: float, value_per_kwh_year: float, rate: float, years: float, eol_frac: float, duty: float = 0.7, dod_exp: float = 0.0,
               knee_share: float = 0.0, knee_soh: Sequence[float] = (0.82, 0.90), knee_kappa: float = 2.4, start_soh: float = 1.0, balancer_rs: Sequence[float] = (0.1, 1e9),
               balancer_eta: float = 0.9, select_counts: Sequence[int] = (), global_counts: Sequence[int] = (), hybrid_counts: Sequence[int] = (), hybrid_per_kwh: float = None, closed_loss: float = 0.0, weak_corr: float = 0.0, test_sigma: float = 0.02, trials: int = 60, seed: int = 0,
-              steps: int = 120, window: float = None, hybrid_shares_wear: bool = False) -> dict:
+              steps: int = 120, window: float = None, hybrid_shares_wear: bool = False, hybrid_exempt: bool = False, return_trials: bool = False, adaptive_hybrid: bool = False) -> dict:
     """Net value per kWh nameplate vs the plain pack (mean, p10, p90, gross, cost, years in service) for: sort only, late switches, level switches (each as found and sorted),
     balancers at each transfer limit. Common random numbers across designs. dod_exp = 0 and knee_share = 0 reproduce reon_design."""
     c0 = np.asarray(caps, dtype=float)
@@ -139,6 +189,11 @@ def wear_scan(caps: Sequence[float], m: int, *, fade_mean: float, fade_cv: float
         for r_ in balancer_rs:
             designs.append((f"hybrid {k_}/{m} + balancer {('unlimited' if r_ > 1e6 else format(r_, '.0%'))}", "hybsel", (k_, r_), False,
                             hybrid_per_kwh if hybrid_per_kwh is not None else electronics_per_kwh * k_ / m + balancer_per_kwh))
+    if adaptive_hybrid:   # a switch on every cell (full electronics cost) plus a balancer at each transfer limit; the K weakest cells at any moment are exempt (K = the most the voltage window allows)
+        k_dyn = (m - n_min) if n_min is not None else max(1, m // 10)
+        if k_dyn > 0:
+            for r_ in balancer_rs:
+                designs.append((f"hybrid adaptive {k_dyn}/{m} + balancer {('unlimited' if r_ > 1e6 else format(r_, '.0%'))}", "hybdyn", (k_dyn, r_), False, electronics_per_kwh + balancer_per_kwh))
     pv = {d[0]: np.zeros(trials) for d in designs}
     yrs = {d[0]: np.zeros(trials) for d in designs}
     qd = duty * float(np.mean(c0.reshape(-1, m).min(axis=1)))
@@ -164,7 +219,7 @@ def wear_scan(caps: Sequence[float], m: int, *, fade_mean: float, fade_cv: float
                 if kk > 0:
                     mask[np.arange(n // m)[:, None], np.argsort(meas[idx].reshape(-1, m), axis=1)[:, :kk]] = True
             for j in range(steps):
-                cap, dod = _step(c[idx].reshape(-1, m), m, qd, kind, par, loss, closed_loss, balancer_eta, mask, n_min, hybrid_shares_wear)
+                cap, dod = _step(c[idx].reshape(-1, m), m, qd, kind, par, loss, closed_loss, balancer_eta, mask, n_min, hybrid_shares_wear, hybrid_exempt)
                 u[j] = cap.sum()
                 if j == steps - 1:
                     break
@@ -187,6 +242,8 @@ def wear_scan(caps: Sequence[float], m: int, *, fade_mean: float, fade_cv: float
         net = gross - cst
         out[nm] = {"mean": float(net.mean()), "p10": float(np.percentile(net, 10)), "p90": float(np.percentile(net, 90)), "years": float(yrs[nm].mean()),
                    "gross": float(gross.mean()), "cost": float(cst)}
+        if return_trials:
+            out[nm]["net"] = net.tolist()
     return out
 
 

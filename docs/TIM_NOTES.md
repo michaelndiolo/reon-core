@@ -46,3 +46,12 @@ Source: live call notes and Discord. The call transcripts are speech-to-text and
 
 ## Built from these notes (7 Nov, night)
 See `docs/STRESS.md`, section "Fixes from Tim Ren's problems". Key result: the capacity-gain headline depends on whether a series element is a single cell (large gain) or a parallel group (small at slow fade). Ask REON first.
+
+## Tim Ren's answers, 8 Nov (to our five questions)
+1. Series position: "could be both" (single cell or parallel group). Capacity per position not given; Tim says the EBS Sodium data sheet exists (not the lithium one) and Rhythm Doshi asked for it.
+2. Field failure rate: "largely depends on the grade of the cell". No number.
+3. String voltage and inverter minimum: "PCS dependent", some very wide, some very narrow.
+4. Sodium cell-to-cell spread: too new for much field data, but disparity is larger than LFP.
+5. Switching cost: the 7 to 24 per kWh is the cost OVER a conventional BMS, set by PCB volume. (Energy lost as heat was not answered.)
+
+Top follow-ups: (1) what balancing the conventional BMS does (none / passive / active, what current); (2) the EBS Sodium data sheet plus the switch heat loss; (3) the PCS DC input range for a 60 kWh storefront system as a share of nominal, and a failure rate for the cell grade in this product.
