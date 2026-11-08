@@ -15,6 +15,7 @@ from hackkit import reon_storm as S
 from hackkit import reon_enviro as EN
 
 N_SERIES = 250
+WINDOW = 0.9   # share of the 250 cells that must stay in the string (REON CTO: about 90%, unclear); every build respects it. None would mean no voltage limit.
 ELEC = 15.5
 CASES_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "examples", "data", "storefront_cases.json")
 
@@ -60,7 +61,7 @@ OURS = ("selective", "late", "level", "hybrid")
 
 def _kw(p, fade, value, elec, years, n):
     return dict(value_per_kwh_year=float(value), electronics_per_kwh=float(elec), fade_cv=0.45 / np.sqrt(p), fade_mean=float(fade), loss=0.04, years=float(years),
-                eol_frac=0.7, trials=8, steps=60, ks=tuple(k for k in KS if k < n) or (1,))
+                eol_frac=0.7, trials=8, steps=60, ks=tuple(k for k in KS if k < n) or (1,), window=WINDOW)
 
 
 def _start(p, n):

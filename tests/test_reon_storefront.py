@@ -46,4 +46,4 @@ def test_gain_vs_fade_rows_come_from_cache_and_are_complete():
         assert len(rows) == len(SF.GAIN_FADES) * len(SF.GAIN_PARALLEL)
         assert all(r["verdict"] in ("BUY", "HOLD") for r in rows)
     one = [r for r in SF.gain_vs_fade(40) if r["parallel"] == 1 and r["fade"] == 0.008][0]
-    assert abs(one["gain"] - 27.25) < 0.1 and one["verdict"] == "BUY"
+    assert abs(one["gain"] - 15.32) < 0.1 and one["verdict"] == "BUY"

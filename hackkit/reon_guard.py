@@ -16,8 +16,8 @@ def caps_array(caps, name="caps", positive=False, min_len=1):
 
 
 def safe_recommend(start, m, *, value_per_kwh_year, electronics_per_kwh, fade_cv, loss=0.02, years=12.0, eol_frac=0.7, duty=0.7, fade_mean=0.02, rate=0.07, balancer_r=0.05, balancer_per_kwh=4.0,
-                   ks=(1, 2, 3, 4), dod_exp=0.87, knee_share=0.65, start_soh=1.0, balancer_eta=0.9, closed_loss=0.0, test_sigma=0.02, sort_cost_per_kwh=0.0, trials=14, steps=40, seed=5):
-    """reon_wear.recommend_build with every input validated. Returns (result, warnings)."""
+                   ks=(1, 2, 3, 4), dod_exp=0.87, knee_share=0.65, start_soh=1.0, balancer_eta=0.9, closed_loss=0.0, test_sigma=0.02, sort_cost_per_kwh=0.0, trials=14, steps=40, seed=5, window=None):
+    """reon_wear.recommend_build with every input validated. window = share of cells that must stay in the string (None: no voltage window). Returns (result, warnings)."""
     from hackkit import reon_wear as W
     s = caps_array(start, "start", positive=True, min_len=2)
     need(isinstance(m, (int, np.integer)) and 2 <= m <= len(s) and len(s) % m == 0, "m: cells per string must divide the number of cells")
@@ -31,6 +31,7 @@ def safe_recommend(start, m, *, value_per_kwh_year, electronics_per_kwh, fade_cv
     need(0.0 <= fade_mean <= 0.5, "mean fade per year must be between 0 and 0.5")
     need(0.0 <= rate <= 0.5, "discount rate must be between 0 and 0.5")
     need(trials >= 2 and steps >= 4, "trials >= 2 and steps >= 4")
+    need(window is None or 0.0 < window <= 1.0, "window must be above 0 and at most 1")
     warn = []
     ks = tuple(k for k in ks if 0 < k < m)
     if not ks:
@@ -45,7 +46,7 @@ def safe_recommend(start, m, *, value_per_kwh_year, electronics_per_kwh, fade_cv
         warn.append("zero value: no build can be worth buying")
     out = W.recommend_build(s, int(m), balancer_r=balancer_r, balancer_per_kwh=balancer_per_kwh, ks=ks, fade_mean=fade_mean, fade_cv=fade_cv, loss=loss, electronics_per_kwh=electronics_per_kwh,
                             sort_cost_per_kwh=sort_cost_per_kwh, value_per_kwh_year=value_per_kwh_year, rate=rate, years=years, eol_frac=eol_frac, duty=duty, dod_exp=dod_exp, knee_share=knee_share,
-                            start_soh=start_soh, balancer_eta=balancer_eta, closed_loss=closed_loss, test_sigma=test_sigma, trials=trials, steps=steps, seed=seed)
+                            start_soh=start_soh, balancer_eta=balancer_eta, closed_loss=closed_loss, test_sigma=test_sigma, trials=trials, steps=steps, seed=seed, window=window)
     return out, warn
 
 

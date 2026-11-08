@@ -1,8 +1,8 @@
-Base case gain 27.3 per kWh (BUY). Net gain over plain, 12 years, per kWh nameplate, one input at a time (a HOLD counts as 0).
-Cell fade per year                       0.004:    11.8 BUY   |    0.02:    99.4 BUY   | swing   87.6 | CITED claim (20,000 cycles), unverified
-Value of a kWh per year ($)               12.0:     2.5 BUY   |    80.0:    70.0 BUY   | swing   67.5 | CITED range
-Spread of fade between cells               0.2:    11.5 BUY   |     0.6:    54.6 BUY   | swing   43.0 | ASSUMED (real cars 0.20 to 0.60)
-Cells in parallel per position               1:    27.3 BUY   |      16:     2.7 BUY   | swing   24.6 | UNKNOWN
-Switch electronics cost per kWh ($)        7.0:    35.8 BUY   |    24.0:    18.8 BUY   | swing   17.0 | CITED (REON CTO)
-Starting capacity spread                  0.01:    26.4 BUY   |    0.05:    42.4 BUY   | swing   16.0 | ASSUMED
-Usable-energy loss to switches             0.0:    28.6 BUY   |     0.1:    25.4 BUY   | swing    3.2 | ASSUMED
+Base case gain 15.3 per kWh (BUY). Net gain over plain, 12 years, per kWh nameplate, one input at a time (a HOLD counts as 0).
+Value of a kWh per year ($)               12.0:     2.5 BUY   |    80.0:    46.1 BUY   | swing   43.7 | CITED range
+Spread of fade between cells               0.2:    11.5 BUY   |     0.6:    40.4 BUY   | swing   28.8 | ASSUMED (real cars 0.20 to 0.60)
+Cell fade per year                       0.004:    11.8 BUY   |    0.02:    34.2 BUY   | swing   22.4 | CITED claim (20,000 cycles), unverified
+Cells in parallel per position               1:    15.3 BUY   |      16:     2.7 BUY   | swing   12.7 | UNKNOWN
+Switch electronics cost per kWh ($)        7.0:    23.8 BUY   |    24.0:    17.7 BUY   | swing    6.1 | CITED (REON CTO)
+Starting capacity spread                  0.01:    16.9 BUY   |    0.05:    20.5 BUY   | swing    3.6 | ASSUMED
+Usable-energy loss to switches             0.0:    16.1 BUY   |     0.1:    14.2 BUY   | swing    1.9 | ASSUMED

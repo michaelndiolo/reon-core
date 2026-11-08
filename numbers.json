@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-07",
+ "generated": "2026-11-08",
  "units": "net value per kWh nameplate, present value, unless stated",
  "note": "Simulations and replays only. Hardware keeps safety authority.",
  "hero_capacity": {
@@ -20,8 +20,8 @@
     "fade_per_year": 0.008,
     "verdict": "BUY",
     "build": "late switches",
-    "gain_vs_plain": 27.3,
-    "p10_gain_vs_plain": 11.6,
+    "gain_vs_plain": 15.3,
+    "p10_gain_vs_plain": 0.4,
     "reasons": [
      "beats plain on an independent seed, pessimistic case too"
     ],
@@ -31,8 +31,8 @@
     "fade_per_year": 0.02,
     "verdict": "BUY",
     "build": "late switches",
-    "gain_vs_plain": 99.4,
-    "p10_gain_vs_plain": 90.0,
+    "gain_vs_plain": 34.2,
+    "p10_gain_vs_plain": 23.9,
     "reasons": [
      "beats plain on an independent seed, pessimistic case too"
     ],

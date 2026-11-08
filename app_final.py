@@ -152,8 +152,8 @@ with front:
                         "Two inputs are assumed and shown as a range: how many avoided cells would really have been replaced (50 to 100%) and the carbon of REON's electronics (1 to 10 kg per kWh, counted in full). "
                         + ("The sign of the result does not flip inside these ranges." if not e0["sign_can_flip"] else "At the low end this is close to zero: the sign can flip, so treat the carbon claim as small here."))
         st.markdown("**Where the numbers are counted.** Energy and hours are measured at the battery string's DC terminals: usable kWh (cell capacities, 80% in the cold, a small switch loss) divided by the load you set. No inverter loss and no solar. Power capability in kW is not modelled; the only kW is your load.")
-        st.markdown("**Voltage limit.** The dollar and life figures come from a model where switches may bypass any empty cell, without checking the inverter's minimum voltage (REON has not given it; about 90% of cells staying in is the CTO's unclear remark). "
-                    "The string view and engineering tab 5 do enforce a floor. Where the floor binds the gain is smaller: in one test at typical wear, builds limited to 25 bypassed cells gave about \\$18 per kWh (a switch plus a balancer) against \\$27 here.")
+        st.markdown("**Voltage limit.** Every build in the dollar and life figures keeps at least 90% of the 250 cells in the string at all times (about 90% is the CTO's unclear remark; REON's real inverter minimum is not known). "
+                    "That caps bypassing at 25 cells. Without the cap the typical case read \\$1,635; with it, \\$919. The pessimistic case is thin (about \\$25), so treat the gain as real but small at typical wear and larger as cells wear harder.")
         st.markdown("**Where it comes from.** Every input is tagged in docs/SOURCES.md. Sodium-ion cell behaviour is assumed; there is no live REON data in this yet.")
     with st.expander("What would have to be true: gain against how fast the cells wear"):
         vsel = st.select_slider("Value of a kWh of backup per year ($)", [12, 22, 40, 80], 40, key="f_gv")
@@ -162,7 +162,7 @@ with front:
             st.altair_chart(VZ.gain_fade_chart(grows), use_container_width=True)
             st.caption("Each line is one way of wiring cells in parallel. Above the dashed zero line the cell-level control pays for itself over 12 years; a cross means the engine says hold. "
                        "Read it from the right: the faster the cells wear, the more control is worth, and the more cells share a position, the more wear it takes before it pays. "
-                       "The maker's claim is the far left. Steps in the lines come from replacement dates. Simulated at 250 cells, switch cost 15.5 per kWh; not REON data.")
+                       "The maker's claim is the far left. Steps in the lines come from replacement dates. Simulated at 250 cells, switch cost 15.5 per kWh, at least 90% of cells kept in the string; not REON data.")
         else:
             st.info("No precomputed cases found for this value.")
     with st.expander("What we are not doing"):
@@ -234,7 +234,7 @@ with t1:
     def eng1(n, p, value, elec, fcv, loss, fade):
         rng = np.random.default_rng(3)
         start = 100.0 * (1.0 + 0.02 / np.sqrt(p) * rng.standard_normal(n))
-        kw = dict(value_per_kwh_year=float(value), electronics_per_kwh=float(elec), fade_cv=fcv / np.sqrt(p), loss=loss, fade_mean=fade, ks=tuple(k for k in (1, 2, 4, 8, 16, 25) if k < n) or (1,))
+        kw = dict(value_per_kwh_year=float(value), electronics_per_kwh=float(elec), fade_cv=fcv / np.sqrt(p), loss=loss, fade_mean=fade, ks=tuple(k for k in (1, 2, 4, 8, 16, 25) if k < n) or (1,), window=SF.WINDOW)
         if n >= 100:
             kw.update(trials=8, steps=60)
         return G.robust_recommend(start, n, **kw), G.safe_recommend(start, n, **kw)[0]
@@ -266,6 +266,7 @@ with t1:
 with t2:
     st.subheader("Break-even switch cost against a typical balancer (per kWh nameplate)")
     st.dataframe(BE.fillna(">60 (never flips)").astype(str))
+    st.caption("This table was computed before the voltage window was enforced in the engine (see docs/SOURCES.md); treat the break-even costs as the optimistic end.")
     st.write("Above the number in a cell, a typical balancer is better than switches. Tim Ren's overhead range is 7 to 24. Only the lowest-value, narrowest-spread corner puts that range partly in the losing zone. Source: examples/reon_losing_regimes_output.txt.")
     st.write("A logistic go/no-go screen on all inputs, tested on held-out draws, is right 88.5 % of the time against 82.7 % for always saying go, and catches about half the cases we lose: use it as a screen, not a verdict.")
 
@@ -381,7 +382,7 @@ with t9:
         rng9 = np.random.default_rng(3)
         start = 100.0 * (1.0 + 0.02 / np.sqrt(p) * rng9.standard_normal(n))
         ks = tuple(k for k in (1, 2, 4, 8, 16, 25) if k < n) or (1,)
-        out, _ = G.safe_recommend(start, n, value_per_kwh_year=float(v), electronics_per_kwh=float(e), fade_cv=0.45 / np.sqrt(p), fade_mean=float(f), loss=0.04, years=30.0, eol_frac=0.7, trials=8, steps=60, ks=ks)
+        out, _ = G.safe_recommend(start, n, value_per_kwh_year=float(v), electronics_per_kwh=float(e), fade_cv=0.45 / np.sqrt(p), fade_mean=float(f), loss=0.04, years=30.0, eol_frac=0.7, trials=8, steps=60, ks=ks, window=SF.WINDOW)
         return out
 
     sig9 = (n9, p9, f9, v9, e9)
@@ -453,7 +454,7 @@ with t11:
     st.metric("Base case", f"{base_gain:+.1f} per kWh")
     st.bar_chart(tor.set_index("input")[["gain_low", "gain_high"]].rename(columns={"gain_low": "input at its low end", "gain_high": "input at its high end"}))
     st.dataframe(tor[["input", "low", "high", "gain_low", "gain_high", "swing", "tag", "who_can_answer"]].set_index("input"))
-    st.caption("Source: examples/reon_tornado_250.py. Each input stays BUY at both ends of its range in this base case, so the question is how much, not whether (the parallel-group case alone approaches HOLD at 40 cells). Switch loss barely matters; fade, the value of a kWh, and how much cells differ matter most.")
+    st.caption("Source: examples/reon_tornado_250.py. Each input stays BUY at both ends of its range in this base case, so the question is how much, not whether (the parallel-group case alone approaches HOLD at 40 cells). Switch loss barely matters; the value of a kWh, how much cells differ, and fade matter most. Every run keeps at least 90% of cells in the string.")
 
 with t12:
     st.write("Who buys, how it reaches a site, and what policy touches it. The tariff screen turns a demand charge into the value of a kWh and reruns the engine at 250 cells (single cells, typical wear).")

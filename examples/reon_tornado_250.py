@@ -5,6 +5,7 @@ import csv
 import numpy as np
 from multiprocessing import Pool
 from hackkit import reon_guard as G
+from hackkit.reon_storefront import WINDOW   # inverter voltage window, 0.9: every build respects it
 
 KS = (1, 2, 4, 8, 16, 25)
 BASE = dict(p=1, fade=0.008, value=40.0, elec=15.5, loss=0.04, fcv=0.45, spread=0.02)
@@ -29,7 +30,7 @@ def run(a):
     rng = np.random.default_rng(3)
     start = 100.0 * (1.0 + c["spread"] / np.sqrt(p) * rng.standard_normal(250))
     r = G.robust_recommend(start, 250, value_per_kwh_year=c["value"], electronics_per_kwh=c["elec"], fade_cv=c["fcv"] / np.sqrt(p), fade_mean=c["fade"], loss=c["loss"],
-                           years=12.0, eol_frac=0.7, trials=8, steps=60, ks=KS)
+                           years=12.0, eol_frac=0.7, trials=8, steps=60, ks=KS, window=WINDOW)
     return key, val, r["verdict"], (r["mean_gain"] if r["verdict"] == "BUY" else 0.0), r["mean_gain"]
 
 

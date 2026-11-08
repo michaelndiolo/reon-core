@@ -25,10 +25,13 @@ import numpy as np
 from hackkit import reon_design as D
 
 
-def _step(s, m, qd, kind, par, loss, closed_loss, eta, mask=None):
+def _step(s, m, qd, kind, par, loss, closed_loss, eta, mask=None, n_min=None):
     """Capability per string (Ah-equivalent, the m x q convention) and the DoD of every cell, for one design at one time. s: (S, m) capacities."""
     cmin = s.min(axis=1)
     tot = s.sum(axis=1)
+    if n_min is not None:   # inverter voltage window: at least n_min cells stay in the string, so at most m - n_min can be bypassed; reon_window.window_usable, row by row
+        q_stop = np.sort(s, axis=1)[:, ::-1][:, n_min - 1]
+        tot = np.minimum(s, q_stop[:, None]).sum(axis=1)
     cap_plain = m * cmin
     dod_plain = (np.minimum(qd, cmin)[:, None]) / np.maximum(s, 1e-12)
     if kind == "plain":
@@ -90,13 +93,22 @@ def wear_scan(caps: Sequence[float], m: int, *, fade_mean: float, fade_cv: float
               sort_cost_per_kwh: float, value_per_kwh_year: float, rate: float, years: float, eol_frac: float, duty: float = 0.7, dod_exp: float = 0.0,
               knee_share: float = 0.0, knee_soh: Sequence[float] = (0.82, 0.90), knee_kappa: float = 2.4, start_soh: float = 1.0, balancer_rs: Sequence[float] = (0.1, 1e9),
               balancer_eta: float = 0.9, select_counts: Sequence[int] = (), global_counts: Sequence[int] = (), hybrid_counts: Sequence[int] = (), hybrid_per_kwh: float = None, closed_loss: float = 0.0, weak_corr: float = 0.0, test_sigma: float = 0.02, trials: int = 60, seed: int = 0,
-              steps: int = 120) -> dict:
+              steps: int = 120, window: float = None) -> dict:
     """Net value per kWh nameplate vs the plain pack (mean, p10, p90, gross, cost, years in service) for: sort only, late switches, level switches (each as found and sorted),
     balancers at each transfer limit. Common random numbers across designs. dod_exp = 0 and knee_share = 0 reproduce reon_design."""
     c0 = np.asarray(caps, dtype=float)
     n = c0.size
     if n % m:
         raise ValueError("string length m must divide the number of cells")
+    n_min = None
+    if window is not None:   # share of the string's cells that must stay in circuit (REON CTO: about 0.9). Every build, including late and level switches, may bypass at most m - n_min cells at a time.
+        if not 0.0 < window <= 1.0:
+            raise ValueError("window must be above 0 and at most 1")
+        k_max = int(np.floor(m * (1.0 - window) + 1e-9))
+        n_min = m - k_max
+        select_counts = [k for k in select_counts if k <= k_max]
+        hybrid_counts = [k for k in hybrid_counts if k <= k_max]
+        global_counts = [g for g in global_counts if g <= k_max * (n // m)]
     rng = np.random.default_rng(seed)
     rng_k = np.random.default_rng(seed + 1)   # knee draws on their own stream so that knee_share = 0 reproduces reon_design draw for draw
     t = np.linspace(0.0, years, steps)
@@ -145,7 +157,7 @@ def wear_scan(caps: Sequence[float], m: int, *, fade_mean: float, fade_cv: float
                 if kk > 0:
                     mask[np.arange(n // m)[:, None], np.argsort(meas[idx].reshape(-1, m), axis=1)[:, :kk]] = True
             for j in range(steps):
-                cap, dod = _step(c[idx].reshape(-1, m), m, qd, kind, par, loss, closed_loss, balancer_eta, mask)
+                cap, dod = _step(c[idx].reshape(-1, m), m, qd, kind, par, loss, closed_loss, balancer_eta, mask, n_min)
                 u[j] = cap.sum()
                 if j == steps - 1:
                     break

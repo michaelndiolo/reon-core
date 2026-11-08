@@ -104,3 +104,18 @@ def test_global_selective_puts_the_switch_on_the_outlier_wherever_it_is():
     a = W.wear_scan(c, 8, global_counts=(1,), select_counts=(1,), test_sigma=0.0, fade_cv=0.0, **kw)
     assert a["selective: only the 1 weakest cell of the pack"]["gross"] == pytest.approx(a["selective 1/8 cells"]["gross"], rel=1e-9)
     assert a["selective: only the 1 weakest cell of the pack"]["cost"] == pytest.approx(8.8 / 24)   # one switch in the whole pack
+
+
+def test_window_none_is_unchanged_and_window_one_means_no_bypass_gain():
+    import numpy as np
+    caps = 100.0 * (1.0 + 0.05 * np.random.default_rng(1).standard_normal(40))
+    kw = dict(fade_mean=0.01, fade_cv=0.45, loss=0.04, electronics_per_kwh=15.5, balancer_per_kwh=4.0, sort_cost_per_kwh=0.0, value_per_kwh_year=40.0, rate=0.07, years=12.0, eol_frac=0.7, trials=3, steps=20, seed=2)
+    free = W.wear_scan(caps, 40, **kw)
+    none = W.wear_scan(caps, 40, window=None, **kw)
+    assert free["late switches"]["mean"] == none["late switches"]["mean"]
+    tight = W.wear_scan(caps, 40, window=1.0, **kw)
+    assert abs(tight["late switches"]["gross"]) < 1e-9          # no cell may leave: late switches behave like the plain string
+    mid = W.wear_scan(caps, 40, window=0.9, **kw)
+    assert mid["late switches"]["gross"] <= free["late switches"]["gross"] + 1e-9   # a window can only remove value
+    assert mid["late switches"]["gross"] >= tight["late switches"]["gross"] - 1e-9
+    assert all(not k.startswith("selective 8/") for k in W.wear_scan(caps, 40, window=0.9, select_counts=(2, 8), **kw))   # 8 > floor(40 x 0.1) = 4 switches are not allowed
