@@ -156,3 +156,25 @@ def tile_map_chart(frame: pd.DataFrame, selected: str | None = None, title: str 
         stroke=alt.condition(alt.datum.chosen, alt.value("#c0392b"), alt.value("#ffffff")), strokeWidth=alt.condition(alt.datum.chosen, alt.value(3), alt.value(0.5)), tooltip=tip).add_params(pick)
     labels = alt.Chart(df).mark_text(fontSize=12, fontWeight="bold").encode(x=x, y=y, text="abbr:N", color=alt.condition(alt.datum.dark, alt.value("#ffffff"), alt.value("#1e2a2e")), tooltip=tip)
     return (tiles + labels).properties(height=440, width=720).configure_view(stroke=None)
+
+
+def storm_timeline(rows, horizon: float = 24.0, fail_h=None):
+    """Who has lights on, hour by hour. rows: list of (label, lights_on_until_hours). Green bar = lights on, red bar = dark until the horizon; a dashed rule marks the failure hour."""
+    data = []
+    for label, until in rows:
+        until = max(0.0, min(float(until), horizon))
+        data.append(dict(who=label, start=0.0, end=until, state="Lights on"))
+        if until < horizon:
+            data.append(dict(who=label, start=until, end=horizon, state="Dark"))
+    df = pd.DataFrame(data)
+    order = [r[0] for r in rows]
+    bars = alt.Chart(df).mark_bar(height=30).encode(
+        x=alt.X("start:Q", title="Hours into the outage", scale=alt.Scale(domain=[0, horizon]), axis=alt.Axis(values=list(range(0, int(horizon) + 1, 4)), grid=False)), x2="end:Q",
+        y=alt.Y("who:N", sort=order, title=None, axis=alt.Axis(labelLimit=300, labelFontSize=13, ticks=False, domain=False)), color=alt.Color("state:N", scale=alt.Scale(domain=["Lights on", "Dark"], range=["#2a7f8e", "#c0392b"]), legend=alt.Legend(title=None, orient="bottom")),
+        tooltip=[alt.Tooltip("who:N", title=""), alt.Tooltip("state:N", title=""), alt.Tooltip("start:Q", title="From hour", format=".1f"), alt.Tooltip("end:Q", title="To hour", format=".1f")])
+    layers = [bars]
+    if fail_h is not None:
+        rule = alt.Chart(pd.DataFrame({"x": [float(fail_h)]})).mark_rule(color="#1e2a2e", strokeDash=[4, 3], strokeWidth=2).encode(x="x:Q")
+        lab = alt.Chart(pd.DataFrame({"x": [float(fail_h)], "t": ["a cell fails"]})).mark_text(align="left", baseline="bottom", dx=5, dy=-4, color="#1e2a2e", fontSize=12, fontWeight="bold").encode(x="x:Q", y=alt.value(0), text="t:N")
+        layers += [rule, lab]
+    return alt.layer(*layers).properties(height=alt.Step(44))

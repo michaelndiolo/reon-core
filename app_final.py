@@ -24,6 +24,7 @@ from hackkit import reon_grid as GR
 from hackkit import reon_visuals as VZ
 from hackkit import reon_slope as SLP
 from hackkit import reon_map as MP
+from hackkit import reon_demo as DM
 
 st.set_page_config(page_title="REON decision layer", layout="wide")
 st.title("Beyond the weakest cell: what cell-level control is worth")
@@ -40,7 +41,51 @@ def real_packs():
 
 
 BE = pd.DataFrame({"fade spread 0.20": [16.2, 27.3, 45.7, None], "0.45": [25.4, 42.9, None, None], "0.60": [29.1, 49.4, None, None]}, index=["value 12", "value 22", "value 40", "value 80"])
-front, sv_tab, trend_tab, eng_wrap = st.tabs(["Customer view: a storm night", "String view: click a cell", "Cell trends: slope and neighbours", "Engineering and evidence"])
+demo, front, sv_tab, trend_tab, eng_wrap = st.tabs(["Demo", "Customer view: a storm night", "String view: click a cell", "Cell trends: slope and neighbours", "Engineering and evidence"])
+@st.cache_data
+def storm_demo(fail_h):
+    return DM.storm(real_packs(), fail_h)
+
+
+with demo:
+    st.markdown("**A 60 kWh storefront battery, 250 cells in series.** Pick the case. We say what to build, then prove it on a storm night.")
+    dc = st.columns(3)
+    wear_i = dc[0].radio("How fast do the cells wear?", range(len(DM.WEAR)), index=1, key="d_wear", horizontal=False, format_func=lambda i: f"{DM.WEAR[i][0]}: {DM.WEAR[i][2]}")
+    wire_i = dc[1].radio("How are cells wired?", range(len(DM.WIRING)), index=0, key="d_wire", format_func=lambda i: DM.WIRING[i][0])
+    val_i = dc[2].radio("What is a kWh of backup worth a year?", range(len(DM.VALUES)), index=2, key="d_val", format_func=lambda i: DM.VALUES[i][1])
+    case_d = SF.cached_core(DM.WIRING[wire_i][1], DM.WEAR[wear_i][1], DM.VALUES[val_i][0])
+    card = DM.verdict_card(case_d)
+    if card is None:
+        st.info("No precomputed result for this combination.")
+    else:
+        (st.success if card["kind"] == "BUY" else st.info if card["kind"] == "BALANCER" else st.warning)(f"**{card['title']}.** {card['line']}".replace("$", "\\$"))
+        lc, rc = st.columns([1, 2.2], gap="large")
+        with lc:
+            st.markdown("**The midnight call**")
+            failed = st.toggle("A cell fails open during the outage", value=False, key="d_fail")
+            fail_h = st.slider("It fails at hour", 1, 12, 6, key="d_fail_h", disabled=not failed)
+            sm = storm_demo(fail_h)
+            if failed:
+                st.caption("A failed cell breaks a plain string: no current flows. A balancer cannot move charge through a dead cell either. Cell-level control bypasses it and keeps going.")
+            else:
+                st.caption("With no failure the three runs look alike. Switch the failure on.")
+        with rc:
+            if failed:
+                rows = [("Plain string", sm["plain_fail"]), ("Plain string + simple balancer", sm["plain_fail"]), ("Cell-level control", sm["ours_fail"]), ("Cell-level control, shedding half the load", sm["shed_fail"])]
+            else:
+                rows = [("Plain string", sm["plain"]), ("Cell-level control", sm["ours"]), ("Cell-level control, shedding half the load", sm["shed"])]
+            st.altair_chart(VZ.storm_timeline(rows, 24.0, fail_h if failed else None), use_container_width=True)
+        m = st.columns(4)
+        plain_h, ours_h = (sm["plain_fail"], sm["ours_fail"]) if failed else (sm["plain"], sm["ours"])
+        m[0].metric("Lights on, 5 kW load", f"{ours_h:.1f} h", f"{ours_h - plain_h:+.1f} h vs a plain string")
+        m[1].metric("Battery life", f"{card['life_ours']:.0f} years" if card["kind"] == "BUY" else f"{card['life_plain']:.0f} years", f"{card['life_ours'] - card['life_plain']:+.0f} years vs plain" if card["kind"] == "BUY" else "no change from us", delta_color="normal" if card["kind"] == "BUY" else "off")
+        m[2].metric("12-year value from cell-level control", f"${card['dollars']:,.0f}" if card["kind"] == "BUY" else "$0", f"${card['vs_balancer']:,.0f} beyond a balancer" if card["kind"] == "BUY" else "a balancer is enough" if card["kind"] == "BALANCER" else None, delta_color="normal" if card["kind"] == "BUY" else "off")
+        m[3].metric("Manufacturing carbon avoided", f"{card['carbon_t']:.1f} t CO2e" if card["carbon_t"] else "none claimed", help="net of the electronics, over 20 years; a range, not a point (see Customer view)")
+        pr = DM.proof()
+        st.caption(f"Checked against {pr['runs']} stress runs on fresh random draws (random wear, balancer strength, costs, hostile packs): never behind a balancer or a plain string by more than ${pr['worst_regret']:.2f} a kWh. "
+                   "Simulation on assumed sodium-ion behaviour, 12 real car packs for the hours; not REON data. Inputs and limits are on the Engineering and evidence tab.".replace("$", "\\$"))
+
+
 with trend_tab:
     st.write("A snapshot ranks cells by where they are today. A trend asks how fast each one is falling, and whether it falls faster than the cells next to it. Real data: the Nature Energy 2026 packs (95 cells each, measured at 80,000 and 280,000 km). Not REON data.")
 
