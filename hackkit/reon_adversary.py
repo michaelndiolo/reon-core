@@ -124,6 +124,26 @@ def gen_cold_sag(p=1, fade=0.008, cold=0.75, loss=0.10, closed_loss=0.05):
     return f
 
 
+def gen_cold_cited(p=1, fade=0.008, cold=0.95, loss=0.06, closed_loss=0.03, name="cold_m20"):
+    """Cold night with capacity from a published sodium-ion cell (one vendor's NFPP cell: about 95% of room-temperature capacity at -20 C, over 85% at -40 C; Heiwit qualification test, 2026) and
+    switch/closed-path loss raised by an ASSUMED amount for the higher resistance. Not an electrochemical model: resistance rise is a guess."""
+    g = gen_cold_sag(p, fade, cold=cold, loss=loss, closed_loss=closed_loss)
+    return _renamed(g, name)
+
+
+def gen_cold_m40(p=1, fade=0.008):
+    return gen_cold_cited(p, fade, cold=0.85, loss=0.10, closed_loss=0.05, name="cold_m40")
+
+
+def gen_batch_fade(p=1, fade=0.008, batch_len=10, batch_corr=0.6, spread_mult=2.0):
+    """Neighbouring positions age together: runs of batch_len positions share batch_corr of their fade variance (a bad batch fades fast as a block), and start spread is spread_mult x the default.
+    The policy does not know about it (it assumes independent cells), so this tests it blind."""
+    def f(seed):
+        rng = np.random.default_rng(seed)
+        return Draw(_base(rng, p, spread_mult), _kw(p, fade, batch_len=batch_len, batch_corr=batch_corr), seed, dict(case="batch_fade", p=p, fade=fade, batch_len=batch_len, batch_corr=batch_corr, spread_mult=spread_mult))
+    return f
+
+
 def gen_slow_wear(p=1, fade=0.002):
     return _renamed(gen_base(p, fade), "slow_wear")
 
@@ -149,7 +169,7 @@ def _renamed(g, name):
 
 
 GENERATORS = dict(base=gen_base, clustered_weak=gen_clustered_weak, outliers=gen_outliers, fail_open=gen_fail_open, cold_sag=gen_cold_sag, slow_wear=gen_slow_wear, fast_wear=gen_fast_wear,
-                  correlated=gen_correlated)
+                  correlated=gen_correlated, cold_m20=gen_cold_cited, cold_m40=gen_cold_m40, batch_fade=gen_batch_fade)
 
 
 def default_cases(parallels=(4, 16)) -> Dict[str, Callable[[int], Draw]]:

@@ -9,7 +9,7 @@ from hackkit import reon_adversary as A
 from hackkit import reon_policy as POL
 
 OUT = "examples/data/adversary_vs_guard.json"
-SEEDS = (0, 1)
+SEEDS = (0, 1, 2, 3, 4, 5)
 
 
 def my_table(draw):

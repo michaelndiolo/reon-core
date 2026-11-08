@@ -37,6 +37,22 @@ def hours(caps, nameplate_kwh: float, load_kw: float, managed: bool, cold: float
     return float(fail_at_h + left / p)
 
 
+def second_outage_hours(caps, nameplate_kwh: float, load_kw: float, recharge_kw: float, recharge_h: float, managed: bool, cold: float = 1.0, switch_loss: float = 0.02, window: float = None,
+                        power_fraction: float = 1.0, failed: int = 0) -> float:
+    """Back-to-back outages with a slow recovery in between. The first outage has emptied the string to its usable floor; the grid comes back for recharge_h hours and the charger puts in recharge_kw.
+    Energy stored = the smaller of what the charger delivered (managed strings pay the switch loss on it) and what the string can hold (usable_kwh: the weakest cell for a plain string, the
+    window rule for a managed one; failed = cells left open by the first outage). Hours of the second outage = stored / load. A plain energy budget: no rest-voltage rebound and no charge-rate limit on individual cells, and energy left in strong
+    cells of a plain string after the first outage is ignored (conservative for plain)."""
+    need(recharge_kw > 0 and recharge_h >= 0, "storm: recharge power must be above zero and recharge time not negative")
+    need(load_kw > 0 and 0 < power_fraction <= 1, "storm: load must be above zero and the power fraction between 0 and 1")
+    need(failed >= 0, "storm: failed cells must not be negative")
+    cap_e = usable_kwh(caps, nameplate_kwh, managed, cold, switch_loss, window)
+    if failed:   # a cell left open by the first outage: a plain string delivers nothing; a managed string bypasses it and loses that cell's share
+        cap_e = 0.0 if not managed else cap_e * (len(caps_array(caps)) - failed) / len(caps_array(caps))
+    put_in = recharge_kw * recharge_h * ((1.0 - switch_loss) if managed else 1.0)
+    return float(min(put_in, cap_e) / (load_kw * power_fraction))
+
+
 def stress_factors(n: int, k: int, g: float = 0.87) -> dict:
     """Extra stress on each remaining cell when k of n are bypassed for good at constant power."""
     need(0 <= k < n, "stress_factors: need 0 <= k < n")

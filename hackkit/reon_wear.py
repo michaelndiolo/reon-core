@@ -150,9 +150,11 @@ def wear_scan(caps: Sequence[float], m: int, *, fade_mean: float, fade_cv: float
               sort_cost_per_kwh: float, value_per_kwh_year: float, rate: float, years: float, eol_frac: float, duty: float = 0.7, dod_exp: float = 0.0,
               knee_share: float = 0.0, knee_soh: Sequence[float] = (0.82, 0.90), knee_kappa: float = 2.4, start_soh: float = 1.0, balancer_rs: Sequence[float] = (0.1, 1e9),
               balancer_eta: float = 0.9, select_counts: Sequence[int] = (), global_counts: Sequence[int] = (), hybrid_counts: Sequence[int] = (), hybrid_per_kwh: float = None, closed_loss: float = 0.0, weak_corr: float = 0.0, test_sigma: float = 0.02, trials: int = 60, seed: int = 0,
-              steps: int = 120, window: float = None, hybrid_shares_wear: bool = False, hybrid_exempt: bool = False, return_trials: bool = False, adaptive_hybrid: bool = False) -> dict:
+              steps: int = 120, window: float = None, hybrid_shares_wear: bool = False, hybrid_exempt: bool = False, return_trials: bool = False, adaptive_hybrid: bool = False, batch_len: int = 0, batch_corr: float = 0.0) -> dict:
     """Net value per kWh nameplate vs the plain pack (mean, p10, p90, gross, cost, years in service) for: sort only, late switches, level switches (each as found and sorted),
-    balancers at each transfer limit. Common random numbers across designs. dod_exp = 0 and knee_share = 0 reproduce reon_design."""
+    balancers at each transfer limit. Common random numbers across designs. dod_exp = 0 and knee_share = 0 reproduce reon_design.
+    batch_len / batch_corr: neighbouring cells age together. Cells are grouped in runs of batch_len along the string; batch_corr (0 to 1) is the share of fade variance that is shared inside a run
+    (a bad batch fades fast as a block). 0 (default) reproduces the independent draws exactly: the batch draws come from their own stream."""
     c0 = np.asarray(caps, dtype=float)
     n = c0.size
     if n % m:
@@ -167,6 +169,9 @@ def wear_scan(caps: Sequence[float], m: int, *, fade_mean: float, fade_cv: float
         hybrid_counts = [k for k in hybrid_counts if k <= k_max]
         global_counts = [g for g in global_counts if g <= k_max * (n // m)]
     rng = np.random.default_rng(seed)
+    rng_b = np.random.default_rng(seed + 2)   # batch draws on their own stream: batch_corr = 0 leaves every other draw unchanged
+    if not 0.0 <= batch_corr <= 1.0 or batch_len < 0:
+        raise ValueError("batch_corr must be between 0 and 1 and batch_len not negative")
     rng_k = np.random.default_rng(seed + 1)   # knee draws on their own stream so that knee_share = 0 reproduces reon_design draw for draw
     t = np.linspace(0.0, years, steps)
     dt = np.diff(t)
@@ -199,6 +204,9 @@ def wear_scan(caps: Sequence[float], m: int, *, fade_mean: float, fade_cv: float
     qd = duty * float(np.mean(c0.reshape(-1, m).min(axis=1)))
     for i in range(trials):
         z = weak_corr * weak + np.sqrt(1.0 - weak_corr ** 2) * rng.standard_normal(n)
+        if batch_len > 0 and batch_corr > 0.0:
+            zb = np.repeat(rng_b.standard_normal(-(-n // batch_len)), batch_len)[:n]
+            z = np.sqrt(1.0 - batch_corr) * z + np.sqrt(batch_corr) * zb
         f = np.maximum(fade_mean * (1.0 + fade_cv * z), 0.0)
         meas = c0 * (1.0 + test_sigma * rng.standard_normal(n))
         sorted_idx = np.argsort(-meas, kind="stable")

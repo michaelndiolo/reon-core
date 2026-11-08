@@ -22,3 +22,14 @@ def test_pages_run_without_error(page):
 def test_evidence_topics_run_without_error(ev):
     at = _run(3, ev)
     assert not at.exception, [str(e) for e in at.exception]
+
+
+def test_try_your_own_numbers_survey_runs_to_the_answer():
+    at = AppTest.from_file("../app_final.py", default_timeout=300)
+    at.session_state["nav"] = PAGES[3]
+    at.session_state["ev"] = 1
+    at.session_state["wz_step"] = 7
+    at.session_state["wz_ans"] = {"fade25": 0.012, "n1": 200}
+    at.run()
+    assert not at.exception, [str(e) for e in at.exception]
+    assert any("rn-verdict" in h.value for h in at.get("html"))

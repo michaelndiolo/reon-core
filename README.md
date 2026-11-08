@@ -1,6 +1,8 @@
-# reon-core
+# JaiDio · reon-core
 
-Decision layer for REON's "Beyond the Weakest Cell" challenge (MIT Energy & Climate Hack, Nov 2026).
+<img src="assets/jaidio_logo_large.png" alt="JaiDio" width="260">
+
+Team JaiDio (Michael Ndiolo and Aaryan Jain, equal co-developers). Decision layer for REON's "Beyond the Weakest Cell" challenge (MIT Energy & Climate Hack, Nov 2026).
 
 A plain series string delivers only as much as its weakest cell. REON's per-cell switching lets every good cell
 work. This repo does not design the switch hardware (the brief says we need not). It answers the decision:

@@ -9,3 +9,7 @@
 - Correlated: weak_corr 0.9, start spread 3x default (assumed).
 - Baselines: 2.5% and 5% balancers (transfer limit; 5% is the repo's own unsourced rival assumption), balancer cost 4 per kWh, eta 0.9. Hybrid wear sharing credited (hybrid_shares_wear=True), as in the balancer sweep.
 - Draw = one start-cap draw plus one wear_scan seed (trials 6, steps 40: fast, noisier than the verdict's 8-16 trials); regret threshold 0.50 $/kWh (given).
+- Cold, cited (cold_m20, cold_m40): capacity x 0.95 at -20 C and x 0.85 at -40 C, from one vendor's published qualification data for a sodium-ion NFPP cell (Heiwit, 2026). One vendor's cell, not REON's. The extra switch loss (6% / 3% at -20 C; larger at -40 C) is ASSUMED: no source gives resistance rise for this cell.
+- Batch fade (batch_fade): neighbouring cells in blocks of 10 share 60% of their fade variance (assumed), start spread 2x. Implemented in `reon_wear.wear_scan(batch_len, batch_corr)`; the policy is not told.
+- Slow recovery: see `examples/reon_slow_recovery.py`. An ENERGY BUDGET only: charger power (10 kW, assumed about C/6) times recharge hours, capped at nameplate, then `reon_storm.second_outage_hours`. No rest-voltage rebound, no cell-level charge-rate limit.
+- Seeds: 6 per case and wiring (0 to 5). Each run: policy picks a build on seed+5000 (16 trials), scored on the draw seed (24 trials).

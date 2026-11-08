@@ -70,10 +70,10 @@ def proof():
         if "guarded" in v:
             runs += 1
             worst = max(worst, float(v["guarded"].get("regret", 0.0)))
-    for v in load("adversary_vs_guard.json").values():
+    for v in load("adversary_vs_guard.json").values():  # one run per hostile draw; its regret against each rival counts toward the worst
+        runs += 1
         for key, x in v.items():
             if key.startswith("balancer") and "error" not in x:
-                runs += 1
                 worst = max(worst, float(x.get("regret", 0.0)))
     return dict(runs=runs, worst_regret=max(worst, 0.0))
 
