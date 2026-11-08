@@ -22,16 +22,18 @@ def _se(d):
 
 
 def _scan(s, m, *, balancer_r, balancer_per_kwh, ks, fade_mean, fade_cv, loss, electronics_per_kwh, sort_cost_per_kwh, value_per_kwh_year, rate, years, eol_frac, duty, dod_exp, knee_share, start_soh,
-          balancer_eta, closed_loss, test_sigma, trials, steps, seed, window, exempt, adaptive):
+          balancer_eta, closed_loss, test_sigma, trials, steps, seed, window, exempt, adaptive, weak_corr=0.0):
     return W.wear_scan(s, int(m), balancer_rs=(balancer_r,), balancer_per_kwh=balancer_per_kwh, select_counts=ks, global_counts=(), hybrid_counts=ks, fade_mean=fade_mean, fade_cv=fade_cv, loss=loss,
                        electronics_per_kwh=electronics_per_kwh, sort_cost_per_kwh=sort_cost_per_kwh, value_per_kwh_year=value_per_kwh_year, rate=rate, years=years, eol_frac=eol_frac, duty=duty,
-                       dod_exp=dod_exp, knee_share=knee_share, start_soh=start_soh, balancer_eta=balancer_eta, closed_loss=closed_loss, test_sigma=test_sigma, trials=trials, steps=steps, seed=seed,
+                       dod_exp=dod_exp, knee_share=knee_share, start_soh=start_soh, balancer_eta=balancer_eta, closed_loss=closed_loss, test_sigma=test_sigma, trials=trials, steps=steps, seed=seed, weak_corr=weak_corr,
                        window=window, hybrid_shares_wear=True, hybrid_exempt=exempt, return_trials=True, adaptive_hybrid=bool(adaptive and window is not None))
 
 
 def _params(start, m, value_per_kwh_year, electronics_per_kwh, fade_cv, loss, years, eol_frac, duty, fade_mean, rate, balancer_r, balancer_per_kwh, ks, dod_exp, knee_share, start_soh, balancer_eta, closed_loss,
-            test_sigma, sort_cost_per_kwh, trials, steps, window, exempt, adaptive, z):
-    s = G.caps_array(start, "start", positive=True, min_len=2)
+            test_sigma, sort_cost_per_kwh, trials, steps, window, exempt, adaptive, z, weak_corr=0.0):
+    s = G.caps_array(start, "start", positive=False, min_len=2)   # a capacity of 0 is a cell that has failed open: allowed, only a bypass can save that string
+    G.need(bool((s > 0).any()), "start: at least one cell must have capacity")
+    G.need(0.0 <= weak_corr < 1.0, "weak_corr must be in [0, 1)")
     G.need(isinstance(m, (int, np.integer)) and 2 <= m <= len(s) and len(s) % m == 0, "m: cells per string must divide the number of cells")
     G.need(z >= 0, "z must be zero or more")
     G.need(trials >= 4, "trials >= 4 for a paired comparison")
@@ -42,7 +44,7 @@ def _params(start, m, value_per_kwh_year, electronics_per_kwh, fade_cv, loss, ye
     ks = tuple(k for k in ks if 0 < k < m)
     return s, dict(balancer_r=balancer_r, balancer_per_kwh=balancer_per_kwh, ks=ks, fade_mean=fade_mean, fade_cv=fade_cv, loss=loss, electronics_per_kwh=electronics_per_kwh, sort_cost_per_kwh=sort_cost_per_kwh,
                    value_per_kwh_year=value_per_kwh_year, rate=rate, years=years, eol_frac=eol_frac, duty=duty, dod_exp=dod_exp, knee_share=knee_share, start_soh=start_soh, balancer_eta=balancer_eta,
-                   closed_loss=closed_loss, test_sigma=test_sigma, trials=trials, steps=steps, window=window, exempt=exempt, adaptive=adaptive)
+                   closed_loss=closed_loss, test_sigma=test_sigma, trials=trials, steps=steps, window=window, exempt=exempt, adaptive=adaptive, weak_corr=weak_corr)
 
 
 def _decide(res, n_balancer, trials, z, min_margin=0.0):
@@ -67,11 +69,11 @@ def _decide(res, n_balancer, trials, z, min_margin=0.0):
 
 def guarded_recommend(start, m, *, value_per_kwh_year, electronics_per_kwh, fade_cv, loss=0.02, years=12.0, eol_frac=0.7, duty=0.7, fade_mean=0.02, rate=0.07, balancer_r=0.05, balancer_per_kwh=4.0,
                       ks=(1, 2, 4, 8, 16, 25), dod_exp=0.87, knee_share=0.65, start_soh=1.0, balancer_eta=0.9, closed_loss=0.0, test_sigma=0.02, sort_cost_per_kwh=0.0, trials=16, steps=40, seed=5,
-                      window=None, z=1.0, exempt=True, adaptive=True, min_margin=1.0):
+                      window=None, z=1.0, exempt=True, adaptive=True, min_margin=1.0, weak_corr=0.0):
     """Returns dict(build, kind, verdict, mean_gain, p10_gain, margin_vs_rival, rival, why, table). verdict: BUY (one of our builds beats the better rival by more than z paired standard errors),
     BALANCER (a balancer pays and none of our builds clearly beats it by at least min_margin per kWh: tie), HOLD (nothing clearly pays: tie with plain). Gains are per kWh nameplate against a plain string."""
     s, P = _params(start, m, value_per_kwh_year, electronics_per_kwh, fade_cv, loss, years, eol_frac, duty, fade_mean, rate, balancer_r, balancer_per_kwh, ks, dod_exp, knee_share, start_soh, balancer_eta,
-                   closed_loss, test_sigma, sort_cost_per_kwh, trials, steps, window, exempt, adaptive, z)
+                   closed_loss, test_sigma, sort_cost_per_kwh, trials, steps, window, exempt, adaptive, z, weak_corr=weak_corr)
     res = _scan(s, m, seed=seed, **P)
     n_balancer = f"balancer {format(balancer_r, '.0%')}" if balancer_r <= 1e6 else "balancer unlimited"
     verdict, build, rival, margin, why = _decide(res, n_balancer, trials, z, min_margin)
@@ -92,7 +94,7 @@ def robust_guarded(start, m, *, seeds=(5, 11), z=1.0, life_years=30.0, min_margi
     s, P = _params(start, m, kw2.pop("value_per_kwh_year"), kw2.pop("electronics_per_kwh"), kw2.pop("fade_cv"), kw2.pop("loss", 0.02), kw2.pop("years", 12.0), kw2.pop("eol_frac", 0.7), kw2.pop("duty", 0.7),
                    kw2.pop("fade_mean", 0.02), kw2.pop("rate", 0.07), kw2.pop("balancer_r", 0.05), kw2.pop("balancer_per_kwh", 4.0), kw2.pop("ks", (1, 2, 4, 8, 16, 25)), kw2.pop("dod_exp", 0.87),
                    kw2.pop("knee_share", 0.65), kw2.pop("start_soh", 1.0), kw2.pop("balancer_eta", 0.9), kw2.pop("closed_loss", 0.0), kw2.pop("test_sigma", 0.02), kw2.pop("sort_cost_per_kwh", 0.0),
-                   kw2.pop("trials"), kw2.pop("steps", 40), kw2.pop("window", None), kw2.pop("exempt", True), kw2.pop("adaptive", True), z)
+                   kw2.pop("trials"), kw2.pop("steps", 40), kw2.pop("window", None), kw2.pop("exempt", True), kw2.pop("adaptive", True), z, weak_corr=kw2.pop("weak_corr", 0.0))
     fresh = _scan(s, m, seed=seeds[1], **P)
     n_balancer = f"balancer {format(P['balancer_r'], '.0%')}"
     trials = P["trials"]

@@ -1,0 +1,422 @@
+{
+ "base_p1|0": {
+  "case": "base_p1",
+  "seed": 0,
+  "hindsight": 23.83027007938652,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 8/250 + balancer 5%",
+   "gain": 23.22300258682473,
+   "rival": 21.537631140507756,
+   "regret": -1.6853714463169744,
+   "regret_hindsight": 0.6072674925617889
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid adaptive 25/250 + balancer 2%",
+   "gain": 12.814197895648467,
+   "rival": 8.947326176394204,
+   "regret": -3.866871719254263,
+   "regret_hindsight": 11.016072183738052
+  }
+ },
+ "base_p1|1": {
+  "case": "base_p1",
+  "seed": 1,
+  "hindsight": 25.234841111019012,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 2/250 + balancer 5%",
+   "gain": 24.243991970069185,
+   "rival": 22.91598163244018,
+   "regret": -1.3280103376290064,
+   "regret_hindsight": 0.9908491409498268
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid adaptive 25/250 + balancer 2%",
+   "gain": 19.075118252302644,
+   "rival": 10.617512606575483,
+   "regret": -8.457605645727162,
+   "regret_hindsight": 6.159722858716368
+  }
+ },
+ "base_p4|0": {
+  "case": "base_p4",
+  "seed": 0,
+  "hindsight": 8.477048569396556,
+  "balancer 5%": {
+   "verdict": "BALANCER",
+   "build": "balancer 5%",
+   "gain": 8.243994812006123,
+   "rival": 8.243994812006123,
+   "regret": 0.0,
+   "regret_hindsight": 0.233053757390433
+  },
+  "balancer 2.5%": {
+   "verdict": "BALANCER",
+   "build": "balancer 2%",
+   "gain": 3.966612464601718,
+   "rival": 3.966612464601718,
+   "regret": 0.0,
+   "regret_hindsight": 4.510436104794838
+  }
+ },
+ "base_p4|1": {
+  "case": "base_p4",
+  "seed": 1,
+  "hindsight": 8.258973868844658,
+  "balancer 5%": {
+   "verdict": "BALANCER",
+   "build": "balancer 5%",
+   "gain": 7.9708224517345485,
+   "rival": 7.9708224517345485,
+   "regret": 0.0,
+   "regret_hindsight": 0.28815141711010916
+  },
+  "balancer 2.5%": {
+   "verdict": "BALANCER",
+   "build": "balancer 2%",
+   "gain": 3.9774854396809847,
+   "rival": 3.9774854396809847,
+   "regret": 0.0,
+   "regret_hindsight": 4.281488429163673
+  }
+ },
+ "base_p16|0": {
+  "case": "base_p16",
+  "seed": 0,
+  "hindsight": 2.6694538118968976,
+  "balancer 5%": {
+   "verdict": "BALANCER",
+   "build": "balancer 5%",
+   "gain": 2.642574922483977,
+   "rival": 2.642574922483977,
+   "regret": 0.0,
+   "regret_hindsight": 0.026878889412920604
+  },
+  "balancer 2.5%": {
+   "verdict": "BALANCER",
+   "build": "balancer 2%",
+   "gain": 2.0805433301051894,
+   "rival": 2.0805433301051894,
+   "regret": 0.0,
+   "regret_hindsight": 0.5889104817917081
+  }
+ },
+ "base_p16|1": {
+  "case": "base_p16",
+  "seed": 1,
+  "hindsight": 2.6024798842385812,
+  "balancer 5%": {
+   "verdict": "BALANCER",
+   "build": "balancer 5%",
+   "gain": 2.5839493717266886,
+   "rival": 2.5839493717266886,
+   "regret": 0.0,
+   "regret_hindsight": 0.01853051251189264
+  },
+  "balancer 2.5%": {
+   "verdict": "BALANCER",
+   "build": "balancer 2%",
+   "gain": 1.9335794466304053,
+   "rival": 1.9335794466304053,
+   "regret": 0.0,
+   "regret_hindsight": 0.668900437608176
+  }
+ },
+ "clustered_weak_p1|0": {
+  "case": "clustered_weak_p1",
+  "seed": 0,
+  "hindsight": 212.5883136254582,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 25/250 + balancer 5%",
+   "gain": 212.5883136254582,
+   "rival": 59.099015202036924,
+   "regret": -153.48929842342127,
+   "regret_hindsight": 0.0
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid 25/250 + balancer 2%",
+   "gain": 206.14650262046163,
+   "rival": 30.42317026443521,
+   "regret": -175.72333235602642,
+   "regret_hindsight": 6.441811004996566
+  }
+ },
+ "clustered_weak_p1|1": {
+  "case": "clustered_weak_p1",
+  "seed": 1,
+  "hindsight": 186.69597675193063,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 25/250 + balancer 5%",
+   "gain": 186.69597675193063,
+   "rival": 48.1172916905031,
+   "regret": -138.57868506142754,
+   "regret_hindsight": 0.0
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid 25/250 + balancer 2%",
+   "gain": 180.11964228173565,
+   "rival": 26.493028855645083,
+   "regret": -153.62661342609056,
+   "regret_hindsight": 6.576334470194979
+  }
+ },
+ "clustered_weak_p4|0": {
+  "case": "clustered_weak_p4",
+  "seed": 0,
+  "hindsight": 169.87414586845213,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 25/250 + balancer 5%",
+   "gain": 169.87414586845213,
+   "rival": 66.05362636548746,
+   "regret": -103.82051950296467,
+   "regret_hindsight": 0.0
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid 25/250 + balancer 2%",
+   "gain": 169.58200735597757,
+   "rival": 36.04153030694876,
+   "regret": -133.54047704902882,
+   "regret_hindsight": 0.29213851247456546
+  }
+ },
+ "clustered_weak_p4|1": {
+  "case": "clustered_weak_p4",
+  "seed": 1,
+  "hindsight": 153.76217461278475,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 25/250 + balancer 5%",
+   "gain": 153.76217461278475,
+   "rival": 59.143402065359,
+   "regret": -94.61877254742575,
+   "regret_hindsight": 0.0
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid 25/250 + balancer 2%",
+   "gain": 152.28522814918617,
+   "rival": 34.25489625157437,
+   "regret": -118.0303318976118,
+   "regret_hindsight": 1.4769464635985798
+  }
+ },
+ "clustered_weak_p16|0": {
+  "case": "clustered_weak_p16",
+  "seed": 0,
+  "hindsight": 131.27504725225677,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "selective 25/250 cells",
+   "gain": 131.27504725225677,
+   "rival": 68.96699306873496,
+   "regret": -62.308054183521804,
+   "regret_hindsight": 0.0
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "selective 25/250 cells",
+   "gain": 131.27504725225677,
+   "rival": 40.01116708998864,
+   "regret": -91.26388016226812,
+   "regret_hindsight": 0.0
+  }
+ },
+ "clustered_weak_p16|1": {
+  "case": "clustered_weak_p16",
+  "seed": 1,
+  "hindsight": 120.63052405377937,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "selective 25/250 cells",
+   "gain": 119.92079060048684,
+   "rival": 61.14355984869255,
+   "regret": -58.77723075179429,
+   "regret_hindsight": 0.7097334532925288
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "selective 25/250 cells",
+   "gain": 119.92079060048684,
+   "rival": 37.41606549366647,
+   "regret": -82.50472510682036,
+   "regret_hindsight": 0.7097334532925288
+  }
+ },
+ "outliers_p1|0": {
+  "case": "outliers_p1",
+  "seed": 0,
+  "hindsight": 306.5601504653378,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 8/250 + balancer 5%",
+   "gain": 306.5601504653378,
+   "rival": 0.0,
+   "regret": -306.5601504653378,
+   "regret_hindsight": 0.0
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid 8/250 + balancer 2%",
+   "gain": 299.3704084661604,
+   "rival": 0.0,
+   "regret": -299.3704084661604,
+   "regret_hindsight": 7.189741999177386
+  }
+ },
+ "outliers_p1|1": {
+  "case": "outliers_p1",
+  "seed": 1,
+  "hindsight": 306.8288311027497,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 4/250 + balancer 5%",
+   "gain": 306.74090119896306,
+   "rival": 0.0,
+   "regret": -306.74090119896306,
+   "regret_hindsight": 0.08792990378663035
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid 16/250 + balancer 2%",
+   "gain": 299.9803222565792,
+   "rival": 0.0,
+   "regret": -299.9803222565792,
+   "regret_hindsight": 6.848508846170489
+  }
+ },
+ "outliers_p4|0": {
+  "case": "outliers_p4",
+  "seed": 0,
+  "hindsight": 310.6108312000298,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 4/250 + balancer 5%",
+   "gain": 310.6108312000298,
+   "rival": 0.0,
+   "regret": -310.6108312000298,
+   "regret_hindsight": 0.0
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid 4/250 + balancer 2%",
+   "gain": 309.09990137622,
+   "rival": 0.0,
+   "regret": -309.09990137622,
+   "regret_hindsight": 1.5109298238098177
+  }
+ },
+ "outliers_p4|1": {
+  "case": "outliers_p4",
+  "seed": 1,
+  "hindsight": 310.6073943034303,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 4/250 + balancer 5%",
+   "gain": 310.6073943034303,
+   "rival": 0.0,
+   "regret": -310.6073943034303,
+   "regret_hindsight": 0.0
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid 4/250 + balancer 2%",
+   "gain": 309.3622025884535,
+   "rival": 0.0,
+   "regret": -309.3622025884535,
+   "regret_hindsight": 1.2451917149767837
+  }
+ },
+ "outliers_p16|0": {
+  "case": "outliers_p16",
+  "seed": 0,
+  "hindsight": 310.59666865023223,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 4/250 + balancer 5%",
+   "gain": 310.59666865023223,
+   "rival": 0.0,
+   "regret": -310.59666865023223,
+   "regret_hindsight": 0.0
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid 4/250 + balancer 2%",
+   "gain": 310.59666865023223,
+   "rival": 0.0,
+   "regret": -310.59666865023223,
+   "regret_hindsight": 0.0
+  }
+ },
+ "outliers_p16|1": {
+  "case": "outliers_p16",
+  "seed": 1,
+  "hindsight": 310.59782245452,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 4/250 + balancer 5%",
+   "gain": 310.59782245452,
+   "rival": 0.0,
+   "regret": -310.59782245452,
+   "regret_hindsight": 0.0
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid 4/250 + balancer 2%",
+   "gain": 310.59782245452,
+   "rival": 0.0,
+   "regret": -310.59782245452,
+   "regret_hindsight": 0.0
+  }
+ },
+ "fail_open_p1|0": {
+  "case": "fail_open_p1",
+  "seed": 0,
+  "hindsight": 317.6528474625845,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 8/250 + balancer 5%",
+   "gain": 317.61819151376807,
+   "rival": 0.0,
+   "regret": -317.61819151376807,
+   "regret_hindsight": 0.034655948816407545
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid 16/250 + balancer 2%",
+   "gain": 310.84779295496696,
+   "rival": 0.0,
+   "regret": -310.84779295496696,
+   "regret_hindsight": 6.805054507617513
+  }
+ },
+ "fail_open_p1|1": {
+  "case": "fail_open_p1",
+  "seed": 1,
+  "hindsight": 319.36252369494787,
+  "balancer 5%": {
+   "verdict": "BUY",
+   "build": "hybrid 1/250 + balancer 5%",
+   "gain": 319.36252369494787,
+   "rival": 0.0,
+   "regret": -319.36252369494787,
+   "regret_hindsight": 0.0
+  },
+  "balancer 2.5%": {
+   "verdict": "BUY",
+   "build": "hybrid 1/250 + balancer 2%",
+   "gain": 311.72356921588886,
+   "rival": 0.0,
+   "regret": -311.72356921588886,
+   "regret_hindsight": 7.638954479059009
+  }
+ }
+}

@@ -80,3 +80,12 @@ def test_policy_validates_inputs():
         POL.guarded_recommend(start(), 16, **dict(KW, value_per_kwh_year=-1.0))
     with pytest.raises(ValueError):
         POL.guarded_recommend(start(), 16, balancer_r=0.0, **KW)
+
+
+def test_policy_accepts_a_cell_failed_open_and_buys_switches():
+    caps = start(seed=9)
+    caps[5] = 0.0   # failed open: a balancer cannot move charge through it, only a bypass can save the string
+    r = POL.guarded_recommend(caps, 16, **dict(KW, fade_mean=0.004, ks=(1, 2)))
+    assert r["verdict"] == "BUY" and r["mean_gain"] > 10.0
+    with pytest.raises(ValueError):
+        POL.guarded_recommend(np.zeros(16), 16, **KW)
