@@ -1,0 +1,101 @@
+policy                                                            gain vs bal5 (CI) worst regret
+plain                                                       -22.32 [-23.00,-21.63] n=200     45.36
+balancer 2.5%                                               -12.36 [-12.77,-11.95] n=200     37.28
+balancer 5%                                                   0.00 [  0.00,  0.00] n=200     24.93
+late switches                                                -8.92 [-10.63, -7.21] n=200     22.71
+level switches                                              -15.40 [-17.13,-13.68] n=200     28.94
+selective 1/250 cells                                       -21.88 [-22.65,-21.12] n=200     44.78
+selective 2/250 cells                                       -21.85 [-22.63,-21.08] n=200     44.80
+selective 4/250 cells                                       -21.72 [-22.50,-20.94] n=200     44.73
+selective 8/250 cells                                       -21.50 [-22.34,-20.65] n=200     44.67
+selective 16/250 cells                                      -20.53 [-21.62,-19.45] n=200     43.55
+selective 25/250 cells                                      -20.24 [-21.42,-19.06] n=200     43.32
+hybrid 1/250 + balancer 5%                                    1.36 [  1.12,  1.60] n=200     23.41
+hybrid 2/250 + balancer 5%                                    1.26 [  1.02,  1.50] n=200     23.49
+hybrid 4/250 + balancer 5%                                    1.03 [  0.80,  1.27] n=200     23.65
+hybrid 8/250 + balancer 5%                                    0.75 [  0.49,  1.00] n=200     23.98
+hybrid 16/250 + balancer 5%                                   0.30 [ -0.13,  0.73] n=200     24.31
+hybrid 25/250 + balancer 5%                                  -0.45 [ -0.94,  0.04] n=200     25.14
+a. wear-aware full switches, rest x0.5                       -6.67 [ -8.40, -4.95] n=200     22.54
+a. wear-aware full switches + bal 5%, rest x0.5              -3.48 [ -5.15, -1.81] n=200     22.31
+a. wear-aware full switches, rest x0.8                       -7.86 [ -9.58, -6.15] n=200     22.52
+a. wear-aware full switches + bal 5%, rest x0.8              -7.19 [ -8.85, -5.53] n=200     21.98
+c. rotating rest, hybrid 8 + bal 5%, x0.5                    -0.32 [ -0.81,  0.18] n=200     25.44
+c. rotating rest, hybrid 8 + bal 5%, x0.8                     0.62 [  0.18,  1.07] n=200     24.46
+c. rotating rest, hybrid 25 + bal 5%, x0.5                   -5.25 [ -6.22, -4.28] n=200     30.67
+c. rotating rest, hybrid 25 + bal 5%, x0.8                   -1.50 [ -2.24, -0.76] n=200     26.18
+d. hybrid 1 + bal 1.0%                                      -20.02 [-20.69,-19.35] n=200     44.03
+d. hybrid 8 + bal 1.0%                                      -20.03 [-20.75,-19.31] n=200     44.24
+d. hybrid 25 + bal 1.0%                                     -19.74 [-20.77,-18.72] n=200     43.53
+d. hybrid 1 + bal 2.5%                                      -11.54 [-12.00,-11.08] n=200     36.35
+d. hybrid 8 + bal 2.5%                                      -11.99 [-12.49,-11.50] n=200     36.87
+d. hybrid 25 + bal 2.5%                                     -12.74 [-13.51,-11.97] n=200     37.04
+d. hybrid 1 + bal 1.0% (cost scaled)                        -16.82 [-17.49,-16.15] n=200     40.83
+d. hybrid 8 + bal 1.0% (cost scaled)                        -16.83 [-17.55,-16.11] n=200     41.04
+d. hybrid 25 + bal 1.0% (cost scaled)                       -16.54 [-17.57,-15.52] n=200     40.33
+d. hybrid 1 + bal 2.5% (cost scaled)                         -9.54 [-10.00, -9.08] n=200     34.35
+d. hybrid 8 + bal 2.5% (cost scaled)                         -9.99 [-10.49, -9.50] n=200     34.87
+d. hybrid 25 + bal 2.5% (cost scaled)                       -10.74 [-11.51, -9.97] n=200     35.04
+e. switches 8 fitted yr 6 by projected + bal 5%               6.84 [  5.30,  8.38] n=200     17.86
+e. switches 25 fitted yr 6 by reading + bal 5%                6.10 [  4.49,  7.71] n=200     18.55
+e. switches 25 fitted yr 6 by projected + bal 5%              8.58 [  6.95, 10.20] n=200     18.55
+e. switches 25 fitted yr 3+6+9 by projected + bal 5%          9.04 [  7.40, 10.67] n=200      1.63
+b. per-pack k + bal 5% (in-sample)                            1.28 [  0.90,  1.66] n=200     23.54
+GUARDED (a-d)                                                -0.04 [ -0.63,  0.54] n=200      1.40
+GUARDED (a-e, e assumed hardware)                             7.93 [  6.40,  9.46] n=200      0.66
+floor0.8|I5.6 best baseline: hybrid 1/250 + balancer 5%
+   plain                                                    sag   -1.30 [ -2.57, -0.03]  window  -20.75  sag regret 1.94
+   balancer 2.5%                                            sag   -2.35 [ -2.97, -1.73]  window  -11.56  sag regret 2.99
+   balancer 5%                                              sag    0.00 [  0.00,  0.00]  window    0.00  sag regret 0.64
+   late switches                                            sag  -13.51 [-15.44,-11.59]  window  -10.35  sag regret 14.15
+   selective 25/250 cells                                   sag   -2.64 [ -3.95, -1.33]  window  -18.87  sag regret 3.28
+   hybrid 1/250 + balancer 5%                               sag    0.64 [  0.43,  0.85]  window    1.22  sag regret 0.00
+   hybrid 8/250 + balancer 5%                               sag    0.03 [ -0.18,  0.24]  window    0.51  sag regret 0.61
+   c. rotating rest, hybrid 8 + bal 5%, x0.8                sag   -0.27 [ -0.38, -0.15]  window    0.29  sag regret 0.91
+   d. hybrid 1 + bal 2.5%                                   sag   -2.05 [ -2.64, -1.46]  window  -11.28  sag regret 2.69
+   e. switches 8 fitted yr 6 by projected + bal 5%          sag    1.84 [  0.10,  3.58]  window    6.09  sag regret 0.00
+   e. switches 25 fitted yr 6 by reading + bal 5%           sag    1.42 [ -0.38,  3.22]  window    6.15  sag regret 0.00
+   e. switches 25 fitted yr 6 by projected + bal 5%         sag    2.11 [  0.23,  3.99]  window    7.63  sag regret 0.00
+   e. switches 25 fitted yr 3+6+9 by projected + bal 5%     sag    2.14 [  0.26,  4.02]  window    7.89  sag regret 0.00
+floor0.8|I33.3 best baseline: hybrid 1/250 + balancer 5%
+   plain                                                    sag   -1.33 [ -2.60, -0.06]  window  -20.75  sag regret 1.97
+   balancer 2.5%                                            sag   -2.37 [ -2.99, -1.75]  window  -11.56  sag regret 3.01
+   balancer 5%                                              sag    0.00 [  0.00,  0.00]  window    0.00  sag regret 0.64
+   late switches                                            sag  -13.53 [-15.46,-11.61]  window  -10.35  sag regret 14.17
+   selective 25/250 cells                                   sag   -2.67 [ -3.98, -1.36]  window  -18.87  sag regret 3.31
+   hybrid 1/250 + balancer 5%                               sag    0.64 [  0.43,  0.85]  window    1.22  sag regret 0.00
+   hybrid 8/250 + balancer 5%                               sag    0.03 [ -0.18,  0.24]  window    0.51  sag regret 0.61
+   c. rotating rest, hybrid 8 + bal 5%, x0.8                sag   -0.27 [ -0.38, -0.16]  window    0.29  sag regret 0.91
+   d. hybrid 1 + bal 2.5%                                   sag   -2.07 [ -2.66, -1.48]  window  -11.28  sag regret 2.71
+   e. switches 8 fitted yr 6 by projected + bal 5%          sag    1.84 [  0.10,  3.58]  window    6.09  sag regret 0.00
+   e. switches 25 fitted yr 6 by reading + bal 5%           sag    1.42 [ -0.38,  3.22]  window    6.15  sag regret 0.00
+   e. switches 25 fitted yr 6 by projected + bal 5%         sag    2.11 [  0.23,  3.99]  window    7.63  sag regret 0.00
+   e. switches 25 fitted yr 3+6+9 by projected + bal 5%     sag    2.14 [  0.26,  4.02]  window    7.89  sag regret 0.00
+floor0.9|I5.6 best baseline: plain
+   plain                                                    sag    3.49 [  2.96,  4.03]  window  -20.75  sag regret 0.00
+   balancer 2.5%                                            sag   -0.28 [ -0.58,  0.01]  window  -11.56  sag regret 3.78
+   balancer 5%                                              sag    0.00 [  0.00,  0.00]  window    0.00  sag regret 3.49
+   late switches                                            sag  -16.97 [-17.32,-16.62]  window  -10.35  sag regret 20.46
+   selective 25/250 cells                                   sag    1.38 [  0.85,  1.92]  window  -18.87  sag regret 2.11
+   hybrid 1/250 + balancer 5%                               sag    0.34 [  0.31,  0.37]  window    1.22  sag regret 3.15
+   hybrid 8/250 + balancer 5%                               sag   -0.27 [ -0.30, -0.25]  window    0.51  sag regret 3.76
+   c. rotating rest, hybrid 8 + bal 5%, x0.8                sag   -0.40 [ -0.42, -0.37]  window    0.29  sag regret 3.89
+   d. hybrid 1 + bal 2.5%                                   sag   -0.10 [ -0.40,  0.20]  window  -11.28  sag regret 3.59
+   e. switches 8 fitted yr 6 by projected + bal 5%          sag    0.00 [ -0.28,  0.28]  window    6.09  sag regret 3.49
+   e. switches 25 fitted yr 6 by reading + bal 5%           sag   -0.79 [ -1.08, -0.50]  window    6.15  sag regret 4.29
+   e. switches 25 fitted yr 6 by projected + bal 5%         sag   -0.70 [ -1.04, -0.36]  window    7.63  sag regret 4.19
+   e. switches 25 fitted yr 3+6+9 by projected + bal 5%     sag   -0.95 [ -1.30, -0.61]  window    7.89  sag regret 4.45
+floor0.9|I33.3 best baseline: plain
+   plain                                                    sag    3.59 [  3.11,  4.08]  window  -20.75  sag regret 0.00
+   balancer 2.5%                                            sag   -0.20 [ -0.37, -0.03]  window  -11.56  sag regret 3.80
+   balancer 5%                                              sag    0.00 [  0.00,  0.00]  window    0.00  sag regret 3.59
+   late switches                                            sag  -17.01 [-17.35,-16.68]  window  -10.35  sag regret 20.61
+   selective 25/250 cells                                   sag    1.48 [  1.00,  1.96]  window  -18.87  sag regret 2.12
+   hybrid 1/250 + balancer 5%                               sag    0.33 [  0.31,  0.36]  window    1.22  sag regret 3.26
+   hybrid 8/250 + balancer 5%                               sag   -0.28 [ -0.30, -0.25]  window    0.51  sag regret 3.87
+   c. rotating rest, hybrid 8 + bal 5%, x0.8                sag   -0.40 [ -0.42, -0.38]  window    0.29  sag regret 3.99
+   d. hybrid 1 + bal 2.5%                                   sag   -0.02 [ -0.20,  0.16]  window  -11.28  sag regret 3.61
+   e. switches 8 fitted yr 6 by projected + bal 5%          sag   -0.02 [ -0.29,  0.24]  window    6.09  sag regret 3.62
+   e. switches 25 fitted yr 6 by reading + bal 5%           sag   -0.83 [ -1.10, -0.55]  window    6.15  sag regret 4.42
+   e. switches 25 fitted yr 6 by projected + bal 5%         sag   -0.74 [ -1.07, -0.42]  window    7.63  sag regret 4.34
+   e. switches 25 fitted yr 3+6+9 by projected + bal 5%     sag   -1.00 [ -1.33, -0.67]  window    7.89  sag regret 4.60
