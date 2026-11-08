@@ -25,6 +25,8 @@ from hackkit import reon_visuals as VZ
 from hackkit import reon_slope as SLP
 from hackkit import reon_map as MP
 from hackkit import reon_demo as DM
+from hackkit import reon_twin as TWN
+from hackkit import reon_twin_ui as TWU
 
 st.set_page_config(page_title="REON decision layer", layout="wide")
 st.markdown("""<style>
@@ -56,10 +58,41 @@ def real_packs():
 
 
 BE = pd.DataFrame({"fade spread 0.20": [16.2, 27.3, 45.7, None], "0.45": [25.4, 42.9, None, None], "0.60": [29.1, 49.4, None, None]}, index=["value 12", "value 22", "value 40", "value 80"])
-demo, front, sv_tab, trend_tab, eng_wrap = st.tabs(["Demo", "Customer view: a storm night", "String view: click a cell", "Cell trends: slope and neighbours", "Engineering and evidence"])
+demo, twin_tab, front, sv_tab, trend_tab, eng_wrap = st.tabs(["Demo", "Twin: a 3D store you can break", "Customer view: a storm night", "String view: click a cell", "Cell trends: slope and neighbours", "Engineering and evidence"])
 @st.cache_data
 def storm_demo(fail_h):
     return DM.storm(real_packs(), fail_h)
+
+
+def _twin_pick():
+    c = TWU.last_pick("twin3d")
+    if c is not None:
+        st.session_state["tfail"] = TWN.toggle(st.session_state.get("tfail", []), c)
+
+
+with twin_tab:
+    st.markdown("**A twin of one store's battery, and the decision layer behind it.** 250 cells in series, drawn from the real spread of late-life cells. Click a cell to fail it, turn the view, and compare a plain string with cell-level control. "
+                "A twin shows the pack; the Demo tab says whether to build the switches. Every number here comes from the same engine as the String view. Simulation on assumed sodium-ion behaviour, not REON data.")
+    ts = st.session_state
+    ts.setdefault("tfail", [])
+    tc = st.columns([1.5, 1.2, 0.8, 0.8])
+    t_win = tc[0].select_slider("Share of cells that must stay in the string (REON: about 90%)", [0.5, 0.7, 0.9], 0.9, key="t_win")
+    t_load = tc[1].slider("Load (kW)", 1.0, 10.0, 5.0, key="t_load")
+    h_t = GR.make_string(GR.pooled_relative(real_packs()))
+    if tc[2].button("Fail a random cell", key="t_rand"):
+        live_t = [i for i in range(len(h_t)) if i not in ts.tfail]
+        ts.tfail = TWN.toggle(ts.tfail, int(np.random.default_rng(len(ts.tfail) + 7).choice(live_t)))
+    if tc[3].button("Reset", key="t_reset"):
+        ts.tfail = []
+    an_t = GR.analyse(h_t, ts.tfail, t_win, 60.0, 0.04, t_load)
+    TWU.mount(TWN.payload(h_t, an_t, t_load), key="twin3d", on_pick=_twin_pick)
+    tm = st.columns(4)
+    tm[0].metric("Plain string", f"{an_t['plain_kwh']:.0f} kWh", f"{an_t['plain_h']:.1f} h at {t_load:.0f} kW", delta_color="off")
+    tm[1].metric("With cell-level control", f"{an_t['ours_kwh']:.0f} kWh", f"{an_t['ours_h']:.1f} h at {t_load:.0f} kW", delta_color="off")
+    tm[2].metric("Cells that can still leave", f"{max(an_t['room'], 0)} of {an_t['K']}")
+    tm[3].metric("Cells failed", f"{an_t['failed']}")
+    st.caption("Red plane: what a plain string can use (its weakest cell; nothing with any open cell). Amber plane: with control, the weakest cells may leave early, so the usable level is higher. "
+               "Switch loss 4% and the inverter minimum voltage are assumed (REON: about 90% of cells connected). REON's hardware keeps safety authority.")
 
 
 with demo:
