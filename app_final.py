@@ -28,8 +28,9 @@ from hackkit import reon_demo as DM
 
 st.set_page_config(page_title="REON decision layer", layout="wide")
 st.markdown("""<style>
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
-html, body, [class*="css"], .stApp, button, input, textarea, select { font-family: 'Manrope', -apple-system, sans-serif !important; }
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@600;700;800&display=swap');
+html, body, [class*="css"], .stApp, button, input, textarea, select { font-family: 'Barlow', -apple-system, sans-serif !important; }
+h1, h2, h3, [data-testid="stMetricValue"] { font-family: 'Barlow Semi Condensed', 'Barlow', sans-serif !important; letter-spacing: -0.5px; }
 h1, h2, h3 { font-weight: 800 !important; letter-spacing: -0.02em; color: #12161c; }
 h1 { font-size: 2.6rem !important; line-height: 1.05 !important; }
 [data-testid="stMetricValue"] { font-weight: 800; letter-spacing: -0.02em; color: #17324f; }
