@@ -33,7 +33,7 @@ Energy: `usable_kWh = usable_Ah x V x 1e-3`.
 | G | 20.27, 17.42, 19.57, 18.93, 25.04, 23.65, 22.87, 17.59 | 1.00 | 0 | 139.36 | 165.34 | 0.8429 | 1.0 | 0.1864 |
 
 Case G uses the eight retired Nissan Leaf cell capacities reported in arXiv 2402.18859 (Table 1, as read by us). They came from two packs, so treat
-it as an illustration of a realistic spread, not one string. See `docs/REON_DATA.md`.
+it as an illustration of a realistic spread, not one string.
 
 Energy check for case A at V = 3.7 V: usable_conv = 1.036 kWh, usable_ctrl = 1.258 kWh.
 
@@ -55,7 +55,7 @@ drops to f = 0.5: conv goes 400 -> 200, ctrl goes 400 -> 350.
 
 ## What this cannot show
 
-REON's published patent applications describe series columns wired in PARALLEL with per-cell bypass, spare cells and a converter stage; this spec models ONE series column with ideal bypass, so parallel columns, spares and the voltage window are outside it (see `docs/REON_DATA.md`, 1b).
+REON's published patent applications describe series columns wired in PARALLEL with per-cell bypass, spare cells and a converter stage; this spec models ONE series column with ideal bypass, so parallel columns, spares and the voltage window are outside it.
 
 That a real Reon switch behaves like `sum c_i x eta`; that cells in a real second-life pack are in a single series string (parallel groups change
 the min rule); that capacity is the only limit (current, temperature and voltage windows are ignored); or any dollar value. Those need Reon's data.

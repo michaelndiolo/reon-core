@@ -1,4 +1,4 @@
-"""Customer view for a C&I site (Tim Ren: chain stores / small commercial, storm night, 60 kWh, 200-300 cells in series).
+"""Customer view for a C&I site (REON: chain stores / small commercial, storm night, 60 kWh, 200-300 cells in series).
 Turns the engine's numbers into three things a store owner reads: how many hours the backup lasts, how many years the battery lasts, and dollars.
 One series element is either a single large cell (p = 1) or a parallel group of p cells (REON has not said which): the headline depends on it, so it is a switch.
 Dollars are bankable-horizon (12 years, warranty is 10) per kWh nameplate x nameplate; life is cell-limited and capped at 30 years.

@@ -41,7 +41,7 @@ def safe_recommend(start, m, *, value_per_kwh_year, electronics_per_kwh, fade_cv
     if fade_cv > 0.6:
         warn.append("fade spread above 0.6 is outside the real cars measured (0.20 to 0.60): extrapolation")
     if electronics_per_kwh < 7:
-        warn.append("switch cost below 7 per kWh is under Tim Ren's stated range")
+        warn.append("switch cost below 7 per kWh is under REON's stated range")
     if value_per_kwh_year == 0:
         warn.append("zero value: no build can be worth buying")
     out = W.recommend_build(s, int(m), balancer_r=balancer_r, balancer_per_kwh=balancer_per_kwh, ks=ks, fade_mean=fade_mean, fade_cv=fade_cv, loss=loss, electronics_per_kwh=electronics_per_kwh,

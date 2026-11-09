@@ -1,6 +1,6 @@
 """HERO CASE (draft): new 16-cell string, commercial/industrial stationary duty, daily cycling, retire at 70 % (brief). Run: PYTHONPATH=. python examples/reon_hero_cni.py
 Cells start nearly matched (ASSUMED start spread 2 %); what separates them is the spread of FADE RATES, taken from REAL lithium cars (Nature Energy 2026 Fig 4: fade-spread CV 0.20 to 0.60, median 0.45). No sodium-ion spread data yet: ASK REON.
-Sweep: value per delivered kWh-year (12 = grid preset, 22 = retired-EV preset, 40 and 80 = C&I peak-shaving range, ASSUMED until sourced) x switch cost (7, 15.5, 24 per kWh nameplate = Tim Ren's 7 Nov range, with a switch on every cell) x fade-spread CV.
+Sweep: value per delivered kWh-year (12 = grid preset, 22 = retired-EV preset, 40 and 80 = C&I peak-shaving range, ASSUMED until sourced) x switch cost (7, 15.5, 24 per kWh nameplate = REON's 7 Nov range, with a switch on every cell) x fade-spread CV.
 Reports net value per kWh nameplate of the best build (late switches, level switches or selective bypass) against the plain string and against sort only."""
 from multiprocessing import Pool
 import numpy as np

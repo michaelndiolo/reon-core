@@ -1,10 +1,10 @@
-"""Second life (Tim Ren: module-level second life is possible and he supports it; rebuilding from modules or cells is needed; cells inside a module age differently by position).
+"""Second life (REON: module-level second life is possible and he supports it; rebuilding from modules or cells is needed; cells inside a module age differently by position).
 Scenario: a retired EV pack's cells are re-used as ONE fixed series string in a stationary system (the brief's baseline). Real late-life cell capacities (Nature Energy 2026, Fig 4, 12 EVs at 280,000 km, REAL).
 Options, all scored on the same cells:
   plain        n x weakest cell (the brief's baseline)
   module g     modules of g neighbouring cells (in the order the pack gave them) switch as one; a module's capacity is its weakest cell
   cell level   every cell can leave individually
-  BOTH switched options obey the same voltage window: at least `window` of the cells must stay in the string (Tim: about 90 % connected in normal use), so a coarse module may not be able to leave at all
+  BOTH switched options obey the same voltage window: at least `window` of the cells must stay in the string (REON: about 90 % connected in normal use), so a coarse module may not be able to leave at all
   (reon_window.window_usable on the module-weakest values, times g)
   upper bound  sum of all cells
 Value is STATIC (no further ageing, the same cells for `years`), so it is a first-order screen, not a forecast. Rather than invent how switch cost scales with the number of switches, it reports the FLIP POINT: the most

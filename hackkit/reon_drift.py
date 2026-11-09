@@ -86,7 +86,7 @@ def lifetime_compare(caps: Sequence[float], m: int, *, fade_mean_per_year: float
 
 
 def lifespan_loss(n_cells: int, fade_cv: float, retire_soh: float, *, init_cv: float = 0.0, trials: int = 400, seed: int = 0, steps: int = 800, horizon: float = 1.0) -> dict:
-    """Weakest-cell effect on a series pack of n_cells new-ish cells, in the units of Zhou, Bian et al., Nature Energy 2026 (fleet telemetry, see docs/REON_DATA.md): the pack
+    """Weakest-cell effect on a series pack of n_cells new-ish cells, in the units of Zhou, Bian et al., Nature Energy 2026 (fleet telemetry): the pack
     retires when its weakest cell reaches retire_soh (0.85 in that paper); the 'ideal' pack retires when the MEAN cell does. Linear fade c_i(t) = c_i0 (1 - f_i t), f_i ~ Normal(1, fade_cv)
     in units where the mean fade rate is 1 per unit time (only ratios matter; horizon must be long enough for the mean cell to reach retire_soh, i.e. >= 1 - retire_soh). Returns:
       lifespan_loss     = 1 - T_weakest / T_mean         (their 'effective pack lifespan reduction')

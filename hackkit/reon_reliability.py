@@ -1,4 +1,4 @@
-"""System reliability from architecture (Tim Ren, 7 Nov): in a series string every cell must work, so survival is r^n and gets worse as exponentially with cell count; making each cell better barely helps.
+"""System reliability from architecture (REON, 7 Nov): in a series string every cell must work, so survival is r^n and gets worse as exponentially with cell count; making each cell better barely helps.
 Tolerating k dead cells (bypass) turns it into 'at most k of n fail'. Independent failures assumed; bypass cannot fix a short or a thermal event (REON's hardware keeps safety authority)."""
 import math
 from hackkit.reon_guard import need

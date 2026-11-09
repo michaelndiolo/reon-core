@@ -1,4 +1,4 @@
-"""String view (Nalia's click-to-fail idea, rebuilt at Tim Ren's scale: 250 cells in series, about 90 % connected in normal use).
+"""String view (click-to-fail idea, rebuilt at REON's scale: 250 cells in series, about 90 % connected in normal use).
 Pure logic for the dashboard grid; the drawing is in reon_visuals.py.
 
 Health of each cell = capacity / day-1 capacity. The 250 cells are drawn from the REAL spread of late-life cells (Nature Energy 2026, pooled and scaled to the chosen mean health), plus a few planted weak cells like REON's 16-cell example (one at 70 %).

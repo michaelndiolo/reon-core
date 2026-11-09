@@ -4,7 +4,7 @@ Pack model (recheck/SPEC.md): conventional usable = N x weakest cell; control us
 energy that survives the switching and conversion path. Both are scaled by (1 - r) for a reserve, which cancels in every ratio here.
 
 break_even_eta(caps) = N x min / sum. At or below it, control delivers no more than the conventional pack.
-No default efficiency lives here: eta is an input and must be sourced (the literature range is 0.95 to 0.99, see docs/REON_DATA.md 1e).
+No default efficiency lives here: eta is an input and must be sourced (the literature range is 0.95 to 0.99).
 Patterns only; the idea of a break-even loss is generic, no code is taken from anywhere.
 """
 from __future__ import annotations

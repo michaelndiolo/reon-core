@@ -3,7 +3,7 @@
  "units": "net value per kWh nameplate, present value, unless stated",
  "note": "Simulations and replays only. Hardware keeps safety authority.",
  "hero_capacity": {
-  "tags": "250 cells in series, one large cell per position; fade ASSUMED (Tim Ren 20,000-cycle claim implies 0.004 to 0.012); value CITED/DERIVED; switch cost 15.5 (CITED range 7 to 24). Every build respects a 90% voltage window (at most 25 of 250 cells bypassed) and pays 2% switch loss on all energy; verdicts come from the guarded policy (a build of ours only if it beats the better of a 5% balancer and plain by at least 1 per kWh on two seeds). Balancer strength 5% is ASSUMED. Switch cost 7 to 24 is the extra over a conventional BMS (Tim Ren, 8 Nov). See docs/SOURCES.md",
+  "tags": "250 cells in series, one large cell per position; fade ASSUMED (REON 20,000-cycle claim implies 0.004 to 0.012); value CITED/DERIVED; switch cost 15.5 (CITED range 7 to 24). Every build respects a 90% voltage window (at most 25 of 250 cells bypassed) and pays 2% switch loss on all energy; verdicts come from the guarded policy (a build of ours only if it beats the better of a 5% balancer and plain by at least 1 per kWh on two seeds). Balancer strength 5% is ASSUMED. Switch cost 7 to 24 is the extra over a conventional BMS (REON, 8 Nov). See docs/SOURCES.md",
   "rows": [
    {
     "fade_per_year": 0.004,
@@ -66,8 +66,8 @@
      "detect": "ASSUMED: months before a plain string notices a fault (REON sensing makes this zero)",
      "down_cost": "ASSUMED: cost per month the string is down, per kWh nameplate; energy value alone is about 3",
      "lam": "ASSUMED: faults per cell-year; EPRI gives 0.04 to 0.14 % a year for whole stationary systems",
-     "fade": "ASSUMED: 0.004 to 0.012 follows from the 20,000-cycle claim (Tim Ren, unverified); lithium EVs measure about 0.02",
-     "loss": "ASSUMED: switch conduction loss; Tim Ren says 'very minimum, not none'",
+     "fade": "ASSUMED: 0.004 to 0.012 follows from the 20,000-cycle claim (REON, unverified); lithium EVs measure about 0.02",
+     "loss": "ASSUMED: switch conduction loss; REON says 'very minimum, not none'",
      "slack": "share of current the site can shed by stretching discharge; loss share falls in proportion (physics)"
     },
     "rows": [
@@ -129,8 +129,8 @@
      "detect": "ASSUMED: months before a plain string notices a fault (REON sensing makes this zero)",
      "down_cost": "ASSUMED: cost per month the string is down, per kWh nameplate; energy value alone is about 3",
      "lam": "ASSUMED: faults per cell-year; EPRI gives 0.04 to 0.14 % a year for whole stationary systems",
-     "fade": "ASSUMED: 0.004 to 0.012 follows from the 20,000-cycle claim (Tim Ren, unverified); lithium EVs measure about 0.02",
-     "loss": "ASSUMED: switch conduction loss; Tim Ren says 'very minimum, not none'",
+     "fade": "ASSUMED: 0.004 to 0.012 follows from the 20,000-cycle claim (REON, unverified); lithium EVs measure about 0.02",
+     "loss": "ASSUMED: switch conduction loss; REON says 'very minimum, not none'",
      "slack": "share of current the site can shed by stretching discharge; loss share falls in proportion (physics)"
     },
     "rows": [

@@ -12,7 +12,7 @@ hardware or low-level control. We build the decision layer on top.
 | Not ours | Safety limits (over/under voltage, over temperature, short circuit). These stay in certified hardware and are never overridden by this layer |
 
 Open questions for REON: sensing accuracy and reporting rate, per-cell switch loss, what "overhead" means in
-Tim's $560 to $1,920 per 80 kWh string, and sodium-ion spread and ageing data.
+REON's $560 to $1,920 per 80 kWh string, and sodium-ion spread and ageing data.
 
 ## 2. Algorithm
 
@@ -82,7 +82,7 @@ code; pack level current limit, SOC window, and "open string / call crew".
 
 Hardware stays the authority. A refused command is treated as data and the plan is redone.
 
-Known from Tim (Discord, 7 Nov): chemistry-agnostic BMS/EMS; a hot cell can be bypassed to rest; forced-air
+Known from REON (7 Nov): chemistry-agnostic BMS/EMS; a hot cell can be bypassed to rest; forced-air
 cooling today; temperature limits follow the cell maker's spec.
 
 Open questions for REON: data format and reporting rate; sensing accuracy; command format (flags or schedule);

@@ -1,7 +1,7 @@
 """STRESS TEST of the hero case (new sodium-style pack, commercial/industrial duty, retire at 70 %). Run: PYTHONPATH=. python examples/reon_hero_stress.py random|sourced|sourcedv <seed> <n>  |  report
 Each draw moves EVERY input at once and asks: does reon_wear.recommend_build beat the best rival (plain, sort only, balancer)? and does it beat the plain string (the brief's baseline)?
 random: wide ASSUMED ranges on every input (balancer strength and cost drawn independently, on purpose harsh).
-sourced: fade-rate spread drawn from the 12 REAL cars (Nature Energy 2026 Fig 4); switch cost from Tim Ren's 7 to 24 per kWh; balancer strength and cost tied together by real parts (as in reon_stress.draw_sourced); value per kWh-year 10 to 90
+sourced: fade-rate spread drawn from the 12 REAL cars (Nature Energy 2026 Fig 4); switch cost from REON's 7 to 24 per kWh; balancer strength and cost tied together by real parts (as in reon_stress.draw_sourced); value per kWh-year 10 to 90
 (12 grid preset, 22 EV preset, 90 = derived demand-charge ceiling, see docs/SOURCES.md). Still ASSUMED: sodium life, fade rate, start spread, cell size, duty, wear exponents."""
 import csv, json, sys
 from multiprocessing import Pool
@@ -45,7 +45,7 @@ def draw(rng, mode, cvs):
         crate = u(rng, 0.15, 0.5)              # ASSUMED C&I discharge rate
         per_cell = u(rng, 2.1, 3.2) * u(rng, 1.0, 2.5) if amps >= 5.5 else u(rng, 0.5, 2.0)
         p.update(fcv=float(rng.choice(cvs)), elec=u(rng, 7.0, 24.0), r=min(amps / (crate * ah), 1.0), bcost=per_cell / (ah * 3.2 / 1000.0), eta=u(rng, 0.85, 0.95), amps=amps, ah=ah)
-    if mode == "longlife":   # Tim Ren 7 Nov: the NFPP sodium cells are specified at 20,000 cycles (maker claim, UNVERIFIED). Roughly 0.003 to 0.012 per year of capacity fade at 1 cycle a day; life 10 to 25 y
+    if mode == "longlife":   # REON 7 Nov: the NFPP sodium cells are specified at 20,000 cycles (maker claim, UNVERIFIED). Roughly 0.003 to 0.012 per year of capacity fade at 1 cycle a day; life 10 to 25 y
         p["fade"] = lg(rng, 0.003, 0.012); p["years"] = u(rng, 10.0, 25.0)
     if mode == "sitefade":   # fade from the 20,000-cycle claim and the SITE: cycles a day 0.8 to 2, cell temperature 15 to 45 C (doubling per 10 C is an ASSUMED rule of thumb)
         from hackkit.reon_presets import fade_per_year

@@ -4,7 +4,7 @@
   in those draws our best build vs the PLAIN string: median +6.6, still positive in 69%
   size of the loss to the best rival: median -1.2, worst -9.7 per kWh nameplate
 
-break-even switch cost vs the best rival (balancer 5 %, cost 4), per kWh nameplate; Tim Ren's range is 7 to 24
+break-even switch cost vs the best rival (balancer 5 %, cost 4), per kWh nameplate; REON's range is 7 to 24
 value/kWh-yr  fade CV   usable-energy loss 2 %   loss 5 % (voltage floor)
        12      0.20                   16.2         16.2
        12      0.45                   25.4         23.6

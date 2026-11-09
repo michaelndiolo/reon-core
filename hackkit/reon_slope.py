@@ -1,4 +1,4 @@
-"""Fade slope per cell: Tim Ren's "the curve, the trend and the left-to-right comparison, not single maximums" (garbled recording: confirm what he meant).
+"""Fade slope per cell: REON's "the curve, the trend and the left-to-right comparison, not single maximums" (garbled recording: confirm what he meant).
 Our reading, on REAL data: the Nature Energy 2026 packs give each of 95 cells at two ages (80,000 and 280,000 km). Two ages make a slope, not a curve; REON's own per-cell history would give the curve.
   * slope: percentage points of day-1 capacity a cell lost between the two ages;
   * left to right: each cell is compared with the median of its 8 neighbours along the pack (positions as the data give them), not only with the whole pack;

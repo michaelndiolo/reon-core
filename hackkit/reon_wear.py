@@ -1,7 +1,7 @@
 """reon_wear: ageing that DEPENDS ON HOW THE PACK IS RUN, and sourced knee-like fades, so a pack of well-matched cells can still gain from cell-level control.
 
 reon_design ages every cell on its own fixed straight line, whatever the pack does. Real cells do not: the Iowa State / ILCC dataset (59 usable test groups, DOI 10.25380/iastate.22582234,
-docs/REON_DATA.md) shows fade rate rising with depth of discharge, fade ~ DoD^g with g = 0.6 to 0.9 (examples/reon_wear_iowa_fit.py). In a plain series string every cell passes the same
+the literature) shows fade rate rising with depth of discharge, fade ~ DoD^g with g = 0.6 to 0.9 (examples/reon_wear_iowa_fit.py). In a plain series string every cell passes the same
 Ah, so the WEAKEST cell has the deepest discharge, fades fastest, and the spread grows (the divergence the Nature Energy 2026 fleet paper reports). Cell-level bypass can share the duty out
 in proportion to capacity: every cell then sees the same, smaller DoD. Same Ah moved, less wear on the weak cell.
 

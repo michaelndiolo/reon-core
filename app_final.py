@@ -645,9 +645,9 @@ if pidx == 3 and ev == 1:
           ("temp", "How hot does the battery run?", [15, 25, 35, 45], 25, lambda v: f"{v} °C", "Ageing about doubles per 10 °C (an assumed rule of thumb)."),
           ("fcv", "How different are the cells from each other?", [0.2, 0.45, 0.6], 0.45, lambda v: {0.2: "Tight", 0.45: "Typical", 0.6: "Wide"}[v] + f" · {v:.2f}", "Spread of wear rates between cells. Real car packs run 0.20 to 0.60."),
           ("value", "What is backup worth to the owner, per kWh per year?", [12, 22, 40, 80], 40, lambda v: f"${v}", "$12 grid services, $22 EV charging, $40 to $80 for sites that pay demand charges."),
-          ("elec", "What do the switches cost, per kWh of battery?", [7, 15.5, 24], 15.5, lambda v: f"${v:g}", "Tim Ren: $7 to $24 per kWh over a conventional BMS. $15.5 is the middle."),
+          ("elec", "What do the switches cost, per kWh of battery?", [7, 15.5, 24], 15.5, lambda v: f"${v:g}", "REON: $7 to $24 per kWh over a conventional BMS. $15.5 is the middle."),
           ("p1", "How many cells sit side by side at each position?", [1, 4, 16, 40], 1, lambda v: "One cell" if v == 1 else f"{v} in parallel", "REON has not said. More cells in parallel average out wear, so the case for switches shrinks."),
-          ("n1", "How many cells are in series?", [200, 250, 300], 250, lambda v: f"{v} cells", "Tim Ren: 200 to 300 in series. The engine takes about 15 seconds at 250.")]
+          ("n1", "How many cells are in series?", [200, 250, 300], 250, lambda v: f"{v} cells", "REON: 200 to 300 in series. The engine takes about 15 seconds at 250.")]
     ss1 = st.session_state
     ss1.setdefault("wz_step", 0)
     ss1.setdefault("wz_ans", {})
@@ -711,7 +711,7 @@ if pidx == 3 and ev == 2:
     st.subheader("Break-even switch cost against a typical balancer (per kWh nameplate)")
     st.dataframe(BE.fillna(">60 (never flips)").astype(str))
     st.caption("This table was computed before the voltage window was enforced in the engine (see docs/SOURCES.md); treat the break-even costs as the optimistic end.")
-    st.write("Above the number in a cell, a typical balancer is better than switches. Tim Ren's overhead range is 7 to 24. Only the lowest-value, narrowest-spread corner puts that range partly in the losing zone. Source: examples/reon_losing_regimes_output.txt.")
+    st.write("Above the number in a cell, a typical balancer is better than switches. REON's overhead range is 7 to 24. Only the lowest-value, narrowest-spread corner puts that range partly in the losing zone. Source: examples/reon_losing_regimes_output.txt.")
     st.write("A logistic go/no-go screen on all inputs, tested on held-out draws, is right 88.5 % of the time against 82.7 % for always saying go, and catches about half the cases we lose: use it as a screen, not a verdict.")
 
 if pidx == 3 and ev == 3:
@@ -824,7 +824,7 @@ if pidx == 3 and ev == 8:
     st.caption("At slow fade the capacity stream is near zero or negative: the case rests on faults, crew visits and downtime, and the downtime cost is assumed.")
 
 if pidx == 3 and ev == 9:
-    st.write("System level, the way Tim Ren frames it: how many charges does the whole string last, and how likely is it to survive? Life is cell-limited here (30-year horizon, retire at 70% of day-1); the bankable value in \"Is it worth it?\" stops at 12 years.")
+    st.write("System level, the way REON frames it: how many charges does the whole string last, and how likely is it to survive? Life is cell-limited here (30-year horizon, retire at 70% of day-1); the bankable value in \"Is it worth it?\" stops at 12 years.")
     c = st.columns(5)
     n9 = c[0].select_slider("Cells in series per string", [16, 48, 112, 250], 250, key="n9")
     p9 = c[1].select_slider("Cells in parallel per series element (unknown: ask REON)", [1, 4, 16, 40], 1, key="p9")
@@ -853,7 +853,7 @@ if pidx == 3 and ev == 9:
         rows = [{"build": nm, "service life (y)": sv[nm]["years"], "system cycles": sv[nm]["system_cycles"], "share of the 20,000-cycle cell rating": sv[nm]["share_of_cell_rating"], "lifetime kWh per kWh nameplate": sv[nm]["lifetime_kwh_per_kwh_nameplate"],
                  "cost per kWh delivered": sv[nm]["cost_per_kwh_delivered"]} for nm in dict.fromkeys(names)]
         st.dataframe(pd.DataFrame(rows).round(2).set_index("build"))
-        st.caption("System cycles at one cycle a day. Warranty standard 10 years / 8,000 cycles (Tim Ren). Cost per kWh delivered uses an assumed 98 per kWh cell cost plus the build's electronics. Life stops at 30 years in this view.")
+        st.caption("System cycles at one cycle a day. Warranty standard 10 years / 8,000 cycles (REON). Cost per kWh delivered uses an assumed 98 per kWh cell cost plus the build's electronics. Life stops at 30 years in this view.")
     d = st.columns(3)
     lam9 = d[0].select_slider("Faults per cell-year (assumed; ask REON)", [0.0005, 0.001, 0.002, 0.005, 0.01], 0.002, key="lam9")
     yr9 = d[1].select_slider("Years", [5, 10, 15, 20], 10, key="yr9")
@@ -867,7 +867,7 @@ if pidx == 3 and ev == 9:
              f"Each cell would need {100*RL.required_cell_survival(n9, 0.99):.4f}% survival for a plain string to reach 99%. Independent failures assumed; bypass does not fix a short or a thermal event, and REON's hardware keeps safety authority.")
 
 if pidx == 3 and ev == 10:
-    st.write("Why not just balance? Passive balancers move about 0.25 A and only waste energy as heat; active balancers move 0.5 to 6 A. Keeping one weak cell in step needs about load current x capacity gap. Loss goes as current squared (Tim Ren). Switches move no charge.")
+    st.write("Why not just balance? Passive balancers move about 0.25 A and only waste energy as heat; active balancers move 0.5 to 6 A. Keeping one weak cell in step needs about load current x capacity gap. Loss goes as current squared (REON). Switches move no charge.")
     c = st.columns(3)
     ah = c[0].select_slider("Cell size (Ah)", [20, 50, 100], 50, key="ah10")
     cr = c[1].select_slider("Discharge rate (C)", [0.15, 0.3, 0.5], 0.3, key="cr10")
@@ -891,7 +891,7 @@ if pidx == 3 and ev == 10:
     st.subheader("Second life: one retired EV pack as a stationary string")
     st.write("Real late-life cells (Nature Energy 2026, 12 EVs at 280,000 km, 95 cells each) re-used as one fixed series string. How much more is usable if neighbouring cells switch as a module, or every cell switches, and how little can the electronics cost before it stops paying? Static first-order screen: no further ageing, testing and disassembly not priced.")
     q = st.columns(3)
-    win2 = q[0].select_slider("Share of cells that must stay in the string (Tim Ren: about 90% in normal use)", [0.5, 0.7, 0.9], 0.9, key="win2")
+    win2 = q[0].select_slider("Share of cells that must stay in the string (REON: about 90% in normal use)", [0.5, 0.7, 0.9], 0.9, key="win2")
     val2 = q[1].select_slider("Value per kWh-year", [12, 22, 40, 80], 40, key="val2")
     yrs2 = q[2].select_slider("Years of second life", [4, 8, 12], 8, key="yrs2")
     sl = SL.table(real_packs(), window=win2, value=float(val2), years=float(yrs2))

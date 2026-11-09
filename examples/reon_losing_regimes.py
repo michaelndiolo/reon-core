@@ -46,7 +46,7 @@ if __name__ == "__main__":
     cells = [(v, f, l) for l in (0.02, 0.05) for v in (12.0, 22.0, 40.0, 80.0) for f in (0.2, 0.45, 0.6)]
     with Pool() as p:
         res = p.map(flip, cells)
-    print("\nbreak-even switch cost vs the best rival (balancer 5 %, cost 4), per kWh nameplate; Tim Ren's range is 7 to 24")
+    print("\nbreak-even switch cost vs the best rival (balancer 5 %, cost 4), per kWh nameplate; REON's range is 7 to 24")
     print("value/kWh-yr  fade CV   usable-energy loss 2 %   loss 5 % (voltage floor)")
     d = dict(res)
     for v in (12.0, 22.0, 40.0, 80.0):

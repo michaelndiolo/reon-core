@@ -4,8 +4,8 @@ Spread of fade between cells,fcv,0.2,0.6,0.0,22.2,12.1,46.6,BALANCER,BUY,22.2,AS
 Starting capacity spread,spread,0.01,0.05,0.0,18.4,20.6,40.7,BALANCER,BUY,18.4,ASSUMED,REON: incoming cell data,3.4,25.3
 Value of a kWh per year ($),value,12.0,80.0,0.0,12.5,3.8,60.4,BALANCER,BUY,12.5,CITED range,the customer's tariff (demand charge),3.4,25.3
 Balancer strength (share of a cell moved per cycle),r,0.02,0.1,9.1,1.1,16.1,36.6,BUY,BUY,7.9,"ASSUMED, unsourced","REON: what the baseline BMS balances, and at what current",3.4,25.3
-Switch electronics cost per kWh ($),elec,7.0,24.0,7.0,3.1,29.0,25.0,BUY,BUY,3.9,CITED (REON CTO),settled by Tim Ren: this range is the extra over a conventional BMS; it depends on PCB volume,3.4,25.3
-Cells in parallel per position,p,1,16,3.4,0.0,25.3,2.9,BUY,BALANCER,3.4,UNKNOWN (Tim: could be both),REON: the data sheet for the 60 kWh product,3.4,25.3
+Switch electronics cost per kWh ($),elec,7.0,24.0,7.0,3.1,29.0,25.0,BUY,BUY,3.9,CITED (REON CTO),settled by REON: this range is the extra over a conventional BMS; it depends on PCB volume,3.4,25.3
+Cells in parallel per position,p,1,16,3.4,0.0,25.3,2.9,BUY,BALANCER,3.4,UNKNOWN (REON: could be both),REON: the data sheet for the 60 kWh product,3.4,25.3
 Switch loss on all energy (always-closed path),closed,0.0,0.04,4.8,3.1,26.7,25.1,BUY,BUY,1.7,ASSUMED,REON: switch resistance,3.4,25.3
-Voltage window (share of cells that must stay),window,0.8,0.95,2.8,4.2,25.3,25.3,BUY,BUY,1.4,"UNKNOWN (PCS dependent, Tim 8 Nov)",REON: PCS minimum DC input voltage,3.4,25.3
+Voltage window (share of cells that must stay),window,0.8,0.95,2.8,4.2,25.3,25.3,BUY,BUY,1.4,"UNKNOWN (PCS dependent, REON 8 Nov)",REON: PCS minimum DC input voltage,3.4,25.3
 Usable-energy loss to switches,loss,0.0,0.1,3.4,3.4,25.3,25.3,BUY,BUY,0.0,ASSUMED,REON: switch resistance and voltage floor,3.4,25.3

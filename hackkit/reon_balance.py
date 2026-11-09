@@ -1,4 +1,4 @@
-"""Why not just balance? Passive and active balancers versus per-cell switching (Tim Ren, 7 Nov: power electronics loss goes as I squared R, so cost, copper and heat grow with current).
+"""Why not just balance? Passive and active balancers versus per-cell switching (REON, 7 Nov: power electronics loss goes as I squared R, so cost, copper and heat grow with current).
 Passive: burns charge as heat, about 0.25 A at most, charge only. Active: moves charge, about 0.5 to 6 A, efficiency 0.89 to 0.91 at 3 A (Monolithic Power, https://www.monolithicpower.com/learning/resources/active-balancing-how-it-works-and-its-advantages).
 To keep ONE weak cell in step the balancer must supply about load current x capacity gap (our approximation). Path resistance is ASSUMED so that efficiency is 0.90 at 3 A. Switches move no charge, so they have no such current limit (they pay a conduction loss instead)."""
 from hackkit.reon_guard import need

@@ -8,8 +8,9 @@ __pycache__/
 data_external/
 venv/
 
-# private data from REON: never commit
+# private data: never commit
 data/private/
 *.sample.csv
 *_bms_*.csv
 examples/data/tornado_250_partial.json
+.fuse_hidden*

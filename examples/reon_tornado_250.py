@@ -1,6 +1,6 @@
 """One-at-a-time sensitivity at 250 series elements: how much does each uncertain input move what our recommended build earns over the BETTER of a simple balancer or a plain string (12 years, per kWh nameplate)?
 The guarded policy (reon_policy.robust_guarded) decides: 0 when the answer is "a balancer is enough" or "hold". The column total_* is the gain over a plain string.
-Base: one large cell per position (p=1), fade 0.008/yr, value 40 per kWh-year, switch cost 15.5 (already the extra over a conventional BMS, Tim Ren 8 Nov), switch loss 4% (+2% on all energy), balancer 5%, window 0.9, fade spread 0.45, start spread 2%.
+Base: one large cell per position (p=1), fade 0.008/yr, value 40 per kWh-year, switch cost 15.5 (already the extra over a conventional BMS, REON 8 Nov), switch loss 4% (+2% on all energy), balancer 5%, window 0.9, fade spread 0.45, start spread 2%.
 Low and high ends are the ranges used in SOURCES.md. Writes examples/data/tornado_250.csv. Run: PYTHONPATH=. python examples/reon_tornado_250.py"""
 import csv
 import numpy as np
@@ -14,13 +14,13 @@ BASE = dict(p=1, fade=0.008, value=40.0, elec=15.5, loss=0.04, fcv=0.45, spread=
 INPUTS = [
     ("Cell fade per year", "fade", 0.004, 0.02, "CITED claim (20,000 cycles), unverified", "REON: measured fade on the sodium cells"),
     ("Value of a kWh per year ($)", "value", 12.0, 80.0, "CITED range", "the customer's tariff (demand charge)"),
-    ("Switch electronics cost per kWh ($)", "elec", 7.0, 24.0, "CITED (REON CTO)", "settled by Tim Ren: this range is the extra over a conventional BMS; it depends on PCB volume"),
+    ("Switch electronics cost per kWh ($)", "elec", 7.0, 24.0, "CITED (REON CTO)", "settled by REON: this range is the extra over a conventional BMS; it depends on PCB volume"),
     ("Usable-energy loss to switches", "loss", 0.0, 0.10, "ASSUMED", "REON: switch resistance and voltage floor"),
     ("Spread of fade between cells", "fcv", 0.20, 0.60, "ASSUMED (real cars 0.20 to 0.60)", "REON: teardown or cycling data on their cells"),
     ("Starting capacity spread", "spread", 0.01, 0.05, "ASSUMED", "REON: incoming cell data"),
-    ("Cells in parallel per position", "p", 1, 16, "UNKNOWN (Tim: could be both)", "REON: the data sheet for the 60 kWh product"),
+    ("Cells in parallel per position", "p", 1, 16, "UNKNOWN (REON: could be both)", "REON: the data sheet for the 60 kWh product"),
     ("Balancer strength (share of a cell moved per cycle)", "r", 0.02, 0.10, "ASSUMED, unsourced", "REON: what the baseline BMS balances, and at what current"),
-    ("Voltage window (share of cells that must stay)", "window", 0.80, 0.95, "UNKNOWN (PCS dependent, Tim 8 Nov)", "REON: PCS minimum DC input voltage"),
+    ("Voltage window (share of cells that must stay)", "window", 0.80, 0.95, "UNKNOWN (PCS dependent, REON 8 Nov)", "REON: PCS minimum DC input voltage"),
     ("Switch loss on all energy (always-closed path)", "closed", 0.0, 0.04, "ASSUMED", "REON: switch resistance"),
 ]
 

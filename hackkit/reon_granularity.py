@@ -1,6 +1,6 @@
 """reon_granularity: where should the switches go? One per cell, one per group of k cells, or none.
 
-Worst result so far (docs/RESULTS_SO_FAR.md): on well-matched cells a switch at every cell gains only 1 to 3% and costs more per extra kWh than anything
+Worst result so far: on well-matched cells a switch at every cell gains only 1 to 3% and costs more per extra kWh than anything
 else. Reversing that: put a switch on a GROUP of k series cells instead. The group then behaves like one big cell limited by its weakest member, and groups
 can be bypassed, so the pack delivers   sum over groups of  k x (weakest cell in the group).   k = 1 is cell-level control (the sum of all cells), k = N is
 no control (N x weakest). Electronics scale with the number of switches (e / k per kWh of nameplate); the series loss scales with the number of switches in

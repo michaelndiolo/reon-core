@@ -1,4 +1,4 @@
-"""Tim Ren (7 Nov): strings are 200 to 300 cells in series. Our earlier hero case used 16. Rerun at 250 series elements.
+"""REON (7 Nov): strings are 200 to 300 cells in series. Our earlier hero case used 16. Rerun at 250 series elements.
 The open question is what one series element IS: a single large cell (p = 1) or a parallel group of p small cells (e.g. '40P 250S'). Parallel cells average each other out: capacity spread and fade spread both shrink by sqrt(p).
 For each case: verdict (pick on one seed, check on an independent seed with double the trials), net gain over plain per kWh nameplate, and SYSTEM LIFE (years and cycles at one cycle a day, retire at 70 % of day-1) plain vs best of ours.
 usage: python examples/reon_hero_250.py 12   (then 20, then 30: one horizon per call fits the 120 s limit)"""

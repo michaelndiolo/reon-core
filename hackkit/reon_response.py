@@ -9,7 +9,7 @@ Responses, mildest first:
   KILL          open the string and call a crew (hard limit, several cells show fault signs, bypass budget used up, or the string is finished)
 
 Every threshold is a field of Limits and carries a tag. weak_frac is calibrated on REAL cells (0 of 1,140 normal lithium NMC cells were below 0.85 x pack mean, examples/reon_threshold_check.py).
-The rest are ASSUMED placeholders to be replaced by the cell maker's datasheet (Tim Ren: temperature limits are the cell manufacturer's spec)."""
+The rest are ASSUMED placeholders to be replaced by the cell maker's datasheet (REON: temperature limits are the cell manufacturer's spec)."""
 from dataclasses import dataclass, field
 from typing import List, Optional
 import math

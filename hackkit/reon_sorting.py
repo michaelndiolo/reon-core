@@ -1,6 +1,6 @@
 """reon_sorting: is cell-level control better than the usual alternative, sorting retired cells into matched strings?
 
-Current second-life practice (MDPI 2024 review, ACEEE 2026 brief in docs/WHAT_WE_HAVE.md): grade cells or modules by state of health and regroup similar ones.
+Current second-life practice (MDPI 2024 review, ACEEE 2026 brief): grade cells or modules by state of health and regroup similar ones.
 Model: the N cells are split into N/m strings of m cells in series, strings in parallel. A string without control delivers m x (its weakest cell);
 the pack delivers the sum over strings. With control every cell runs to its own end, so the pack delivers the sum of all cells whatever the grouping.
   as found    : strings in the order the cells came (e.g. the real BMW modules)

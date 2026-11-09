@@ -1,4 +1,4 @@
-"""Tim Ren (7 Nov): per-cell capacity/SOH sensing is 'within 5%, often much better'. What does that do to the weak-cell line (reon_response.Limits.weak_frac)?
+"""REON (7 Nov): per-cell capacity/SOH sensing is 'within 5%, often much better'. What does that do to the weak-cell line (reon_response.Limits.weak_frac)?
 Real late-life capacities of 1,140 cells (12 cars, Nature Energy 2026). Measured = true x (1 + error). Two error models, both worst-case reading of '5%':
   bias: one fixed error per cell, uniform in +-5% (does not average out over cycles)    gauss: new error every cycle, sd = 5%/2 (averages over N persistent cycles)
 A false bypass = a healthy real cell measured below (1 - weak_frac) x median of its string for ALL of N cycles. Detection = a cell truly `loss` below the string median is flagged."""

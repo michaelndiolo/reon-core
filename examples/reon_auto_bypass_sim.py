@@ -1,5 +1,5 @@
 """AUTOMATIC BYPASS vs DETECT-AND-REPLACE vs FIXED THRESHOLDS over the life of a 16-cell, 60 kWh string (hackkit/reon_events.py). Run: PYTHONPATH=. python examples/reon_auto_bypass_sim.py
-Sweep (all ASSUMED, no source yet for visit cost or fault rate): fault rate per cell-year 0.002 / 0.01 / 0.03, cost of one crew visit 250 / 1000 / 3000, crew lead time 0.5 / 2 months; value 40 per kWh-year, electronics 15.5 per kWh nameplate (Tim Ren range 7 to 24), fade-rate spread CV 0.45 (REAL lithium median).
+Sweep (all ASSUMED, no source yet for visit cost or fault rate): fault rate per cell-year 0.002 / 0.01 / 0.03, cost of one crew visit 250 / 1000 / 3000, crew lead time 0.5 / 2 months; value 40 per kWh-year, electronics 15.5 per kWh nameplate (REON range 7 to 24), fade-rate spread CV 0.45 (REAL lithium median).
 Net value is per kWh nameplate, discounted at 7 %, averaged over trials; common random numbers across policies."""
 from multiprocessing import Pool
 import numpy as np

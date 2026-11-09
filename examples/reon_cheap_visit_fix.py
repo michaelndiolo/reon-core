@@ -1,7 +1,7 @@
 """Close the HOLD regime (cheap crew visits, high switch loss). Over hostile site draws where the per-site chooser picks replace-on-failure or a threshold instead of automatic bypass:
  1. break-even switch loss and break-even switch cost: the targets REON would have to meet for automatic bypass to pay at that site
  2. how many such sites flip to automatic bypass if the site can shed current (slack): conduction loss share = I x R / V falls with current (physics); slack 0.3 and 0.5
- 3. share of the HOLD sites that are already at plausible loss (<= 4%, 'very minimum' per Tim Ren)"""
+ 3. share of the HOLD sites that are already at plausible loss (<= 4%, 'very minimum' per REON)"""
 import numpy as np
 from multiprocessing import Pool
 from hackkit import reon_events as E

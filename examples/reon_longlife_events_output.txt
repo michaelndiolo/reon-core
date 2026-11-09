@@ -1,4 +1,4 @@
-Slow-fade sodium (Tim: 20,000-cycle cells, maker claim): does automatic bypass still pay in the string-life simulation? net per kWh nameplate, 12 seeds, 12-year horizon (months=144)
+Slow-fade sodium (REON: 20,000-cycle cells, maker claim): does automatic bypass still pay in the string-life simulation? net per kWh nameplate, 12 seeds, 12-year horizon (months=144)
 fade/yr fault/cell-y  visit down_cost |    replace    thr0.85       ours ours+crew1  ours+crew | best
   0.004        0.002    500         0 |      306.3      285.3      299.6      299.2      299.6 | replace
   0.004        0.002    500        20 |      304.1      285.3      299.6      299.2      299.6 | replace

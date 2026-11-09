@@ -2,7 +2,7 @@
 
 Top to bottom: pick or paste the cells (sidebar), set the practical limits and the money inputs (each with a REAL / CITED / ASSUMED tag), read the verdict and
 the five tiles, then the tabs: What we gain, How solid is it, Money, Carbon, Story (What / How / Who / Why). Every number comes from the tested modules in hackkit/.
-The starting values in the sidebar are literature or test values, NOT REON's: replace them with REON's answers (see docs/ASK_REON_DRAFT.md)."""
+The starting values in the sidebar are literature or test values, NOT REON's: replace them with REON's answers."""
 from __future__ import annotations
 
 import numpy as np

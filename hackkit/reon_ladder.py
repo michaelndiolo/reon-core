@@ -1,4 +1,4 @@
-"""Granularity ladder (Tim Ren: module-level second life is possible, but cells inside a module age differently by position).
+"""Granularity ladder (REON: module-level second life is possible, but cells inside a module age differently by position).
 Cells in physical modules of `module` cells share a location, so part of the fade spread is between modules and part is within. Switching g cells at a time (g = 1 cell level, g = module, g = n no switching = plain string).
 Gain = usable of the switched design / usable of a plain string - 1, median over trials. Lognormal fade spread, independent draws; our own simulation, not REON data."""
 import numpy as np

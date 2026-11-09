@@ -224,7 +224,7 @@ def design_scan(caps: Sequence[float], m: int, *, fade_mean: float, fade_cvs: Se
     balancer_per_kwh; converter_loss and converter_per_kwh_cell = an always-lossy DC-DC converter per group of k cells (cost scales as 1/k^q like switches).
     Passive balancing equals the plain pack (it only equalises state of charge) and has no row.
     fail_rate_per_cell_year > 0 adds open-circuit cell failures (exponential times, no repair unless repair_years is given: a failed cell is replaced after an exponential time with that mean): a failed cell kills its string for plain, sorted, balancer and group-switch designs
-    that cannot bypass it, while a switch on every cell loses only that cell. The rate is ASSUMED: nothing public gives it for retired cells (see docs/WHAT_WE_HAVE.md).
+    that cannot bypass it, while a switch on every cell loses only that cell. The rate is ASSUMED: nothing public gives it for retired cells (see docs/SOURCES.md).
     Late-engaging switches ('late') and the hybrid (balancer first, switches for the rest) are the improved designs; the hybrid costs hybrid_per_kwh, by default the
     switch electronics plus the balancer (separate hardware); pass a smaller number if one set of hardware does both."""
     n = len(caps)
@@ -263,7 +263,7 @@ def design_scan(caps: Sequence[float], m: int, *, fade_mean: float, fade_cvs: Se
 def add_capacity_breakeven(recs: list, design: str) -> dict:
     """Buying extra cells instead of `design`: adding a share x of capacity at c per kWh yields x times the plain pack's value. To match the design's gross gain it
     must spend c x gross / base_value. So the design is cheaper than extra capacity whenever extra capacity costs more than  c* = cost x base_value / gross
-    (per kWh of nameplate; compare with 20 to 98 per kWh, docs/REON_DATA.md). Returns per-scenario c* and min / median / max (None where gross <= 0)."""
+    (per kWh of nameplate; compare with 20 to 98 per kWh). Returns per-scenario c* and min / median / max (None where gross <= 0)."""
     out = {}
     for r in recs:
         if r["design"] == design:

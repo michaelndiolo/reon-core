@@ -27,8 +27,7 @@ data-center presets run on the same engine as evidence that the method is not ti
 | `examples/` | Real-pack runs (Nature Energy 2026, 12 cars) and stress tests, each with its saved output |
 | `recheck/` | Independent pack-model spec and reference implementation |
 | `docs/SPEC.md` | Inputs and outputs for the hardware, the algorithm and the dashboard |
-| `docs/PLAN.md` | Build order, owners, tests |
-| `docs/background/` | Sources, earlier results, questions for REON |
+| `docs/SOURCES.md`, `docs/STRESS.md` | Source tags for every number; stress-test results (shown in the dashboard) |
 
 ## Run
 
@@ -36,7 +35,7 @@ data-center presets run on the same engine as evidence that the method is not ti
 pip install -r requirements.txt
 python -m pytest -q
 PYTHONPATH=. python examples/reon_nature_vs_brief_baseline.py
-streamlit run app_reon.py
+streamlit run app_final.py
 ```
 
 ## Status
@@ -44,4 +43,3 @@ streamlit run app_reon.py
 Source tags are kept on every number (REAL, CITED, ASSUMED). Nothing here is validated on sodium-ion cells;
 the fade and knee sources are lithium. See `docs/SPEC.md` for what is assumed.
 
-Large raw datasets (Iowa State, Leaf, LFP) are not copied here; they stay in the older `reon-battery` repo.

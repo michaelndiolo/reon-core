@@ -1,5 +1,5 @@
 """VOLTAGE LIMIT on cell-level control, on the 12 REAL cars (Nature Energy 2026 Fig 4, 95 cells, 280,000 km; relative capacities). Run: PYTHONPATH=. python examples/reon_voltage_limit.py
-For each chemistry curve and each system minimum voltage (fraction of nominal string voltage; REON's inverter minimum is UNKNOWN, ask Tim), discharge at 0.3C constant power and report hours as a gain over the plain string:
+For each chemistry curve and each system minimum voltage (fraction of nominal string voltage; REON's inverter minimum is UNKNOWN, ask REON), discharge at 0.3C constant power and report hours as a gain over the plain string:
 ideal (usable = sum of cells, no voltage floor) vs floor (cells bypassed only while the string stays at or above the minimum). Share kept = floor gain / ideal gain."""
 import csv
 import numpy as np

@@ -1,4 +1,4 @@
-"""System-level view (Tim Ren, 7 Nov): the business case is energy per charge and how many charges the SYSTEM lasts, not how long a cell lasts. A cell may be rated 20,000 cycles while the system guarantee is 8,000, because the weakest cell sets the system.
+"""System-level view (REON, 7 Nov): the business case is energy per charge and how many charges the SYSTEM lasts, not how long a cell lasts. A cell may be rated 20,000 cycles while the system guarantee is 8,000, because the weakest cell sets the system.
 Works on the table that reon_wear.recommend_build returns (years = service life of each build, retire at eol_frac of day-1)."""
 from hackkit.reon_guard import need
 
@@ -6,7 +6,7 @@ OURS_PREFIX = ("selective", "late", "level", "hybrid")
 
 
 def incremental_share(bms_multiple):
-    """Tim Ren: REON's electronics cost 3 to 4 times a conventional BMS. A customer buying a plain string buys a BMS anyway, so the extra cost is (k - 1) / k of the total."""
+    """REON: REON's electronics cost 3 to 4 times a conventional BMS. A customer buying a plain string buys a BMS anyway, so the extra cost is (k - 1) / k of the total."""
     need(bms_multiple >= 1.0, "system: BMS multiple must be at least 1")
     return (bms_multiple - 1.0) / bms_multiple
 
